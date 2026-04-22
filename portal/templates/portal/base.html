@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-
-      <!-- ACESSIBILIDADE -->
   <div class="barra-acesso">
     <div class="container">
       <span>Portal de Utilidade Publica — Instituto Federal do Tocantins</span>
@@ -21,31 +19,91 @@
       </div>
     </div>
   </div>
-<!-- HEADER -->
-<header>
+  <header>
     <div class="header-inner">
-        <a class="logo" href="{% url 'portal:home' %}">
-            <h1>Portal Segurança Digital</h1>
-        </a>
-        <nav>
-            <a href="{% url 'portal:home' %}">Inicio</a>
-            <a href="{% url 'portal:golpes' %}">Golpes</a>
-            <a href="{% url 'portal:denuncia' %}">Denunciar</a>
-            <a href="{% url 'portal:delegacias' %}">Delegacias</a>
-            <a href="{% url 'portal:estatisticas' %}">Estatisticas</a>
-            <a href="{% url 'portal:videos' %}">Videos</a>
-        </nav>
+      <a class="logo" href="{% url 'portal:home' %}">
+        <div class="logo-escudo">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 1L3 5v6c0 5.25 3.75 10.15 9 11.35C17.25 21.15 21 16.25 21 11V5L12 1zm-1 14l-3-3 1.4-1.4 1.6 1.6 4.6-4.6L17 9l-6 6z" />
+          </svg>
+        </div>
+        <div class="logo-nome">
+          <h1>Portal Seguranca Digital</h1>
+          <span>Prevencao a Golpes — IFTO / 2026</span>
+        </div>
+      </a>
+      <nav>
+        <a href="{% url 'portal:home'%}" class="ativo">Inicio</a>
+        <a href="{%  url 'portal:denuncia'%}">Denunciar</a>
+        <a href="{%  url 'portal:delegacias'%}">Delegacias</a>
+        <a href="{%  url 'portal:estatisticas'%}">Estatisticas</a>
+        <a href="{% url 'portal:videos'%}">Videos</a>
+      </nav>
     </div>
-</header>
+  </header>
 
+
+  <div class="faixa-alerta">
+    <div class="container">
+      <div class="alerta-icone">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+        </svg>
+      </div>
+      <span>
+        <strong>Atencao:</strong> Nenhuma instituicao bancaria ou orgao publico solicita senhas, codigos ou
+        transferencias por telefone ou mensagem. Desconfie sempre e confirme por outros canais antes de qualquer acao.
+      </span>
+    </div>
+  </div>
 <!-- CONTEÚDO DINÂMICO -->
 {% block content %}
 {% endblock %}
 
-<!-- FOOTER -->
-<footer>
-    <p>&copy; 2026 Portal Segurança Digital</p>
-</footer>
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>Sobre o Portal</h4>
+          <p>Projeto de Extensao desenvolvido por alunos do curso de Sistemas para Internet do Instituto Federal do
+            Tocantins, sob orientacao do Prof. Jonas de Macedo Sousa Junior. Ano: 2026.</p>
+        </div>
+        <div>
+          <h4>Navegacao</h4>
+          <ul>
+            <li><a href="{% url 'portal:home' %}">Inicio</a></li>
+            <li><a href="{% url 'portal:denuncia' %}">Registrar Denuncia</a></li>
+            <li><a href="{% url 'portal:delegacias' %}">Delegacias</a></li>
+            <li><a href="{% url 'portal:estatisticas' %}">Estatisticas</a></li>
+            <li><a href="{% url 'portal:videos' %}">Videos Educativos</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Institucional</h4>
+          <ul>
+            <li><a href="#">Sobre o Projeto</a></li>
+            <li><a href="#">Equipe</a></li>
+            <li><a href="https://www.ifto.edu.br/" target="_blank">IFTO</a></li>
+            <li><a href="#">Extensao I — 2026</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Links Uteis</h4>
+          <ul>
+            <li><a href="#">Policia Civil do Tocantins</a></li>
+            <li><a href="#">SaferNet Brasil</a></li>
+            <li><a href="#">Procon Tocantins</a></li>
+            <li><a href="#">Banco Central</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 Portal Seguranca Digital — Instituto Federal do Tocantins. Projeto academico sem fins lucrativos.
+    </div>
+  </footer>
 
 <script src="{% static 'js/script.js' %}"></script>
 </body>

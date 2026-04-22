@@ -2,8 +2,109 @@
 
 {% block content %}
 
-<section class="secao secao-alt">
-  <!-- cola aqui delegacias -->
-</section>
+ <section class="secao secao-alt" id="delegacias">
+    <div class="container">
+      <div class="secao-header">
+        <span class="section-label">Onde Buscar Ajuda</span>
+        <h2 class="section-title">Delegacias e Canais Oficiais</h2>
+        <p class="section-desc">Localize delegacias e orgaos competentes para registrar ocorrencias e obter orientacao.
+        </p>
+      </div>
+      <div class="delegacias-layout">
+        <div class="filtro-panel">
+          <h4>Filtrar por</h4>
+          <select id="filtro-tipo">
+            <option value="">Todos os tipos</option>
+            <option value="Ciberneticos">Delegacia de Crimes Ciberneticos</option>
+            <option value="Idoso">Delegacia de Atendimento ao Idoso</option>
+            <option value="Procon">Procon</option>
+            <option value="Canal Online">Canal Online</option>
+          </select>
+          <input type="text" id="filtro-texto" placeholder="Buscar por nome..." />
+          <select id="filtro-cidade">
+            <option value="">Todos os municipios</option>
+            <option value="Palmas">Palmas</option>
+            <option value="Araguaina">Araguaina</option>
+            <option value="Gurupi">Gurupi</option>
+            <option value="Porto Nacional">Porto Nacional</option>
+          </select>
+        </div>
+        <div class="delegacias-lista" id="lista-delegacias">
+          <div class="delegacia-item" data-tipo="Ciberneticos" data-cidade="Palmas">
+            <div>
+              <h3>Delegacia de Crimes Ciberneticos — Palmas</h3>
+              <div class="del-infos">
+                <span class="del-info"><svg viewBox="0 0 24 24">
+                    <path
+                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                  </svg>Av. Teotonio Segurado, s/n — Palmas, TO</span>
+                <span class="del-info"><svg viewBox="0 0 24 24">
+                    <path
+                      d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+                  </svg>(63) 3218-0000</span>
+                <span class="del-info"><svg viewBox="0 0 24 24">
+                    <path
+                      d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z" />
+                  </svg>Seg a Sex, 8h as 18h</span>
+              </div>
+            </div>
+            <button class="btn-mapa">Ver no mapa</button>
+          </div>
+          <div class="delegacia-item" data-tipo="Canal Online" data-cidade="">
+            <div>
+              <h3>SaferNet Brasil — Canal Online de Denuncia</h3>
+              <div class="del-infos">
+                <span class="del-info"><svg viewBox="0 0 24 24">
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                  </svg>safernet.org.br — Atendimento nacional</span>
+                <span class="del-info"><svg viewBox="0 0 24 24">
+                    <path
+                      d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z" />
+                  </svg>Disponivel 24 horas</span>
+              </div>
+            </div>
+            <button class="btn-mapa">Acessar site</button>
+          </div>
+          <div class="delegacia-item" data-tipo="Procon" data-cidade="Palmas">
+            <div>
+              <h3>Procon Tocantins — Defesa do Consumidor</h3>
+              <div class="del-infos">
+                <span class="del-info"><svg viewBox="0 0 24 24">
+                    <path
+                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                  </svg>Palmas, TO</span>
+                <span class="del-info"><svg viewBox="0 0 24 24">
+                    <path
+                      d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+                  </svg>151 (ligacao gratuita)</span>
+                <span class="del-info"><svg viewBox="0 0 24 24">
+                    <path
+                      d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z" />
+                  </svg>Seg a Sex, 8h as 17h</span>
+              </div>
+            </div>
+            <button class="btn-mapa">Ver no mapa</button>
+          </div>
+          <div class="delegacia-item" data-tipo="Canal Online" data-cidade="Nacional">
+            <div>
+              <h3>Banco Central do Brasil — Canal do Cidadao</h3>
+              <div class="del-infos">
+                <span class="del-info"><svg viewBox="0 0 24 24">
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                  </svg>Nacional — bcb.gov.br/meubc</span>
+                <span class="del-info"><svg viewBox="0 0 24 24">
+                    <path
+                      d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+                  </svg>145 (ligacao gratuita)</span>
+              </div>
+            </div>
+            <button class="btn-mapa">Acessar site</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
 {% endblock %}

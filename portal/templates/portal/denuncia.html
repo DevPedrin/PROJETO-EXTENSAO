@@ -2,8 +2,76 @@
 
 {% block content %}
 
-<section class="secao">
-  
-</section>
+  <!-- DENÚNCIA -->
+  <section class="secao" id="denuncia">
+    <div class="container">
+      <div class="secao-header">
+        <span class="section-label">Canal de Atendimento</span>
+        <h2 class="section-title">Registrar uma Denuncia</h2>
+        <p class="section-desc">Sua contribuicao e importante. Os dados coletados ajudam a mapear as ocorrencias e a
+          alertar outras pessoas.</p>
+      </div>
+      <div class="denuncia-layout">
+        <div class="denuncia-info">
+          <h3>Antes de preencher, leia:</h3>
+          <p>O registro e gratuito e pode ser feito de forma anonima. Nenhum dado pessoal e obrigatorio. As informacoes
+            sao utilizadas apenas para fins estatisticos e de prevencao.</p>
+          <div class="info-box">
+            <strong>Dica importante</strong>
+            Se voce foi vitima de um crime, registre tambem um Boletim de Ocorrencia na delegacia mais proxima ou pelo
+            site da Policia Civil do Tocantins.
+          </div>
+        </div>
+        <div class="form-card">
+          <div class="form-row">
+            <label>Tipo de golpe <span class="obr">*</span></label>
+            <select id="form-tipo-golpe">
+              <option value="">Selecione o tipo de golpe...</option>
+              <option>Golpe do WhatsApp / Redes Sociais</option>
+              <option>Falso funcionario de banco</option>
+              <option>Golpe do Pix</option>
+              <option>Promocao ou Premio falso</option>
+              <option>Link ou pagina falsa</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-row">
+              <label>Data da ocorrencia</label>
+              <input type="date" id="form-data" />
+            </div>
+            <div class="form-row">
+              <label>Cidade</label>
+              <input type="text" id="form-cidade" placeholder="Ex.: Palmas — TO" />
+            </div>
+          </div>
+          <div class="form-row">
+            <label>Descricao do ocorrido <span class="obr">*</span></label>
+            <textarea id="form-descricao"
+              placeholder="Descreva brevemente o que aconteceu. Quanto mais detalhes, melhor para o mapeamento..."></textarea>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-row">
+              <label>Nome (opcional)</label>
+              <input type="text" id="form-nome" placeholder="Pode deixar em branco" />
+            </div>
+            <div class="form-row">
+              <label>Faixa etaria</label>
+              <select id="form-idade">
+                <option value="">Selecione...</option>
+                <option>18 a 29 anos</option>
+                <option>30 a 44 anos</option>
+                <option>45 a 59 anos</option>
+                <option>60 anos ou mais</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-form" id="btn-enviar-denuncia">
+            Enviar Denuncia
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
 
 {% endblock %}

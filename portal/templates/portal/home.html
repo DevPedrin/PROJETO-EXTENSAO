@@ -1,10 +1,82 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
+  <section class="hero" id="inicio">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-tag">Servico de Utilidade Publica</div>
+        <h2>Proteja-se contra Golpes e Fraudes Digitais</h2>
+        <p>Este portal oferece informacoes educativas, orientacoes de seguranca e canais de denuncia para ajudar a
+          populacao a identificar e se proteger de fraudes na internet.</p>
+        <div class="hero-btns">
+          <a href="#golpes" class="btn btn-amarelo">Conhecer os Principais Golpes</a>
+          <a href="{% url 'portal:denuncia' %}" class="btn btn-outline">Registrar uma Denuncia</a>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <h3>Numeros de Emergencia</h3>
+        <ul class="numeros-lista">
+          <li><span class="orgao">Policia Militar</span> <span class="num">190</span></li>
+          <li><span class="orgao">Policia Civil</span> <span class="num">197</span></li>
+          <li><span class="orgao">Procon</span> <span class="num">151</span></li>
+          <li><span class="orgao">Banco Central</span> <span class="num">145</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-<section class="hero">
-    <h2>Proteja-se contra Golpes</h2>
-    <p>Conteúdo da home...</p>
-</section>
-
+  <section class="secao secao-alt" id="golpes">
+    <div class="container">
+      <div class="secao-header">
+        <span class="section-label">Seguranca Digital</span>
+        <h2 class="section-title">Principais Tipos de Golpes Digitais</h2>
+        <p class="section-desc">Conhecer as modalidades de fraude e o primeiro passo para nao ser vitima. Leia com
+          atencao e compartilhe com sua familia.</p>
+      </div>
+      <div class="golpes-grid">
+        <div class="golpe-card golpe-destaque">
+          <span class="golpe-tipo tipo-alto">Risco Alto</span>
+          <h3>Golpe do WhatsApp</h3>
+          <p>Criminosos clonam numeros ou fingem ser familiares pedindo transferencias urgentes. Sempre confirme por
+            ligacao antes de qualquer pagamento.</p>
+          <a href="#" class="leia-mais">Saiba mais e como se proteger</a>
+        </div>
+        <div class="golpe-card">
+          <span class="golpe-tipo tipo-alto">Risco Alto</span>
+          <h3>Falso Funcionario de Banco</h3>
+          <p>Ligacoes ou mensagens simulando centrais bancarias para obter senhas e dados. Bancos nunca solicitam essas
+            informacoes remotamente.</p>
+          <a href="#" class="leia-mais">Saiba mais e como se proteger</a>
+        </div>
+        <div class="golpe-card">
+          <span class="golpe-tipo tipo-alto">Risco Alto</span>
+          <h3>Golpe do Pix</h3>
+          <p>Falsas cobracas, QR Codes adulterados ou transferencias induzidas por urgencia. Confira sempre o nome do
+            destinatario antes de confirmar.</p>
+          <a href="#" class="leia-mais">Saiba mais e como se proteger</a>
+        </div>
+        <div class="golpe-card">
+          <span class="golpe-tipo tipo-medio">Atencao</span>
+          <h3>Promocoes e Premios Falsos</h3>
+          <p>Promessas de premios, sorteios e beneficios inexistentes que exigem dados pessoais ou pagamento para
+            liberacao.</p>
+          <a href="#" class="leia-mais">Saiba mais e como se proteger</a>
+        </div>
+        <div class="golpe-card">
+          <span class="golpe-tipo tipo-medio">Atencao</span>
+          <h3>Links e Paginas Falsas</h3>
+          <p>Mensagens com links que imitam sites de bancos, lojas ou orgaos publicos. Verifique sempre o endereco da
+            pagina antes de inserir dados.</p>
+          <a href="#" class="leia-mais">Saiba mais e como se proteger</a>
+        </div>
+        <div class="golpe-card">
+          <span class="golpe-tipo tipo-dica">Orientacao</span>
+          <h3>Como se Proteger no Dia a Dia</h3>
+          <p>Desconfie de urgencias. Confirme informacoes por outros canais. Nunca informe senhas. Consulte um familiar
+            de confianca antes de agir.</p>
+          <a href="#" class="leia-mais">Ver todas as orientacoes</a>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}
