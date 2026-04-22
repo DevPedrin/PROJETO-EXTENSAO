@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal Segurança Digital</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+      <!-- ACESSIBILIDADE -->
+  <div class="barra-acesso">
+    <div class="container">
+      <span>Portal de Utilidade Publica — Instituto Federal do Tocantins</span>
+      <div class="acesso-btns">
+        <span style="margin-right:4px">Tamanho do texto:</span>
+        <button onclick="document.documentElement.style.fontSize='120%'">A+</button>
+        <button onclick="document.documentElement.style.fontSize='100%'">A</button>
+        <button onclick="document.body.style.filter=(document.body.style.filter?'':'invert(1) hue-rotate(180deg)')">Alto
+          Contraste</button>
+      </div>
+    </div>
+  </div>
+<!-- HEADER -->
+<header>
+    <div class="header-inner">
+        <a class="logo" href="{% url 'portal:home' %}">
+            <h1>Portal Segurança Digital</h1>
+        </a>
+        <nav>
+            <a href="{% url 'portal:home' %}">Inicio</a>
+            <a href="{% url 'portal:golpes' %}">Golpes</a>
+            <a href="{% url 'portal:denuncia' %}">Denunciar</a>
+            <a href="{% url 'portal:delegacias' %}">Delegacias</a>
+            <a href="{% url 'portal:estatisticas' %}">Estatisticas</a>
+            <a href="{% url 'portal:videos' %}">Videos</a>
+        </nav>
+    </div>
+</header>
+
+<!-- CONTEÚDO DINÂMICO -->
+{% block content %}
+{% endblock %}
+
+<!-- FOOTER -->
+<footer>
+    <p>&copy; 2026 Portal Segurança Digital</p>
+</footer>
+
+<script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
