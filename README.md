@@ -1,38 +1,115 @@
-# Portal Segurança Digital
+#  Portal Segurança Digital
 
-Portal informativo de utilidade pública para prevenção de golpes e acesso a informações de segurança pública.
+Portal informativo para prevenção de golpes e acesso a conteúdos de
+segurança digital.
 
-O projeto utiliza tecnologias de desenvolvimento web para criar uma plataforma digital voltada à disseminação de informações públicas e segurança digital.
+------------------------------------------------------------------------
 
-## Membros
-- Elias Giovanni de Oliveira Brandão
-- Gabriel Victor Silva Vilarinho
-- Samuel Ulsan Cavalcante Luz
-- Wanderson das Neves Morais
-- Pedro Henrique Pereira Rocha
+##  Membros
 
-## Requisitos
-- Python
-- pip (gerenciador de pacotes do Python)
+-   Elias Giovanni de Oliveira Brandão
+-   Gabriel Victor Silva Vilarinho
+-   Samuel Ulsan Cavalcante Luz
+-   Wanderson das Neves Morais
+-   Pedro Henrique Pereira Rocha
 
-## Como rodar o projeto (Windows)
+------------------------------------------------------------------------
 
-É recomendado usar um ambiente virtual.
+##  Requisitos
 
-Na raiz do projeto, execute o comando:
+-   Python
+-   pip
+-   PostgreSQL **ou** Docker + Docker Compose
 
-```bash
-python -m venv venv
+------------------------------------------------------------------------
+
+##  Setup
+
+### 1. Clonar o projeto
+
+``` bash
+git clone https://github.com/DevPedrin/PROJETO-EXTENSAO
+cd PROJETO-EXTENSAO
 ```
 
-Depois ative com:
+------------------------------------------------------------------------
 
-```bash
+### 2. Criar `.env`
+
+``` bash
+cp .env.example .env
+```
+
+O projeto já possui um `.env.example` configurado.
+
+------------------------------------------------------------------------
+
+### 3. Ambiente virtual
+
+#### Linux/Mac
+
+``` bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### Windows
+
+``` bash
+python -m venv venv
 venv\Scripts\activate
 ```
 
-Por fim, instale as dependências:
+------------------------------------------------------------------------
 
-```bash
+### 4. Instalar dependências
+
+``` bash
 pip install -r requirements.txt
 ```
+
+------------------------------------------------------------------------
+
+##  Banco de Dados
+
+Escolha uma opção:
+
+###  PostgreSQL local
+
+-   Crie um banco (ex: `db-portal`)
+-   Configure o `.env` conforme seu ambiente
+
+------------------------------------------------------------------------
+
+###  Docker
+
+``` bash
+docker-compose up -d
+```
+
+#### O banco será criado automaticamente.
+------------------------------------------------------------------------
+
+##  Migrations
+
+``` bash
+python manage.py migrate
+```
+
+------------------------------------------------------------------------
+
+## ▶ Rodar o projeto
+
+``` bash
+python manage.py runserver
+```
+
+Acesse: http://127.0.0.1:8000/
+
+------------------------------------------------------------------------
+
+## ⚠️ Observações
+
+-   O `.env` é obrigatório
+-   O banco deve estar rodando antes das migrations
+-   Não versionar o `.env`
