@@ -1,14 +1,138 @@
-<h2>Cadastro</h2>
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro — Portal Segurança Digital</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
 
-{% if error %}
-    <p style="color:red;">{{ error }}</p>
-{% endif %}
+  <!-- BARRA ACESSIBILIDADE -->
+  <div class="barra-acesso">
+    <div class="container">
+      <span>Portal de Utilidade Publica — Instituto Federal do Tocantins</span>
+      <div class="acesso-btns">
+        <span style="margin-right:4px">Tamanho do texto:</span>
+        <button onclick="document.documentElement.style.fontSize='120%'">A+</button>
+        <button onclick="document.documentElement.style.fontSize='100%'">A</button>
+        <button onclick="document.body.style.filter=(document.body.style.filter?'':'invert(1) hue-rotate(180deg)')">Alto Contraste</button>
+      </div>
+    </div>
+  </div>
 
-<form method="post">
-    {% csrf_token %}
-    <input name="username" placeholder="Usuário">
-    <input name="password" type="password" placeholder="Senha">
-    <button type="submit">Cadastrar</button>
-</form>
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="{% url 'portal:home' %}">
+        <div class="logo-escudo">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 1L3 5v6c0 5.25 3.75 10.15 9 11.35C17.25 21.15 21 16.25 21 11V5L12 1zm-1 14l-3-3 1.4-1.4 1.6 1.6 4.6-4.6L17 9l-6 6z" />
+          </svg>
+        </div>
+        <div class="logo-nome">
+          <h1>Portal Seguranca Digital</h1>
+          <span>Prevencao a Golpes — IFTO / 2026</span>
+        </div>
+      </a>
+      <nav>
+        <a href="{% url 'portal:home' %}">Inicio</a>
+        <a href="{% url 'portal:denuncia' %}">Denunciar</a>
+        <a href="{% url 'portal:delegacias' %}">Delegacias</a>
+        <a href="{% url 'portal:estatisticas' %}">Estatisticas</a>
+        <a href="{% url 'portal:videos' %}">Videos</a>
+      </nav>
+    </div>
+  </header>
 
-<a href="/accounts/login/">Já tenho conta</a>
+  <!-- CONTEÚDO -->
+  <div class="auth-wrapper">
+    <div class="auth-card">
+
+      <div class="auth-logo">
+        <div class="auth-logo-escudo">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 1L3 5v6c0 5.25 3.75 10.15 9 11.35C17.25 21.15 21 16.25 21 11V5L12 1zm-1 14l-3-3 1.4-1.4 1.6 1.6 4.6-4.6L17 9l-6 6z" />
+          </svg>
+        </div>
+        <div class="auth-logo-nome">
+          Portal Seguranca Digital
+          <span>Crie sua conta</span>
+        </div>
+      </div>
+
+      <hr class="auth-divider">
+
+      <p class="auth-titulo">Cadastro</p>
+      <p class="auth-subtitulo">Preencha os dados abaixo para criar sua conta.</p>
+
+      {% if error %}
+        <div class="auth-erro">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" class="auth-form">
+        {% csrf_token %}
+        <div class="form-row">
+          <label for="id_username">Usuário</label>
+          <input id="id_username" name="username" type="text" placeholder="Escolha um nome de usuário" autocomplete="username">
+        </div>
+        <div class="form-row">
+          <label for="id_password">Senha</label>
+          <input id="id_password" name="password" type="password" placeholder="Crie uma senha" autocomplete="new-password">
+        </div>
+        <button type="submit" class="btn-form">Criar conta</button>
+      </form>
+
+      <p class="auth-link">
+        Já tem uma conta? <a href="{% url 'login' %}">Entrar</a>
+      </p>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>Sobre o Portal</h4>
+          <p>Projeto de Extensao desenvolvido por alunos do curso de Sistemas para Internet do Instituto Federal do Tocantins, sob orientacao do Prof. Jonas de Macedo Sousa Junior. Ano: 2026.</p>
+        </div>
+        <div>
+          <h4>Navegacao</h4>
+          <ul>
+            <li><a href="{% url 'portal:home' %}">Inicio</a></li>
+            <li><a href="{% url 'portal:denuncia' %}">Registrar Denuncia</a></li>
+            <li><a href="{% url 'portal:delegacias' %}">Delegacias</a></li>
+            <li><a href="{% url 'portal:estatisticas' %}">Estatisticas</a></li>
+            <li><a href="{% url 'portal:videos' %}">Videos Educativos</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Institucional</h4>
+          <ul>
+            <li><a href="#">Sobre o Projeto</a></li>
+            <li><a href="#">Equipe</a></li>
+            <li><a href="https://www.ifto.edu.br/" target="_blank">IFTO</a></li>
+            <li><a href="#">Extensao I — 2026</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Links Uteis</h4>
+          <ul>
+            <li><a href="#">Policia Civil do Tocantins</a></li>
+            <li><a href="#">SaferNet Brasil</a></li>
+            <li><a href="#">Procon Tocantins</a></li>
+            <li><a href="#">Banco Central</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 Portal Seguranca Digital — Instituto Federal do Tocantins. Projeto academico sem fins lucrativos.
+    </div>
+  </footer>
+
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

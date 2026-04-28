@@ -14,14 +14,14 @@
       <div class="denuncia-layout">
         <div class="denuncia-info">
           <h3>Antes de preencher, leia:</h3>
-          <p>O registro e gratuito e pode ser feito de forma anonima. Nenhum dado pessoal e obrigatorio. As informacoes
-            sao utilizadas apenas para fins estatisticos e de prevencao.</p>
+          <p>Para garantir a segurança, o uso da plataforma exige login. Porém, você pode optar por uma <strong>denúncia anônima</strong> marcando a opção no formulário abaixo. Seus dados de cadastro não serão vinculados a este registro.</p>
           <div class="info-box">
             <strong>Dica importante</strong>
             Se voce foi vitima de um crime, registre tambem um Boletim de Ocorrencia na delegacia mais proxima ou pelo
             site da Policia Civil do Tocantins.
           </div>
         </div>
+        {% if user.is_authenticated %}
         <div class="form-card">
           <div class="form-row">
             <label>Tipo de golpe <span class="obr">*</span></label>
@@ -66,10 +66,27 @@
               </select>
             </div>
           </div>
+          
+          <div class="form-checkbox" style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">
+            <input type="checkbox" id="form-anonimo" style="width: auto; cursor: pointer;">
+            <label for="form-anonimo" style="font-size: 0.9rem; color: var(--cinza-texto); font-weight: 600; cursor: pointer; margin: 0;">
+              Desejo fazer esta denúncia de forma anônima (não vincular meu usuário)
+            </label>
+          </div>
           <button class="btn-form" id="btn-enviar-denuncia">
             Enviar Denuncia
           </button>
         </div>
+        {% else %}
+        <div class="form-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 64px 24px; background: var(--branco); border: 1px solid var(--cinza-linha); border-radius: var(--raio);">
+          <svg viewBox="0 0 24 24" style="width: 56px; height: 56px; fill: var(--azul-gov); margin-bottom: 20px;">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+          </svg>
+          <h3 style="font-family: var(--fonte-titulo); font-size: 1.4rem; color: var(--azul-gov); margin-bottom: 12px; font-weight: 700;">Formulário Protegido</h3>
+          <p style="color: var(--cinza-texto); margin-bottom: 32px; font-size: 0.95rem; max-width: 320px;">Para iniciar o preenchimento da denúncia, por favor, faça login na plataforma.</p>
+          <a href="{% url 'login' %}?next={% url 'portal:denuncia' %}" class="btn-form" style="text-decoration: none; display: inline-block; width: auto; padding: 14px 40px;">Fazer Login</a>
+        </div>
+        {% endif %}
       </div>
     </div>
   </section>
