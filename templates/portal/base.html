@@ -39,6 +39,16 @@
         <a href="{%  url 'portal:delegacias'%}">Delegacias</a>
         <a href="{%  url 'portal:estatisticas'%}">Estatisticas</a>
         <a href="{% url 'portal:videos'%}">Videos</a>
+        {% if user.is_authenticated %}
+          <span class="nav-usuario">Olá, {{ user.username }}</span>
+          <a href="{% url 'logout' %}" class="nav-btn-sair">Sair</a>
+        {% else %}
+          {% if request.resolver_match.url_name == 'denuncia' %}
+            <a href="{% url 'login' %}?next={{ request.path }}" class="nav-btn-entrar">Entrar</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="nav-btn-entrar">Entrar</a>
+          {% endif %}
+        {% endif %}
       </nav>
     </div>
   </header>

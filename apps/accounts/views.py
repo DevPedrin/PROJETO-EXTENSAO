@@ -11,7 +11,14 @@ def login_view(request):
 
         if user:
             login(request, user)
-            return redirect("home")
+            next_url = request.POST.get("next")
+            if next_url:
+                return redirect(next_url)
+            return redirect("portal:home")
+        else:
+            return render(request, "accounts/login.html", {
+                "error": "Usuário ou senha inválidos."
+            })
 
     return render(request, "accounts/login.html")
 
@@ -40,4 +47,4 @@ def register_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("login")
+    return redirect("portal:home")

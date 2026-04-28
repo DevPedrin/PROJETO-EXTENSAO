@@ -210,6 +210,51 @@
       color: var(--branco);
     }
 
+    /* ─── NAV AUTENTICAÇÃO ── */
+    .nav-usuario {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--cinza-texto);
+      padding: 9px 10px;
+      white-space: nowrap;
+      align-self: center;
+    }
+
+    .nav-btn-entrar {
+      background: var(--amarelo-gov);
+      color: var(--azul-gov) !important;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 8px 18px;
+      border-radius: var(--raio);
+      white-space: nowrap;
+      transition: opacity .15s, transform .15s;
+    }
+
+    .nav-btn-entrar:hover {
+      opacity: .88;
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+
+    .nav-btn-sair {
+      background: transparent;
+      color: var(--vermelho-alerta) !important;
+      border: 1px solid var(--vermelho-alerta);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 7px 14px;
+      border-radius: var(--raio);
+      white-space: nowrap;
+      transition: background .15s, color .15s;
+    }
+
+    .nav-btn-sair:hover {
+      background: var(--vermelho-alerta);
+      color: var(--branco) !important;
+      text-decoration: none;
+    }
+
     /* ─── ALERTA ── */
     .faixa-alerta {
       background: var(--vermelho-alerta);
@@ -1148,6 +1193,145 @@
       width: 100%;
       height: 100%;
       border: none;
+    }
+
+    /* ─── AUTENTICAÇÃO (login / cadastro) ── */
+    .auth-wrapper {
+      min-height: calc(100vh - 220px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 16px;
+      background: var(--cinza-bg);
+    }
+
+    .auth-card {
+      background: var(--branco);
+      border: 1px solid var(--cinza-linha);
+      border-radius: var(--raio);
+      padding: 40px 40px 36px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 2px 16px rgba(13, 59, 110, .09);
+    }
+
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .auth-logo-escudo {
+      width: 42px;
+      height: 42px;
+      background: var(--azul-gov);
+      border-radius: var(--raio);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .auth-logo-escudo svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--amarelo-gov);
+    }
+
+    .auth-logo-nome {
+      font-family: var(--fonte-titulo);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--azul-gov);
+      line-height: 1.2;
+    }
+
+    .auth-logo-nome span {
+      display: block;
+      font-family: var(--fonte-corpo);
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--cinza-texto);
+    }
+
+    .auth-titulo {
+      font-family: var(--fonte-titulo);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--azul-gov);
+      margin-bottom: 4px;
+    }
+
+    .auth-subtitulo {
+      font-size: 0.88rem;
+      color: var(--cinza-texto);
+      margin-bottom: 28px;
+    }
+
+    .auth-divider {
+      border: none;
+      border-top: 1px solid var(--cinza-linha);
+      margin-bottom: 28px;
+    }
+
+    .auth-form .form-row {
+      margin-bottom: 18px;
+    }
+
+    .auth-form .form-row label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--azul-gov);
+      margin-bottom: 6px;
+    }
+
+    .auth-form .form-row input {
+      width: 100%;
+      padding: 12px 14px;
+      font-family: var(--fonte-corpo);
+      font-size: 1rem;
+      color: var(--texto);
+      background: var(--cinza-bg);
+      border: 1px solid var(--cinza-linha);
+      border-radius: var(--raio);
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    .auth-form .form-row input:focus {
+      outline: none;
+      border-color: var(--azul-medio);
+      box-shadow: 0 0 0 3px var(--azul-claro);
+      background: var(--branco);
+    }
+
+    .auth-erro {
+      background: var(--vermelho-fundo);
+      border-left: 4px solid var(--vermelho-alerta);
+      border-radius: 0 var(--raio) var(--raio) 0;
+      padding: 11px 14px;
+      font-size: 0.88rem;
+      color: var(--vermelho-alerta);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .auth-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.88rem;
+      color: var(--cinza-texto);
+    }
+
+    .auth-link a {
+      color: var(--azul-medio);
+      font-weight: 700;
+    }
+
+    .auth-link a:hover {
+      text-decoration: underline;
     }
 
     /* ─── RESPONSIVO ── */
