@@ -33,83 +33,102 @@ cd PROJETO-EXTENSAO
 ```
 
 ------------------------------------------------------------------------
-
 ### 2. Criar `.env`
 
-``` bash
+```bash
 cp .env.example .env
 ```
 
 O projeto já possui um `.env.example` configurado.
 
-------------------------------------------------------------------------
+---
 
-### 3. Ambiente virtual
+## Ambiente de execução
+
+Escolha uma das opções abaixo.
+
+## Opção 1: Docker (recomendado)
+
+Subir containers:
+
+```bash
+docker compose up --build -d
+```
+
+Acesse:
+
+http://127.0.0.1:8000/
+
+### Aplicar migrations
+
+Sempre que houver alteração nos models ou após atualizar o projeto:
+
+```bash
+docker compose exec application python manage.py migrate
+```
+
+---
+
+## Opção 2: Execução local
+
+### 3. Criar ambiente virtual
 
 #### Linux/Mac
 
-``` bash
+```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
 #### Windows
 
-``` bash
+```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-------------------------------------------------------------------------
+---
 
 ### 4. Instalar dependências
 
-``` bash
+```bash
 pip install -r requirements.txt
 ```
 
-------------------------------------------------------------------------
+---
 
-##  Banco de Dados
+## Banco de Dados
 
-Escolha uma opção:
+### PostgreSQL local
 
-###  PostgreSQL local
+- Crie um banco (exemplo: `db-portal`)
+- Configure o arquivo `.env`
 
--   Crie um banco (ex: `db-portal`)
--   Configure o `.env` conforme seu ambiente
+---
 
-------------------------------------------------------------------------
+## Aplicar migrations
 
-###  Docker
-
-``` bash
-docker-compose up -d
-```
-
-#### O banco será criado automaticamente.
-------------------------------------------------------------------------
-
-##  Migrations
-
-``` bash
+```bash
 python manage.py migrate
 ```
 
-------------------------------------------------------------------------
+---
 
-## ▶ Rodar o projeto
+## Rodar o projeto
 
-``` bash
+```bash
 python manage.py runserver
 ```
 
-Acesse: http://127.0.0.1:8000/
+Acesse:
 
-------------------------------------------------------------------------
+http://127.0.0.1:8000/
 
-## ⚠️ Observações
+---
 
--   O `.env` é obrigatório
--   O banco deve estar rodando antes das migrations
--   Não versionar o `.env`
+## Observações
+
+- O arquivo `.env` é obrigatório
+- O banco deve estar rodando antes das migrations
+- Não versionar o `.env`
+- O projeto pode ser executado com ou sem Docker
