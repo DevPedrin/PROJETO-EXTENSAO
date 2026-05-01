@@ -132,3 +132,4 @@ http://127.0.0.1:8000/
 - O banco deve estar rodando antes das migrations
 - Não versionar o `.env`
 - O projeto pode ser executado com ou sem Docker
+- .
