@@ -1,235 +1,105 @@
 :root {
-      --azul-gov: #0D3B6E;
-      --azul-medio: #1456A0;
-      --azul-claro: #D6E4F5;
-      --amarelo-gov: #F5A800;
-      --amarelo-claro: #FEF3D0;
-      --amarelo-linha: #E89B00;
-      --branco: #FFFFFF;
-      --cinza-bg: #F4F6F9;
-      --cinza-linha: #DDE3EC;
-      --cinza-texto: #4A5568;
-      --texto: #1A202C;
-      --vermelho-alerta: #B91C1C;
-      --vermelho-fundo: #FEF2F2;
-
-      --fonte-corpo: 'Source Sans 3', sans-serif;
-      --fonte-titulo: 'Source Serif 4', serif;
-
-      --max-w: 1160px;
-      --raio: 6px;
-    }
-
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-
-
-
-    html {
-      scroll-behavior: smooth;
+      /* Cores Padrão GOV.BR */
+      --gov-azul-escuro: #004587;
+      --gov-azul-claro: #1351b4;
+      --gov-cinza-claro: #f8f8f8;
+      --gov-cinza-escuro: #333333;
+      --gov-branco: #ffffff;
+      --gov-amarelo: #ffcc00;
+      --gov-azul-governo: #004587;
+      
+      --fonte-principal: 'Rawline', 'Open Sans', sans-serif;
+      --max-w: 1200px;
     }
 
     body {
-      font-family: var(--fonte-corpo);
-      font-size: 1.1rem;
-      color: var(--texto);
-      background: var(--cinza-bg);
-      line-height: 1.75;
+      font-family: var(--fonte-principal);
+      background-color: var(--gov-branco);
+      color: var(--gov-cinza-escuro);
+      line-height: 1.5;
     }
 
-    a {
-      color: var(--azul-medio);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .container {
-      width: 100%;
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 0 32px;
-    }
-
-    .section-label {
-      display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--azul-medio);
-      border-left: 3px solid var(--amarelo-gov);
-      padding-left: 10px;
-      margin-bottom: 14px;
-    }
-
-    .section-title {
-      font-family: var(--fonte-titulo);
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--azul-gov);
-      line-height: 1.25;
-      margin-bottom: 10px;
-    }
-
-    .section-desc {
-      color: var(--cinza-texto);
-      font-size: 1rem;
-      max-width: 560px;
-    }
-
-    /* ─── BARRA ACESSIBILIDADE ── */
+    /* BARRA DE ACESSIBILIDADE GOV.BR */
     .barra-acesso {
-      background: var(--azul-gov);
-      color: rgba(255, 255, 255, .75);
-      font-size: 0.8rem;
-      padding: 6px 0;
-      border-bottom: 2px solid var(--amarelo-gov);
+      background: var(--gov-azul-escuro);
+      color: var(--gov-branco);
+      font-size: 12px;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
-    .barra-acesso .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .acesso-btns {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .acesso-btns button {
-      background: rgba(255, 255, 255, .1);
-      border: 1px solid rgba(255, 255, 255, .25);
-      color: rgba(255, 255, 255, .85);
-      font-family: var(--fonte-corpo);
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 3px 11px;
-      border-radius: 3px;
-      cursor: pointer;
-      transition: background .15s;
-    }
-
-    .acesso-btns button:hover {
-      background: rgba(255, 255, 255, .22);
-    }
-
-    /* ─── HEADER ── */
+    /* HEADER GOV.BR */
     header {
-      background: var(--branco);
-      border-bottom: 4px solid var(--amarelo-gov);
-      position: sticky;
-      top: 0;
-      z-index: 200;
-      box-shadow: 0 2px 10px rgba(13, 59, 110, .1);
+      background: var(--gov-branco);
+      border-bottom: 1px solid #eeeeee;
+      padding: 20px 0;
     }
 
     .header-inner {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 16px 32px;
+      align-items: center;
       max-width: var(--max-w);
       margin: 0 auto;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      text-decoration: none;
-    }
-
-    .logo-escudo {
-      width: 52px;
-      height: 52px;
-      background: var(--azul-gov);
-      border-radius: var(--raio);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .logo-escudo svg {
-      width: 28px;
-      height: 28px;
-      fill: var(--amarelo-gov);
+      padding: 0 20px;
     }
 
     .logo-nome h1 {
-      font-family: var(--fonte-titulo);
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--azul-gov);
-      line-height: 1.2;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--gov-azul-escuro);
+      text-transform: uppercase;
+      letter-spacing: -1px;
     }
 
     .logo-nome span {
-      font-size: 0.78rem;
-      color: var(--cinza-texto);
+      font-size: 14px;
+      color: var(--gov-cinza-escuro);
+      font-weight: 400;
     }
 
-    nav {
-      display: flex;
-      gap: 2px;
-      flex-wrap: wrap;
-    }
-
+    /* NAVEGAÇÃO */
     nav a {
-      font-size: 0.92rem;
+      color: var(--gov-azul-claro);
       font-weight: 600;
-      color: var(--azul-gov);
-      padding: 9px 15px;
-      border-radius: var(--raio);
-      transition: background .15s;
-      white-space: nowrap;
-    }
-
-    nav a:hover {
-      background: var(--azul-claro);
+      padding: 10px 15px;
       text-decoration: none;
+      border-bottom: 2px solid transparent;
     }
 
-    nav a.ativo {
-      background: var(--azul-gov);
-      color: var(--branco);
+    nav a:hover, nav a.ativo {
+      border-bottom: 2px solid var(--gov-azul-claro);
     }
 
-    /* ─── NAV AUTENTICAÇÃO ── */
-    .nav-usuario {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--cinza-texto);
-      padding: 9px 10px;
-      white-space: nowrap;
-      align-self: center;
+    /* BOTÕES GOV.BR */
+    .btn-amarelo {
+      background-color: var(--gov-amarelo);
+      color: #000;
+      border-radius: 20px; /* Botões arredondados gov.br */
+      padding: 10px 25px;
+      font-weight: bold;
+      border: none;
     }
 
-    .nav-btn-entrar {
-      background: var(--amarelo-gov);
-      color: var(--azul-gov) !important;
-      font-weight: 700;
-      font-size: 0.88rem;
-      padding: 8px 18px;
-      border-radius: var(--raio);
-      white-space: nowrap;
-      transition: opacity .15s, transform .15s;
+    .btn-outline {
+      border: 1px solid var(--gov-azul-claro);
+      color: var(--gov-azul-claro);
+      border-radius: 20px;
     }
+
+    /* CARDS */
+    .golpe-card, .form-card, .delegacia-item {
+      border: 1px solid #dddddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+    }
+
+    .golpe-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--gov-azul-claro);
+    }
+
 
     .nav-btn-entrar:hover {
       opacity: .88;
