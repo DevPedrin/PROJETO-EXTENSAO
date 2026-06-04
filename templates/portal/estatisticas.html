@@ -1,9 +1,73 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
-
 <section class="secao secao-alt">
-  <h3>Ainda sem dados para isso...</h3>
+    <div class="container">
+        <div class="secao-header">
+            <span class="section-label">Dados Oficiais</span>
+            <h2 class="section-title">Estatísticas de Denúncias</h2>
+            <p class="section-desc">Dados baseados em denúncias validadas e processadas pelo nosso sistema de moderação.</p>
+        </div>
+
+        <div class="estatisticas-resumo">
+            <div class="estat-card">
+                <span class="estat-valor">{{ total_denuncias }}</span>
+                <span class="estat-label">Denúncias Aprovadas</span>
+            </div>
+        </div>
+
+        <div class="estatisticas-detalhe">
+            <h3>Denúncias por Delegacia</h3>
+            <div class="grafico-simulado">
+                {% for delegacia in denuncias_por_delegacia %}
+                <div class="barra-item">
+                    <span class="barra-nome">{{ delegacia.nome }}</span>
+                    <div class="barra-fundo">
+                        <div class="barra-preenchimento" style="width: {{ delegacia.porcentagem }}%"></div>
+                    </div>
+                    <span class="barra-valor">{{ delegacia.total }}</span>
+                </div>
+                {% empty %}
+                <p>Nenhuma denúncia aprovada até o momento.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </section>
 
+<style>
+    .estatisticas-resumo {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 40px;
+    }
+    .estat-card {
+        background: var(--azul-gov);
+        color: white;
+        padding: 30px;
+        border-radius: 8px;
+        text-align: center;
+        min-width: 200px;
+    }
+    .estat-valor {
+        display: block;
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--amarelo-gov);
+    }
+    .barra-item {
+        margin-bottom: 15px;
+    }
+    .barra-fundo {
+        background: #eee;
+        height: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 5px 0;
+    }
+    .barra-preenchimento {
+        background: var(--azul-gov);
+        height: 100%;
+    }
+</style>
 {% endblock %}

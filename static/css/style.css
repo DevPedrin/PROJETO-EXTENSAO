@@ -1,16 +1,60 @@
 :root {
-      /* Cores Padrão GOV.BR */
-      --gov-azul-escuro: #004587;
-      --gov-azul-claro: #1351b4;
-      --gov-cinza-claro: #f8f8f8;
-      --gov-cinza-escuro: #333333;
-      --gov-branco: #ffffff;
-      --gov-amarelo: #ffcc00;
-      --gov-azul-governo: #004587;
-      
-      --fonte-principal: 'Rawline', 'Open Sans', sans-serif;
-      --max-w: 1200px;
-    }
+  --azul-gov: #004587;
+  --azul-claro: #1351b4;
+  --azul-medio: #1d67d5;
+  --amarelo-gov: #ffcc00;
+  --amarelo-linha: #f2e317;
+  --amarelo-claro: #fff9db;
+  --vermelho-alerta: #e52207;
+  --vermelho-fundo: #fef2f2;
+  --cinza-bg: #f8f8f8;
+  --cinza-linha: #e5e7eb;
+  --cinza-texto: #333333;
+  --branco: #ffffff;
+  --texto: #1a1a1a;
+  --fonte-principal: "Rawline", "Open Sans", sans-serif;
+  --fonte-titulo: "Rawline", sans-serif;
+  --fonte-corpo: "Open Sans", sans-serif;
+  --max-w: 1200px;
+  --raio: 4px;
+  --gov-azul-escuro: #004587;
+  --gov-azul-claro: #1351b4;
+  --gov-cinza-claro: #f8f8f8;
+  --gov-cinza-escuro: #333333;
+  --gov-branco: #ffffff;
+  --gov-amarelo: #ffcc00;
+  --gov-azul-governo: #004587;
+}
+
+.container {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logo-escudo {
+  width: 48px;
+  height: 48px;
+  background: var(--azul-gov);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-escudo svg {
+  width: 28px;
+  height: 28px;
+  fill: var(--amarelo-gov);
+}
+
 
     body {
       font-family: var(--fonte-principal);
