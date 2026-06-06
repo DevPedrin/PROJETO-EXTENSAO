@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação Técnica — Portal Segurança Digital</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #10b981;
+            --accent-hover: #059669;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #334155;
+            --text-heading: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --radius-sm: 6px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --sidebar-width: 280px;
+        }
+
+        [data-theme="dark"] {
+            --primary: #020617;
+            --primary-light: #0f172a;
+            --accent: #10b981;
+            --accent-hover: #34d399;
+            --bg-body: #0b0f19;
+            --bg-card: #151f32;
+            --text-main: #94a3b8;
+            --text-heading: #f8fafc;
+            --text-muted: #64748b;
+            --border: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: var(--transition);
+        }
+
+        /* Sidebar Styling */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--primary);
+            color: #ffffff;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-container {
+            width: 38px;
+            height: 38px;
+            background-color: var(--accent);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .logo-container svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .sidebar-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .sidebar-header span {
+            font-size: 11px;
+            color: #10b981;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .search-box {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-section-title {
+            padding: 20px 24px 8px 24px;
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0 16px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav li.active a {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .sidebar-nav li.active a {
+            border-left: 3px solid var(--accent);
+            padding-left: 11px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-nav a svg {
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+        }
+
+        .sidebar-nav a:hover svg, .sidebar-nav li.active a svg {
+            opacity: 1;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Main Content Container */
+        main {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 40px 50px;
+            max-width: 1200px;
+            transition: var(--transition);
+        }
+
+        /* Topbar tools */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .doc-selector {
+            display: flex;
+            background-color: var(--border);
+            padding: 4px;
+            border-radius: var(--radius-sm);
+            gap: 4px;
+        }
+
+        .selector-btn {
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .selector-btn.active {
+            background-color: var(--bg-card);
+            color: var(--text-heading);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .theme-toggle-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .theme-toggle-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .theme-toggle-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .theme-toggle-btn .sun { display: none; }
+        [data-theme="dark"] .theme-toggle-btn .moon { display: none; }
+        [data-theme="dark"] .theme-toggle-btn .sun { display: block; }
+
+        /* Typography & Layout styles */
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-heading);
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        p {
+            line-height: 1.7;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        /* Revision History Table */
+        .revision-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        .revision-card h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        th {
+            background-color: var(--bg-body);
+            color: var(--text-heading);
+            font-weight: 600;
+        }
+
+        td {
+            color: var(--text-main);
+        }
+
+        /* Documentation sections */
+        .doc-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 32px;
+            scroll-margin-top: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+            transition: var(--transition);
+        }
+
+        .doc-section:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .doc-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            background-color: var(--bg-body);
+            border-radius: var(--radius-sm);
+            margin-bottom: 24px;
+            border: 1px dashed var(--border);
+        }
+
+        .meta-item h5 {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .meta-item p {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 0;
+            color: var(--text-heading);
+        }
+
+        .meta-item code {
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .rule-list {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .rule-list li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        /* Callout alert */
+        .callout {
+            border-left: 4px solid var(--accent);
+            background-color: rgba(16, 185, 129, 0.04);
+            padding: 16px 20px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin: 20px 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: var(--text-heading);
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .callout-content {
+            font-size: 13.5px;
+            color: var(--text-main);
+            font-style: italic;
+        }
+
+        .callout-content p {
+            margin-bottom: 0;
+        }
+
+        /* Interface fields table specific rules */
+        .interface-table th {
+            font-size: 13px;
+        }
+        .interface-table td {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .badge-type {
+            display: inline-block;
+            padding: 2px 6px;
+            font-family: monospace;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 4px;
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+
+        [data-theme="dark"] .badge-type {
+            background-color: #1e293b;
+            color: #94a3b8;
+        }
+
+        .badge-req {
+            font-weight: 600;
+            color: #ef4444;
+        }
+
+        .badge-action {
+            display: inline-block;
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+
+        [data-theme="dark"] .badge-action {
+            background-color: #082f49;
+            color: #38bdf8;
+        }
+
+        /* Tabs hide/show logic */
+        .doc-page {
+            display: none;
+        }
+
+        .doc-page.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* Back to portal button */
+        .back-portal-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #ffffff;
+            background-color: var(--accent);
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+            transition: var(--transition);
+        }
+
+        .back-portal-btn:hover {
+            background-color: var(--accent-hover);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .back-portal-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Legends footer style */
+        .legend-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-top: 40px;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .legend-section h4 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+        }
+
+        .legend-section table {
+            margin-bottom: 0;
+        }
+
+        .legend-section table th, .legend-section table td {
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 1024px) {
+            aside {
+                left: calc(-1 * var(--sidebar-width));
+            }
+            body.sidebar-open aside {
+                left: 0;
+            }
+            main {
+                margin-left: 0;
+                padding: 30px 20px;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside>
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 1L3 5v6c0 5.25 3.75 10.15 9 11.35C17.25 21.15 21 16.25 21 11V5L12 1zm-1 14l-3-3 1.4-1.4 1.6 1.6 4.6-4.6L17 9l-6 6z"/>
+                </svg>
+            </div>
+            <div>
+                <h2>Portal Segurança</h2>
+                <span>Documentação</span>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="docSearch" placeholder="Buscar regra ou função..." onkeyup="filterDocs()">
+        </div>
+
+        <!-- Sidebar Navigation List dynamically toggled based on current selected Doc tab -->
+        <div class="nav-section-title" id="navTitle">Regras de Negócio</div>
+        <ul class="sidebar-nav" id="sidebarMenu">
+            <!-- Dynamically populated -->
+        </ul>
+
+        <div class="sidebar-footer">
+            <div>Projeto de Extensão — IFTO</div>
+            <div>Versão 1.0 (2026)</div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main>
+        <div class="topbar">
+            <!-- Tab switcher button -->
+            <div class="doc-selector">
+                <button class="selector-btn active" id="btnRn" onclick="switchDoc('rn')">Regras de Negócio</button>
+                <button class="selector-btn" id="btnArtefato" onclick="switchDoc('art')">Artefato (Funções)</button>
+            </div>
+
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="display: flex; gap: 4px; align-items: center; margin-right: 12px; background: var(--bg-card); padding: 4px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                    <button class="selector-btn" style="padding: 4px 12px; font-size: 13px;" onclick="document.documentElement.style.fontSize='120%'">A+</button>
+                    <button class="selector-btn" style="padding: 4px 12px; font-size: 13px;" onclick="document.documentElement.style.fontSize='100%'">A</button>
+                    <button class="selector-btn" style="padding: 4px 12px; font-size: 13px;" onclick="document.body.style.filter=(document.body.style.filter?'':'invert(1) hue-rotate(180deg)')">Alto Contraste</button>
+                </div>
+                <a href="/" class="back-portal-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                    Acessar Portal
+                </a>
+                <button class="theme-toggle-btn" onclick="toggleTheme()" title="Alternar Tema">
+                    <svg class="moon" viewBox="0 0 24 24">
+                        <path d="M12 3c.132 0 .263 0 .393.007a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 3z"/>
+                    </svg>
+                    <svg class="sun" viewBox="0 0 24 24">
+                        <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1zM5.636 5.636a1 1 0 0 1 1.414 0l1.414 1.414a1 1 0 0 1-1.414 1.414L5.636 7.05a1 1 0 0 1 0-1.414zm11.314 11.314a1 1 0 0 1 1.414 0l1.414 1.414a1 1 0 0 1-1.414 1.414l-1.414-1.414a1 1 0 0 1 0-1.414zM2 12a1 1 0 0 1 1-1h2a1 1 0 0 1 0 2H3a1 1 0 0 1-1-1zm16 0a1 1 0 0 1 1-1h2a1 1 0 0 1 0 2h-2a1 1 0 0 1-1-1zM7.05 18.364a1 1 0 0 1 0-1.414l1.414-1.414a1 1 0 1 1 1.414 1.414l-1.414 1.414a1 1 0 0 1-1.414 0zm11.314-11.314a1 1 0 0 1 0-1.414l1.414-1.414a1 1 0 1 1 1.414 1.414l-1.414 1.414a1 1 0 0 1-1.414 0z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== TELA 1: REGRAS DE NEGÓCIO ==================== -->
+        <div id="pageRn" class="doc-page active">
+            <h1>Regras de Negócio</h1>
+            <div class="subtitle">Mapeamento das diretrizes, validações e comportamentos fundamentais do Portal Segurança Digital.</div>
+
+            <!-- Revision History -->
+            <div class="revision-card">
+                <h3>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="var(--accent)"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z"/></svg>
+                    Histórico de Revisões
+                </h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Versão</th>
+                            <th>Descrição</th>
+                            <th>Autor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>21/05/2026</td>
+                            <td>1.0</td>
+                            <td>Criação do documento com as regras de negócio identificadas no código.</td>
+                            <td>Equipe Portal Segurança Digital</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RN Sections -->
+            <div id="sec-rn1" class="doc-section" data-search-term="RN001 controle acesso formulario denuncia login">
+                <span class="doc-badge">RN001</span>
+                <h3>Controle de acesso ao formulário de denúncia</h3>
+                <p>Esta regra define o controle de acesso à funcionalidade de registro de denúncia no portal.</p>
+                <ul class="rule-list">
+                    <li>O formulário de registro de denúncia <strong>somente será exibido para usuários autenticados</strong> (com sessão ativa no sistema).</li>
+                    <li>Ao acessar a página <code>/denuncia/</code> sem estar autenticado, o sistema <strong>não exibirá o formulário</strong>. Em seu lugar, será apresentado um bloco informativo com ícone de cadeado e a seguinte mensagem orientativa:</li>
+                </ul>
+                <div class="callout">
+                    <div class="callout-title">Mensagem de Restrição</div>
+                    <div class="callout-content">"Para iniciar o preenchimento da denúncia, por favor, faça login na plataforma."</div>
+                </div>
+                <ul class="rule-list">
+                    <li>Será exibido um botão <strong>"Fazer Login"</strong> que redirecionará o usuário para a página de login, preservando o endereço de destino no parâmetro <code>?next=</code> da URL, para que após o login o usuário seja retornado automaticamente à página de denúncia.</li>
+                </ul>
+            </div>
+
+            <div id="sec-rn2" class="doc-section" data-search-term="RN002 opcao denuncia anonima sigilo checkbox">
+                <span class="doc-badge">RN002</span>
+                <h3>Opção de denúncia anônima</h3>
+                <p>Esta regra define o comportamento da opção de anonimato no formulário de denúncia.</p>
+                <ul class="rule-list">
+                    <li>Mesmo que o usuário esteja autenticado, o sistema deve oferecer a opção de <strong>realizar a denúncia de forma anônima</strong>, por meio de uma caixa de seleção (checkbox) presente no formulário, com o seguinte texto:</li>
+                </ul>
+                <div class="callout">
+                    <div class="callout-title">Texto da Opção</div>
+                    <div class="callout-content">"Desejo fazer esta denúncia de forma anônima (não vincular meu usuário)"</div>
+                </div>
+                <ul class="rule-list">
+                    <li>Quando esta opção estiver marcada, o registro da denúncia <strong>não deverá ser vinculado ao usuário logado</strong>.</li>
+                    <li>O sistema deve registrar a denúncia sem associação de identidade, garantindo o sigilo absoluto do denunciante.</li>
+                </ul>
+            </div>
+
+            <div id="sec-rn3" class="doc-section" data-search-term="RN003 unicidade usuario cadastro username erro">
+                <span class="doc-badge">RN003</span>
+                <h3>Unicidade de usuário no cadastro</h3>
+                <p>Esta regra é utilizada para garantir a integridade e unicidade dos nomes de usuário na plataforma.</p>
+                <ul class="rule-list">
+                    <li>Ao submeter o formulário de cadastro, o sistema deve <strong>verificar se o username informado já existe</strong> na base de dados.</li>
+                    <li>Caso o nome de usuário já esteja cadastrado, o sistema <strong>deve bloquear o registro</strong> e retornar a tela de cadastro com a seguinte mensagem de erro:</li>
+                </ul>
+                <div class="callout">
+                    <div class="callout-title">Mensagem de Validação</div>
+                    <div class="callout-content">"Usuário já existe"</div>
+                </div>
+                <ul class="rule-list">
+                    <li>Apenas após a confirmação de que o <code>username</code> é único, o sistema poderá criar a conta e autenticar o usuário automaticamente.</li>
+                </ul>
+            </div>
+
+            <div id="sec-rn4" class="doc-section" data-search-term="RN004 redirecionamento pos-autenticação login logout cadastro">
+                <span class="doc-badge">RN004</span>
+                <h3>Redirecionamento pós-autenticação</h3>
+                <p>Esta regra define os comportamentos de redirecionamento do fluxo de navegação após as ações de login, logout e cadastro.</p>
+                <h4 style="font-size:15px; margin-bottom:10px; color:var(--text-heading)">Regras específicas de redirecionamento:</h4>
+                <ul class="rule-list">
+                    <li><strong>Após o login bem-sucedido:</strong> caso exista parâmetro <code>next</code> na requisição, redireciona o usuário para a URL indicada neste parâmetro. Caso contrário, redireciona para a página inicial (<code>portal:home</code>).</li>
+                    <li><strong>Após credenciais inválidas:</strong> retorna à tela de login com o erro: <em>"Usuário ou senha inválidos."</em></li>
+                    <li><strong>Após o cadastro bem-sucedido:</strong> autentica o usuário de forma automática e o redireciona diretamente para a página inicial.</li>
+                    <li><strong>Após o logout:</strong> encerra a sessão ativa e redireciona o usuário para a página inicial.</li>
+                </ul>
+            </div>
+
+            <div id="sec-rn5" class="doc-section" data-search-term="RN005 recursos acessibilidade aumentar texto alto contraste">
+                <span class="doc-badge">RN005</span>
+                <h3>Recursos de acessibilidade</h3>
+                <p>Esta regra define os recursos de acessibilidade que devem estar disponíveis e operacionais em todas as páginas do portal.</p>
+                <ul class="rule-list">
+                    <li>O portal deve apresentar, em <strong>todas as páginas</strong>, uma barra de acessibilidade no topo da tela com as seguintes opções:
+                        <ul style="margin-left:20px; margin-top:5px;">
+                            <li><strong>Aumentar texto (A+):</strong> ao ser acionada, aumenta a fonte global para 120%.</li>
+                            <li><strong>Restaurar texto (A):</strong> restaura a fonte ao tamanho padrão (100%).</li>
+                            <li><strong>Alto Contraste:</strong> aplica filtro de inversão de cores e rotação de matiz no corpo da página. Uma segunda ativação desliga o filtro.</li>
+                        </ul>
+                    </li>
+                    <li>A barra de acessibilidade deve exibir o seguinte texto institucional: <em>"Portal de Utilidade Pública — Instituto Federal do Tocantins"</em>.</li>
+                </ul>
+            </div>
+
+            <div id="sec-rn6" class="doc-section" data-search-term="RN006 filtros delegacias canais oficiais javascript municipio tipo busca">
+                <span class="doc-badge">RN006</span>
+                <h3>Filtros de delegacias e canais oficiais</h3>
+                <p>Esta regra define a funcionalidade e o comportamento dos filtros interativos na página de delegacias.</p>
+                <ul class="rule-list">
+                    <li>A página de delegacias deve apresentar um painel lateral de filtros que permita refinar a listagem pelos seguintes critérios de busca:
+                        <ul style="margin-left:20px; margin-top:5px;">
+                            <li><strong>Tipo de órgão:</strong> combo contendo as especialidades (Cibernéticos, Idoso, Procon, Canal Online).</li>
+                            <li><strong>Busca por nome:</strong> campo de texto livre que filtra os itens pelo nome digitado.</li>
+                            <li><strong>Município:</strong> combo com os municípios do Tocantins cadastrados (Palmas, Gurupi, Araguaína, etc.).</li>
+                        </ul>
+                    </li>
+                    <li>Os filtros devem ser processados dinamicamente via JavaScript client-side, <strong>sem a necessidade de recarregar a página</strong>.</li>
+                </ul>
+            </div>
+
+            <div id="sec-rn7" class="doc-section" data-search-term="RN007 alerta global seguranca faixa base.html">
+                <span class="doc-badge">RN007</span>
+                <h3>Alerta global de segurança</h3>
+                <p>Esta regra define a presença e obrigatoriedade de exibição do alerta global antifraude em toda a plataforma.</p>
+                <ul class="rule-list">
+                    <li>Em <strong>todas as páginas</strong> do portal deve ser exibida uma faixa de alerta fixada abaixo do cabeçalho, com o texto:</li>
+                </ul>
+                <div class="callout" style="border-left-color: #ef4444; background-color: rgba(239, 68, 68, 0.04);">
+                    <div class="callout-title" style="color: #ef4444;">Alerta Antifraude Fixo</div>
+                    <div class="callout-content">"<strong>Atenção:</strong> Nenhuma instituição bancária ou órgão público solicita senhas, códigos ou transferências por telefone ou mensagem. Desconfie sempre e confirme por outros canais antes de qualquer ação."</div>
+                </div>
+                <ul class="rule-list">
+                    <li>Esta faixa é injetada via template base (`base.html`), garantindo consistência técnica em qualquer nova rota criada no portal.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ==================== TELA 2: ARTEFATO DE FUNÇÕES ==================== -->
+        <div id="pageArtefato" class="doc-page">
+            <h1>Artefato de Funções</h1>
+            <div class="subtitle">Especificação detalhada das rotas, lógica de processamento e campos de interface das funções do sistema.</div>
+
+            <!-- Revision History -->
+            <div class="revision-card">
+                <h3>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="var(--accent)"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z"/></svg>
+                    Histórico de Revisões
+                </h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Versão</th>
+                            <th>Descrição</th>
+                            <th>Autor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>21/05/2026</td>
+                            <td>1.0</td>
+                            <td>Criação do documento contendo as 8 funções implementadas no portal.</td>
+                            <td>Equipe Portal Segurança Digital</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Funções -->
+            <div id="sec-fn1" class="doc-section" data-search-term="exibir pagina inicial home raiz">
+                <span class="doc-badge">Função 1</span>
+                <h3>Exibir Página Inicial</h3>
+                
+                <div class="meta-grid">
+                    <div class="meta-item">
+                        <h5>Acesso (URL)</h5>
+                        <p><code>/</code></p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Permissão</h5>
+                        <p>Público</p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Template</h5>
+                        <p><code>portal/home.html</code></p>
+                    </div>
+                </div>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Objetivo</h4>
+                <p>Apresentar a tela inicial do portal contendo as principais informações sobre golpes digitais, contatos de emergência e links diretos para denúncias.</p>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Lógica de Processamento</h4>
+                <p>O sistema processa a requisição GET na raiz, renderiza o template estático estendido do template base. Não há requisições adicionais de banco de dados nesta etapa.</p>
+
+                <h4 style="font-size:14px; margin-bottom:12px;">Campos da Interface</h4>
+                <table class="interface-table">
+                    <thead>
+                        <tr>
+                            <th>Nome do Campo / Elemento</th>
+                            <th>Tp</th>
+                            <th>Tm</th>
+                            <th>Ob</th>
+                            <th>Aç</th>
+                            <th>Regras de Apresentação / Validação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Botão "Conhecer os Golpes"</strong></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge-action">L</span></td>
+                            <td>Redireciona para âncora <code>#golpes</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Botão "Registrar Denúncia"</strong></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><span class="badge-action">L</span></td>
+                            <td>Redireciona para rota <code>/denuncia/</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Painel de Números Úteis</strong></td>
+                            <td><span class="badge-type">A</span></td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>Exibe telefones oficiais de utilidade (190, 197, 151, 145).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="sec-fn2" class="doc-section" data-search-term="consultar delegacias canais oficiais mapa busca">
+                <span class="doc-badge">Função 2</span>
+                <h3>Consultar Delegacias e Canais Oficiais</h3>
+
+                <div class="meta-grid">
+                    <div class="meta-item">
+                        <h5>Acesso (URL)</h5>
+                        <p><code>/delegacias/</code></p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Permissão</h5>
+                        <p>Público</p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Template</h5>
+                        <p><code>portal/delegacias.html</code></p>
+                    </div>
+                </div>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Objetivo</h4>
+                <p>Exibir lista completa de delegacias físicas e canais oficiais para registrar ocorrências digitais.</p>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Lógica de Processamento</h4>
+                <p>O sistema renderiza a lista de delegacias físicas no Tocantins. Os filtros de pesquisa e seleção por cidade/tipo são executados inteiramente client-side (JavaScript), sem reload da página, conforme a <strong>RN006</strong>.</p>
+
+                <h4 style="font-size:14px; margin-bottom:12px;">Campos da Interface</h4>
+                <table class="interface-table">
+                    <thead>
+                        <tr>
+                            <th>Nome do Campo / Elemento</th>
+                            <th>Tp</th>
+                            <th>Tm</th>
+                            <th>Ob</th>
+                            <th>Aç</th>
+                            <th>Regras de Apresentação / Validação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Filtrar por tipo</strong></td>
+                            <td><span class="badge-type">O</span></td>
+                            <td>—</td>
+                            <td><span class="badge-req">N</span></td>
+                            <td><span class="badge-action">S</span></td>
+                            <td>Combo de seleção de tipo de delegacia/canal.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Buscar por nome</strong></td>
+                            <td><span class="badge-type">A</span></td>
+                            <td>—</td>
+                            <td><span class="badge-req">N</span></td>
+                            <td><span class="badge-action">P</span></td>
+                            <td>Filtro de busca em tempo real por digitação.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Filtrar por município</strong></td>
+                            <td><span class="badge-type">O</span></td>
+                            <td>—</td>
+                            <td><span class="badge-req">N</span></td>
+                            <td><span class="badge-action">S</span></td>
+                            <td>Combo contendo municípios cadastrados.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="sec-fn3" class="doc-section" data-search-term="registrar denuncia formulario anonimo">
+                <span class="doc-badge">Função 3</span>
+                <h3>Registrar Denúncia</h3>
+
+                <div class="meta-grid">
+                    <div class="meta-item">
+                        <h5>Acesso (URL)</h5>
+                        <p><code>/denuncia/</code></p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Permissão</h5>
+                        <p>Restrito (Exibe informativo se deslogado)</p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Template</h5>
+                        <p><code>portal/denuncia.html</code></p>
+                    </div>
+                </div>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Objetivo</h4>
+                <p>Permitir o registro estruturado de um crime digital sofrido ou presenciado pelo cidadão.</p>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Lógica de Processamento</h4>
+                <p>A página verifica se o usuário está autenticado no Django. Se autenticado, apresenta o formulário de cadastro. Se deslogado, oculta os campos e apresenta card para realizar login com retorno dinâmico (parâmetro next), conforme a <strong>RN001</strong>.</p>
+
+                <h4 style="font-size:14px; margin-bottom:12px;">Campos da Interface</h4>
+                <table class="interface-table">
+                    <thead>
+                        <tr>
+                            <th>Nome do Campo / Elemento</th>
+                            <th>Tp</th>
+                            <th>Tm</th>
+                            <th>Ob</th>
+                            <th>Aç</th>
+                            <th>Regras de Apresentação / Validação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Tipo de golpe</strong></td>
+                            <td><span class="badge-type">O</span></td>
+                            <td>—</td>
+                            <td><span class="badge-req">S</span></td>
+                            <td><span class="badge-action">S</span></td>
+                            <td>Combo obrigatório com os tipos de golpe mais recorrentes.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Data da ocorrência</strong></td>
+                            <td><span class="badge-type">N</span></td>
+                            <td>10</td>
+                            <td><span class="badge-req">N</span></td>
+                            <td><span class="badge-action">P</span></td>
+                            <td>Formato padrão DD/MM/AAAA.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Descrição do ocorrido</strong></td>
+                            <td><span class="badge-type">A</span></td>
+                            <td>—</td>
+                            <td><span class="badge-req">S</span></td>
+                            <td><span class="badge-action">P</span></td>
+                            <td>Relato detalhado do golpe. Textarea.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Denúncia anônima</strong></td>
+                            <td><span class="badge-type">O</span></td>
+                            <td>—</td>
+                            <td><span class="badge-req">N</span></td>
+                            <td><span class="badge-action">S</span></td>
+                            <td>Checkbox para anonimato. Se marcada, limpa o vínculo com a FK do usuário ativo (<strong>RN002</strong>).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="sec-fn4" class="doc-section" data-search-term="consultar estatisticas graficos dados">
+                <span class="doc-badge">Função 4</span>
+                <h3>Consultar Estatísticas</h3>
+
+                <div class="meta-grid">
+                    <div class="meta-item">
+                        <h5>Acesso (URL)</h5>
+                        <p><code>/estatisticas/</code></p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Permissão</h5>
+                        <p>Público</p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Template</h5>
+                        <p><code>portal/estatisticas.html</code></p>
+                    </div>
+                </div>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Objetivo</h4>
+                <p>Apresentar gráficos e indicadores quantitativos e qualitativos sobre golpes registrados no estado do Tocantins.</p>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Lógica de Processamento</h4>
+                <p><em>(Em desenvolvimento)</em> A rota carrega os dados consolidados do banco e renderiza indicadores visuais utilizando bibliotecas gráficas ou painéis simplificados.</p>
+            </div>
+
+            <div id="sec-fn5" class="doc-section" data-search-term="consultar videos educativos galeria youtube">
+                <span class="doc-badge">Função 5</span>
+                <h3>Consultar Vídeos Educativos</h3>
+
+                <div class="meta-grid">
+                    <div class="meta-item">
+                        <h5>Acesso (URL)</h5>
+                        <p><code>/videos/</code></p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Permissão</h5>
+                        <p>Público</p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Template</h5>
+                        <p><code>portal/videos.html</code></p>
+                    </div>
+                </div>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Objetivo</h4>
+                <p>Galeria de vídeos de conscientização integrados para visualização do cidadão.</p>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Lógica de Processamento</h4>
+                <p>O portal renderiza cards dinâmicos contendo os placeholders do YouTube. Ao clicar nos cards, um player interativo é carregado.</p>
+            </div>
+
+            <div id="sec-fn6" class="doc-section" data-search-term="autenticar usuario login entrar">
+                <span class="doc-badge">Função 6</span>
+                <h3>Autenticar Usuário (Login)</h3>
+
+                <div class="meta-grid">
+                    <div class="meta-item">
+                        <h5>Acesso (URL)</h5>
+                        <p><code>/accounts/login/</code></p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Permissão</h5>
+                        <p>Público</p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Template</h5>
+                        <p><code>accounts/login.html</code></p>
+                    </div>
+                </div>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Objetivo</h4>
+                <p>Validação da identidade do cidadão na base de dados do Django para iniciar uma sessão de usuário ativa.</p>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Lógica de Processamento</h4>
+                <p>O formulário envia os campos <code>username</code> e <code>password</code> em requisição POST. O sistema autentica via Auth backend. Em caso de sucesso, redireciona o usuário (obedecendo à regra de parâmetro <code>next</code> se fornecido, <strong>RN004</strong>). Em caso de erro, retorna erro de validação.</p>
+            </div>
+
+            <div id="sec-fn7" class="doc-section" data-search-term="cadastrar usuario registro conta nova">
+                <span class="doc-badge">Função 7</span>
+                <h3>Cadastrar Usuário (Registro)</h3>
+
+                <div class="meta-grid">
+                    <div class="meta-item">
+                        <h5>Acesso (URL)</h5>
+                        <p><code>/accounts/register/</code></p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Permissão</h5>
+                        <p>Público</p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Template</h5>
+                        <p><code>accounts/register.html</code></p>
+                    </div>
+                </div>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Objetivo</h4>
+                <p>Permitir a criação de contas de acesso à plataforma pelo cidadão.</p>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Lógica de Processamento</h4>
+                <p>O formulário verifica a exclusividade do campo username no banco de dados (<strong>RN003</strong>). Caso esteja liberado, cria o registro do usuário com a senha criptografada via Hash e efetua o login automático direcionando para a página principal (<code>portal:home</code>).</p>
+            </div>
+
+            <div id="sec-fn8" class="doc-section" data-search-term="encerrar sessao logout sair">
+                <span class="doc-badge">Função 8</span>
+                <h3>Encerrar Sessão (Logout)</h3>
+
+                <div class="meta-grid">
+                    <div class="meta-item">
+                        <h5>Acesso (URL)</h5>
+                        <p><code>/accounts/logout/</code></p>
+                    </div>
+                    <div class="meta-item">
+                        <h5>Permissão</h5>
+                        <p>Restrito a Logados</p>
+                    </div>
+                </div>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Objetivo</h4>
+                <p>Encerrar a sessão ativa do usuário com segurança.</p>
+
+                <h4 style="font-size:14px; margin-bottom:8px;">Lógica de Processamento</h4>
+                <p>Aciona a função <code>logout()</code> do Django, invalidando o token de sessão atual e redireciona o usuário para a página de login ou página inicial conforme a regra <strong>RN004</strong>.</p>
+            </div>
+
+            <!-- Legend Info Card for Functions -->
+            <div class="legend-card">
+                <h3>Legenda de Notação</h3>
+                <div class="legend-grid">
+                    <div class="legend-section">
+                        <h4>Tipos de Dados (Tp)</h4>
+                        <table>
+                            <tr><th>A</th><td>Alfanumérico</td></tr>
+                            <tr><th>N</th><td>Numérico</td></tr>
+                            <tr><th>O</th><td>Opção (Select/Radio)</td></tr>
+                        </table>
+                    </div>
+                    <div class="legend-section">
+                        <h4>Obrigatoriedade (Ob)</h4>
+                        <table>
+                            <tr><th>S</th><td>Sim (Obrigatório)</td></tr>
+                            <tr><th>N</th><td>Não (Opcional)</td></tr>
+                        </table>
+                    </div>
+                    <div class="legend-section">
+                        <h4>Ação (Aç)</h4>
+                        <table>
+                            <tr><th>P</th><td>Pesquisa / Consulta / Filtro</td></tr>
+                            <tr><th>S</th><td>Salvar / Registrar</td></tr>
+                            <tr><th>L</th><td>Link / Navegação interna</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Set Theme based on saved preference or system default
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Toggle Documents Display (Tabs)
+        let currentDoc = 'rn'; // Default
+
+        const rnNavItems = [
+            { id: '#sec-rn1', label: 'RN001 - Acesso Denúncia' },
+            { id: '#sec-rn2', label: 'RN002 - Anonimato' },
+            { id: '#sec-rn3', label: 'RN003 - Unicidade Cadastro' },
+            { id: '#sec-rn4', label: 'RN004 - Redirecionamento' },
+            { id: '#sec-rn5', label: 'RN005 - Acessibilidade' },
+            { id: '#sec-rn6', label: 'RN006 - Filtros Delegacia' },
+            { id: '#sec-rn7', label: 'RN007 - Alerta Global' }
+        ];
+
+        const artNavItems = [
+            { id: '#sec-fn1', label: 'F1 - Exibir Home' },
+            { id: '#sec-fn2', label: 'F2 - Consultar Delegacias' },
+            { id: '#sec-fn3', label: 'F3 - Registrar Denúncia' },
+            { id: '#sec-fn4', label: 'F4 - Consultar Estatísticas' },
+            { id: '#sec-fn5', label: 'F5 - Consultar Vídeos' },
+            { id: '#sec-fn6', label: 'F6 - Autenticar Usuário' },
+            { id: '#sec-fn7', label: 'F7 - Cadastrar Usuário' },
+            { id: '#sec-fn8', label: 'F8 - Encerrar Sessão' }
+        ];
+
+        function populateSidebarMenu() {
+            const menu = document.getElementById('sidebarMenu');
+            const title = document.getElementById('navTitle');
+            menu.innerHTML = '';
+
+            const items = currentDoc === 'rn' ? rnNavItems : artNavItems;
+            title.textContent = currentDoc === 'rn' ? 'Regras de Negócio' : 'Artefato de Funções';
+
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                if (index === 0) li.classList.add('active');
+
+                const a = document.createElement('a');
+                a.href = item.id;
+                
+                // Icon selection based on item type
+                let iconSvg = '';
+                if (currentDoc === 'rn') {
+                    iconSvg = `<svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`;
+                } else {
+                    iconSvg = `<svg viewBox="0 0 24 24"><path d="M12.04 3.551a1 1 0 0 1 1.92 0l1.247 3.835a1 1 0 0 0 .95.69h4.032a1 1 0 0 1 .588 1.81l-3.262 2.37a1 1 0 0 0-.364 1.118l1.247 3.835a1 1 0 0 1-1.554 1.13L13.12 16.03a1 1 0 0 0-1.178 0l-3.262 2.37a1 1 0 0 1-1.554-1.13l1.247-3.835a1 1 0 0 0-.364-1.118L4.945 9.886a1 1 0 0 1 .588-1.81h4.032a1 1 0 0 0 .95-.69L12.04 3.55z"/></svg>`;
+                }
+
+                a.innerHTML = iconSvg + `<span>${item.label}</span>`;
+                a.onclick = function(e) {
+                    // Update active class
+                    const activeItem = menu.querySelector('li.active');
+                    if (activeItem) activeItem.classList.remove('active');
+                    li.classList.add('active');
+                };
+
+                li.appendChild(a);
+                menu.appendChild(li);
+            });
+        }
+
+        function switchDoc(docType) {
+            currentDoc = docType;
+            const btnRn = document.getElementById('btnRn');
+            const btnArt = document.getElementById('btnArtefato');
+            const pageRn = document.getElementById('pageRn');
+            const pageArt = document.getElementById('pageArtefato');
+
+            if (docType === 'rn') {
+                btnRn.classList.add('active');
+                btnArt.classList.remove('active');
+                pageRn.classList.add('active');
+                pageArt.classList.remove('active');
+            } else {
+                btnRn.classList.remove('active');
+                btnArt.classList.add('active');
+                pageRn.classList.remove('active');
+                pageArt.classList.add('active');
+            }
+            populateSidebarMenu();
+            filterDocs(); // apply filters if search is active
+        }
+
+        // Search Filter function
+        function filterDocs() {
+            const query = document.getElementById('docSearch').value.toLowerCase().trim();
+            const activePage = currentDoc === 'rn' ? 'pageRn' : 'pageArtefato';
+            const sections = document.querySelectorAll(`#${activePage} .doc-section`);
+
+            sections.forEach(section => {
+                const searchTerms = section.getAttribute('data-search-term').toLowerCase();
+                const titleText = section.querySelector('h3').textContent.toLowerCase();
+                const contentText = section.textContent.toLowerCase();
+
+                if (query === '' || searchTerms.includes(query) || titleText.includes(query) || contentText.includes(query)) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize Menu
+        populateSidebarMenu();
+    </script>
+</body>
+</html>

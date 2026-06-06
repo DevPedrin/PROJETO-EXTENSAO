@@ -1,0 +1,71 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+
+  <section class="secao">
+    <div class="container">
+      <div class="secao-header">
+        <span class="section-label">Painel do Usuário</span>
+        <h2 class="section-title">Minhas Denúncias</h2>
+        <p class="section-desc">Aqui você acompanha o histórico das denúncias registradas em seu nome.</p>
+      </div>
+
+      <div class="info-box" style="margin-bottom: 32px; max-width: 800px; margin-left: auto; margin-right: auto;">
+        <strong>Nota sobre Privacidade</strong>
+        As denúncias que você optou por fazer de forma <strong>anônima</strong> não aparecem nesta lista, pois foram desvinculadas da sua conta permanentemente para garantir o seu sigilo absoluto.
+      </div>
+
+      {% if denuncias %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+          {% for denuncia in denuncias %}
+            <div style="
+              background: #fff;
+              border: 1px solid var(--cinza-linha);
+              border-radius: var(--raio);
+              padding: 24px;
+              box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            ">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                <span style="
+                  background: #e8f4f8;
+                  color: var(--azul-gov);
+                  padding: 4px 12px;
+                  border-radius: 16px;
+                  font-size: 0.85rem;
+                  font-weight: 700;
+                ">{{ denuncia.get_tipo_golpe_display }}</span>
+                <span style="font-size: 0.85rem; color: var(--cinza-texto);">{{ denuncia.criado_em|date:"d/m/Y H:i" }}</span>
+              </div>
+              
+              <h4 style="margin-top: 0; margin-bottom: 8px; color: var(--cor-texto);">
+                {% if denuncia.cidade %}{{ denuncia.cidade }}{% else %}Local não informado{% endif %}
+              </h4>
+              <p style="font-size: 0.95rem; color: var(--cinza-texto); margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                {{ denuncia.descricao }}
+              </p>
+
+              <div style="font-size: 0.85rem; color: var(--cinza-texto); border-top: 1px solid var(--cinza-linha); padding-top: 12px;">
+                {% if denuncia.data_ocorrencia %}
+                  <strong>Ocorrido em:</strong> {{ denuncia.data_ocorrencia|date:"d/m/Y" }}<br>
+                {% endif %}
+                <strong>Identificação:</strong> {{ denuncia.nome_informado|default:"Nome não informado" }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div style="text-align: center; padding: 64px 20px; background: #fff; border: 1px dashed var(--cinza-linha); border-radius: var(--raio);">
+          <svg viewBox="0 0 24 24" style="width: 48px; height: 48px; fill: var(--cinza-texto); margin-bottom: 16px; opacity: 0.5;">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+            <path d="M7 12h2v5H7zm4-3h2v8h-2zm4-3h2v11h-2z"/>
+          </svg>
+          <h3 style="color: var(--cor-texto); margin-bottom: 8px;">Nenhuma denúncia encontrada</h3>
+          <p style="color: var(--cinza-texto); margin-bottom: 24px;">Você ainda não registrou nenhuma denúncia identificada.</p>
+          <a href="{% url 'portal:denuncia' %}" class="btn-form" style="text-decoration: none; display: inline-block; width: auto; padding: 12px 32px;">Registrar Nova Denúncia</a>
+        </div>
+      {% endif %}
+
+    </div>
+  </section>
+
+{% endblock %}
