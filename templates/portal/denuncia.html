@@ -7,9 +7,8 @@
     <div class="container">
       <div class="secao-header">
         <span class="section-label">Canal de Atendimento</span>
-        <h2 class="section-title">Registrar uma Denuncia</h2>
-        <p class="section-desc">Sua contribuicao e importante. Os dados coletados ajudam a mapear as ocorrencias e a
-          alertar outras pessoas.</p>
+        <h2 class="section-title">Registrar uma Denúncia</h2>
+        <p class="section-desc">Sua contribuição é importante. Os dados coletados ajudam a mapear as ocorrências e a alertar outras pessoas.</p>
       </div>
       <div class="denuncia-layout">
         <div class="denuncia-info">
@@ -17,68 +16,61 @@
           <p>Para garantir a segurança, o uso da plataforma exige login. Porém, você pode optar por uma <strong>denúncia anônima</strong> marcando a opção no formulário abaixo. Seus dados de cadastro não serão vinculados a este registro.</p>
           <div class="info-box">
             <strong>Dica importante</strong>
-            Se voce foi vitima de um crime, registre tambem um Boletim de Ocorrencia na delegacia mais proxima ou pelo
-            site da Policia Civil do Tocantins.
+            Se você foi vítima de um crime, registre também um Boletim de Ocorrência na delegacia mais próxima ou pelo site da Polícia Civil do Tocantins.
           </div>
         </div>
-        {% if user.is_authenticated %}
-        <div class="form-card">
+        
+        {% if sucesso %}
+        <div class="form-card" style="text-align: center; padding: 64px 24px;">
+           <svg viewBox="0 0 24 24" style="width: 56px; height: 56px; fill: #059669; margin-bottom: 20px;">
+             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+           </svg>
+           <h3 style="font-family: var(--fonte-titulo); font-size: 1.4rem; color: #065F46; margin-bottom: 12px; font-weight: 700;">Denúncia Registrada!</h3>
+           <p style="color: var(--cinza-texto); margin-bottom: 32px; font-size: 0.95rem;">Sua denúncia foi enviada para moderação. Agradecemos sua contribuição para a segurança digital.</p>
+           <a href="{% url 'portal:home' %}" class="btn-form" style="text-decoration: none; display: inline-block; width: auto; padding: 14px 40px;">Voltar para o Início</a>
+        </div>
+        {% elif user.is_authenticated %}
+        <form class="form-card" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
           <div class="form-row">
-            <label>Tipo de golpe <span class="obr">*</span></label>
-            <select id="form-tipo-golpe">
-              <option value="">Selecione o tipo de golpe...</option>
-              <option>Golpe do WhatsApp / Redes Sociais</option>
-              <option>Falso funcionario de banco</option>
-              <option>Golpe do Pix</option>
-              <option>Promocao ou Premio falso</option>
-              <option>Link ou pagina falsa</option>
-              <option>Outro</option>
-            </select>
+            <label>Título da Denúncia (opcional)</label>
+            <input type="text" name="titulo" placeholder="Ex: Golpe do falso boleto">
           </div>
-          <div class="form-grid-2">
-            <div class="form-row">
-              <label>Data da ocorrencia</label>
-              <input type="date" id="form-data" />
-            </div>
-            <div class="form-row">
-              <label>Cidade</label>
-              <input type="text" id="form-cidade" placeholder="Ex.: Palmas — TO" />
-            </div>
-          </div>
+          
           <div class="form-row">
-            <label>Descricao do ocorrido <span class="obr">*</span></label>
-            <textarea id="form-descricao"
+            <label>Descrição do ocorrido <span class="obr">*</span></label>
+            <textarea name="descricao" required
               placeholder="Descreva brevemente o que aconteceu. Quanto mais detalhes, melhor para o mapeamento..."></textarea>
           </div>
+
           <div class="form-grid-2">
             <div class="form-row">
-              <label>Nome (opcional)</label>
-              <input type="text" id="form-nome" placeholder="Pode deixar em branco" />
+              <label>Delegacia Vinculada (opcional)</label>
+              <select name="delegacia">
+                <option value="">Selecione se souber...</option>
+                {% for d in delegacias %}
+                <option value="{{ d.id }}">{{ d.nome }}</option>
+                {% endfor %}
+              </select>
             </div>
             <div class="form-row">
-              <label>Faixa etaria</label>
-              <select id="form-idade">
-                <option value="">Selecione...</option>
-                <option>18 a 29 anos</option>
-                <option>30 a 44 anos</option>
-                <option>45 a 59 anos</option>
-                <option>60 anos ou mais</option>
-              </select>
+              <label>Anexos (Imagens ou PDFs)</label>
+              <input type="file" name="arquivos" multiple>
             </div>
           </div>
           
           <div class="form-checkbox" style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">
-            <input type="checkbox" id="form-anonimo" style="width: auto; cursor: pointer;">
+            <input type="checkbox" name="anonimo" id="form-anonimo" style="width: auto; cursor: pointer;">
             <label for="form-anonimo" style="font-size: 0.9rem; color: var(--cinza-texto); font-weight: 600; cursor: pointer; margin: 0;">
               Desejo fazer esta denúncia de forma anônima (não vincular meu usuário)
             </label>
           </div>
-          <button class="btn-form" id="btn-enviar-denuncia">
-            Enviar Denuncia
+          <button type="submit" class="btn-form">
+            Enviar Denúncia
           </button>
-        </div>
+        </form>
         {% else %}
-        <div class="form-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 64px 24px; background: var(--branco); border: 1px solid var(--cinza-linha); border-radius: var(--raio);">
+        <div class="form-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 64px 24px;">
           <svg viewBox="0 0 24 24" style="width: 56px; height: 56px; fill: var(--azul-gov); margin-bottom: 20px;">
             <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
           </svg>
