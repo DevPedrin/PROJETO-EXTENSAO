@@ -1,5 +1,7 @@
+from django.contrib import admin
 from django.urls import path
 from . import views
+
 
 app_name = 'portal'
 
@@ -13,7 +15,6 @@ urlpatterns = [
     # Sistema de Ocorrências
     path('denuncia/', views.denuncia, name='denuncia'),
     
-    # Núcleo de Dashboards Dinâmicas
     path('dashboard/', views.dashboard_router, name='dashboard'),
     path('dashboard/usuario/', views.dashboard_usuario, name='dashboard_usuario'),
     path('dashboard/moderador/', views.dashboard_moderador, name='dashboard_moderador'),
