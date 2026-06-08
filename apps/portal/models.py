@@ -1,6 +1,15 @@
 from django.db import models
 from django.conf import settings
 
+class Video(models.Model):
+    titulo = models.CharField(max_length=200, verbose_name="Título")
+    descricao = models.TextField(verbose_name="Descrição", blank=True)
+    url_youtube = models.URLField(verbose_name="Link do Vídeo (YouTube, etc.)")
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.titulo
+
 
 class Denuncia(models.Model):
     """
@@ -29,9 +38,12 @@ class Denuncia(models.Model):
         ('60_mais', '60 anos ou mais'),
     ]
 
-    # ─── Vínculo com usuário ────────────────────────────────────────────────
-    # NUNCA é null: denúncias anônimas usam o usuário técnico 'anonimo_sistema'.
-    # O campo 'anonima' indica se o vínculo é real ou técnico.
+    STATUS_DENUNCIA = [
+        ('analise', 'Em Análise'),
+        ('aprovada', 'Aprovada'),
+        ('rejeitada', 'Rejeitada'),
+    ]
+
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
@@ -43,7 +55,6 @@ class Denuncia(models.Model):
         ),
     )
 
-    # ─── Flag de anonimato ───────────────────────────────────────────────────
     anonima = models.BooleanField(
         default=False,
         verbose_name='Denúncia anônima',
@@ -53,7 +64,6 @@ class Denuncia(models.Model):
         ),
     )
 
-    # ─── Dados da ocorrência ─────────────────────────────────────────────────
     tipo_golpe = models.CharField(
         max_length=30,
         choices=TIPOS_GOLPE,
@@ -77,9 +87,6 @@ class Denuncia(models.Model):
         help_text='Descrição fornecida pelo denunciante.',
     )
 
-    # ─── Dados opcionais informados no formulário ────────────────────────────
-    # Atenção: este campo é o nome que o denunciante OPTOU por informar no
-    # relato (ex.: nome da vítima), NÃO o nome do usuário autenticado.
     nome_informado = models.CharField(
         max_length=150,
         blank=True,
@@ -94,7 +101,13 @@ class Denuncia(models.Model):
         verbose_name='Faixa etária',
     )
 
-    # ─── Metadados ───────────────────────────────────────────────────────────
+    status = models.CharField(
+        max_length=15,
+        choices=STATUS_DENUNCIA,
+        default='analise',
+        verbose_name='Status da Denúncia'
+    )
+
     criado_em = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Registrado em',
@@ -112,8 +125,6 @@ class Denuncia(models.Model):
 
     @property
     def exibir_autor(self):
-        """Retorna 'Anônimo' para denúncias anônimas, impedindo qualquer
-        acesso acidental ao usuário técnico em templates/relatórios."""
         if self.anonima:
             return 'Anônimo'
         return self.usuario.username

@@ -1,0 +1,31 @@
+{% extends 'portal/base.html' %}
+{% block content %}
+<h2>Meu Painel Geral</h2>
+<p>Bem-vindo, <strong>{{ request.user.nome_completo|default:request.user.username }}</strong>.</p>
+<hr>
+<h3>Minhas Denúncias Registradas (Identificadas)</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Protocolo</th>
+            <th>Tipo do Golpe</th>
+            <th>Cidade</th>
+            <th>Data da Ocorrência</th>
+            <th>Status Interno</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in denuncias %}
+        <tr>
+            <td>#{{ d.pk }}</td>
+            <td>{{ d.get_tipo_golpe_display }}</td>
+            <td>{{ d.cidade|default:"Não Informada" }}</td>
+            <td>{{ d.data_ocorrencia|date:"d/m/Y"|default:"-" }}</td>
+            <td><strong>{{ d.get_status_display }}</strong></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">Você não possui denúncias identificadas abertas.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

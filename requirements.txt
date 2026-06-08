@@ -1,7 +1,3 @@
-# Dependências principais (necessárias em todos os ambientes)
 Django>=5.0,<5.1
 python-decouple>=3.8
-
-# Dependências de produção (PostgreSQL)
-# Instale com: pip install -r requirements-prod.txt
-# psycopg2-binary>=2.9
+psycopg2-binary==2.9.9

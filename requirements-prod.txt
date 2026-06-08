@@ -1,3 +1,0 @@
-# Dependências de produção (inclui tudo do requirements.txt + PostgreSQL)
--r requirements.txt
-psycopg2-binary>=2.9

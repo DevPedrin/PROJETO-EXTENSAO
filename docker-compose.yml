@@ -21,7 +21,7 @@ services:
   application:
     build: .
     container_name: django-portal
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:

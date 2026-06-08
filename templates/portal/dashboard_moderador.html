@@ -1,0 +1,20 @@
+{% extends 'portal/base.html' %}
+{% block content %}
+<h2>Painel de Moderação - Denúncias Pendentes</h2>
+<table>
+    <tr><th>ID</th><th>Tipo</th><th>Descrição</th><th>Ações</th></tr>
+    {% for d in denuncias %}
+    <tr>
+        <td>{{ d.pk }}</td>
+        <td>{{ d.get_tipo_golpe_display }}</td>
+        <td>{{ d.descricao }}</td>
+        <td>
+            <a href="{% url 'alterar_status_denuncia' d.pk 'aprovar' %}" style="color:green;">Aprovar</a> | 
+            <a href="{% url 'alterar_status_denuncia' d.pk 'rejeitar' %}" style="color:orange;">Rejeitar</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">Nenhuma denúncia aguardando análise.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

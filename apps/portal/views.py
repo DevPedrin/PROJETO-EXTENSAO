@@ -1,14 +1,23 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.conf import settings
-import os
 from django.http import HttpResponse, Http404
+import os
 
 from .forms import DenunciaForm
+from .models import Denuncia, Video
 from apps.accounts.models import User
 
+# ─── Funções Auxiliares de Permissão ──────────────────────────────────────────
+def eh_moderador_ou_admin(user):
+    return user.is_authenticated and user.tipo_usuario in ['moderador', 'admin']
 
+def eh_admin(user):
+    return user.is_authenticated and user.tipo_usuario == 'admin'
+
+
+# ─── Rotas Públicas Base ──────────────────────────────────────────────────────
 def home(request):
     return render(request, 'portal/home.html')
 
@@ -17,37 +26,33 @@ def delegacias(request):
     return render(request, 'portal/delegacias.html')
 
 
+def estatisticas(request):
+    return render(request, 'portal/estatisticas.html')
+
+
+def videos(request):
+    # Agora lista dinamicamente os vídeos cadastrados no banco
+    lista_videos = Video.objects.all().order_by('-criado_em')
+    return render(request, 'portal/videos.html', {'videos': lista_videos})
+
+
+# ─── Sistema de Fluxo de Denúncias (Segurança Preservada) ─────────────────────
 @login_required
 def denuncia(request):
-    """
-    View de denúncias com anonimato garantido no backend.
-
-    Regra de segurança central:
-        - O campo `usuario` NUNCA vem do formulário/POST.
-        - Se `anonima=True`, o usuário real é DESCARTADO e substituído
-          pelo usuário técnico fixo `anonimo_sistema`.
-        - Isso impede qualquer tentativa de manipulação via API ou frontend.
-    """
+    """View de denúncias com anonimato garantido no backend."""
     if request.method == 'POST':
         form = DenunciaForm(request.POST)
 
         if form.is_valid():
-            # Não salva ainda — precisamos definir `usuario` antes
             nova_denuncia = form.save(commit=False)
             anonima = form.cleaned_data.get('anonima', False)
 
             if anonima:
-                # ── Modo anônimo ────────────────────────────────────────────
-                # Ignora COMPLETAMENTE o usuário autenticado.
-                # Usa o usuário técnico fixo definido nas settings.
-                # Nenhum log, nenhuma FK, nenhum vínculo com request.user.
                 try:
                     usuario_anonimo = User.objects.get(
                         username=settings.ANONYMOUS_COMPLAINT_USERNAME
                     )
                 except User.DoesNotExist:
-                    # Falha segura + Self-healing: se o usuário técnico não existir
-                    # (ex: migration não rodou ou foi apagado), recria ele automaticamente.
                     usuario_anonimo = User.objects.create(
                         username=settings.ANONYMOUS_COMPLAINT_USERNAME,
                         email='anonimo@sistema.local',
@@ -61,10 +66,7 @@ def denuncia(request):
                     usuario_anonimo.save()
 
                 nova_denuncia.usuario = usuario_anonimo
-
             else:
-                # ── Modo identificado ────────────────────────────────────────
-                # Usa o usuário autenticado da sessão atual.
                 nova_denuncia.usuario = request.user
 
             nova_denuncia.save()
@@ -75,28 +77,102 @@ def denuncia(request):
             )
             return redirect('portal:denuncia')
 
-        # Formulário inválido — reexibe com erros
         return render(request, 'portal/denuncia.html', {'form': form})
 
-    # GET — exibe formulário vazio
     form = DenunciaForm()
     return render(request, 'portal/denuncia.html', {'form': form})
 
 
-def estatisticas(request):
-    return render(request, 'portal/estatisticas.html')
+# ─── Roteador Dinâmico e Painéis (Dashboards) ─────────────────────────────────
+@login_required
+def dashboard_router(request):
+    """Redireciona centralizadamente o usuário com base em seu privilégio."""
+    if request.user.tipo_usuario == 'admin':
+        return redirect('portal:dashboard_admin')
+    elif request.user.tipo_usuario == 'moderador':
+        return redirect('portal:dashboard_moderador')
+    return redirect('portal:dashboard_usuario')
 
 
-def videos(request):
-    return render(request, 'portal/videos.html')
+@login_required
+def dashboard_usuario(request):
+    """Painel do Usuário Comum: Retorna apenas os registros identificados dele."""
+    denuncias = Denuncia.objects.filter(usuario=request.user).order_by('-criado_em')
+    return render(request, 'portal/dashboard_usuario.html', {'denuncias': denuncias})
 
 
+@login_required
+@user_passes_test(eh_moderador_ou_admin)
+def dashboard_moderador(request):
+    """Painel de Moderação: Focado em validar denúncias pendentes."""
+    denuncias_pendentes = Denuncia.objects.filter(status='analise').order_by('-criado_em')
+    return render(request, 'portal/dashboard_moderador.html', {'denuncias': denuncias_pendentes})
+
+
+@login_required
+@user_passes_test(eh_admin)
+def dashboard_admin(request):
+    """Painel de Administração Global."""
+    todas_denuncias = Denuncia.objects.all().order_by('-criado_em')
+    todos_videos = Video.objects.all().order_by('-criado_em')
+    context = {
+        'denuncias': todas_denuncias,
+        'videos': todos_videos,
+        'total_analise': todas_denuncias.filter(status='analise').count(),
+        'total_aprovadas': todas_denuncias.filter(status='aprovada').count(),
+    }
+    return render(request, 'portal/dashboard_admin.html', context)
+
+
+# ─── Sistema de Gerenciamento de Denúncias ───────────────────────────────────
+@login_required
+@user_passes_test(eh_moderador_ou_admin)
+def alterar_status_denuncia(request, pk, acao):
+    """Permite aprovar, rejeitar ou excluir definitivamente denúncias."""
+    denuncia_obj = get_object_or_404(Denuncia, pk=pk)
+    
+    if acao == 'aprovar':
+        denuncia_obj.status = 'aprovada'
+        denuncia_obj.save()
+        messages.success(request, f"Denúncia #{pk} aprovada com sucesso.")
+    elif acao == 'rejeitar':
+        denuncia_obj.status = 'rejeitada'
+        denuncia_obj.save()
+        messages.warning(request, f"Denúncia #{pk} marcada como rejeitada.")
+    elif acao == 'apagar':
+        if request.user.tipo_usuario == 'admin':
+            denuncia_obj.delete()
+            messages.error(request, f"Denúncia #{pk} excluída permanentemente.")
+        else:
+            raise Http404("Apenas administradores podem deletar dados.")
+            
+    return redirect('portal:dashboard')
+
+
+# ─── Sistema de Cadastro de Vídeos ──────────────────────────────────────────
+@login_required
+@user_passes_test(eh_moderador_ou_admin)
+def cadastrar_video(request):
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        descricao = request.POST.get('descricao')
+        url = request.POST.get('url_youtube')
+        
+        if titulo and url:
+            Video.objects.create(titulo=titulo, descricao=descricao, url_youtube=url)
+            messages.success(request, 'Vídeo cadastrado com sucesso!')
+            return redirect('portal:dashboard')
+            
+    return render(request, 'portal/cadastrar_video.html')
+
+
+# ─── Outras Funções Legadas mantidas por segurança ───────────────────────────
 def documentacao(request):
     if not request.user.is_authenticated or (not request.user.is_staff and not request.user.is_superuser):
         raise Http404("Documentação técnica não encontrada.")
-    path = os.path.join(settings.BASE_DIR, 'documentação', 'index.html')
-    if os.path.exists(path):
-        with open(path, 'r', encoding='utf-8') as f:
+    path_doc = os.path.join(settings.BASE_DIR, 'documentação', 'index.html')
+    if os.path.exists(path_doc):
+        with open(path_doc, 'r', encoding='utf-8') as f:
             content = f.read()
         return HttpResponse(content, content_type='text/html; charset=utf-8')
     raise Http404("Documentação técnica não encontrada.")
@@ -104,25 +180,11 @@ def documentacao(request):
 
 @login_required
 def minhas_denuncias(request):
-    """
-    Exibe apenas as denúncias vinculadas ao usuário logado.
-    Denúncias anônimas não aparecerão aqui por estarem vinculadas
-    ao usuário técnico 'anonimo_sistema', preservando o sigilo.
-    """
-    from .models import Denuncia
-    denuncias = Denuncia.objects.filter(usuario=request.user).order_by('-criado_em')
-    return render(request, 'portal/minhas_denuncias.html', {'denuncias': denuncias})
+    return redirect('portal:dashboard_usuario')
 
 
 @login_required
 def todas_denuncias(request):
-    """
-    Exibe TODAS as denúncias cadastradas (painel geral).
-    Acesso restrito apenas a administradores/equipe.
-    """
-    if not (request.user.is_staff or request.user.is_superuser):
+    if not (request.user.is_staff or request.user.is_superuser or request.user.tipo_usuario in ['admin', 'moderador']):
         raise Http404("Página não encontrada.")
-        
-    from .models import Denuncia
-    denuncias = Denuncia.objects.all().order_by('-criado_em')
-    return render(request, 'portal/todas_denuncias.html', {'denuncias': denuncias})
+    return redirect('portal:dashboard')

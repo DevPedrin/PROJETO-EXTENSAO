@@ -115,4 +115,15 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 # Username do usuário técnico fixo para denúncias anônimas.
 # Esse usuário é criado automaticamente via data migration (0002).
 # Nunca altere este valor após o banco ser populado em produção.
+
+AUTH_USER_MODEL = 'accounts.User'
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/dashboard/'  # Modificado para cair direto no roteador dinâmico
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+# Username do usuário técnico fixo para denúncias anônimas.
 ANONYMOUS_COMPLAINT_USERNAME = 'anonimo_sistema'
+
+# Simulação de disparo de e-mails via console para depuração local
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
