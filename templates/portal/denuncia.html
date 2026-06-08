@@ -5,11 +5,46 @@
   <!-- DENÚNCIA -->
   <section class="secao" id="denuncia">
     <div class="container">
+      
+      {% if user.is_authenticated %}
+        <!-- Botões de acesso rápido -->
+        <div style="margin-bottom: 32px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+          <a href="{% url 'portal:minhas_denuncias' %}" class="btn-form" style="width: auto; padding: 10px 24px; background: transparent; color: var(--azul-gov); border: 2px solid var(--azul-gov); font-size: 0.95rem;">
+            📄 Ver Minhas Denúncias
+          </a>
+          {% if user.is_staff or user.is_superuser %}
+            <a href="{% url 'portal:todas_denuncias' %}" class="btn-form" style="width: auto; padding: 10px 24px; background: var(--azul-gov); color: #fff; font-size: 0.95rem;">
+              🛡️ Painel Geral (Admin)
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+
       <div class="secao-header">
         <span class="section-label">Canal de Atendimento</span>
         <h2 class="section-title">Registrar uma Denúncia</h2>
         <p class="section-desc">Sua contribuição é importante. Os dados coletados ajudam a mapear as ocorrências e a alertar outras pessoas.</p>
       </div>
+
+      <!-- Mensagens de sucesso/erro -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alerta-form alerta-{{ message.tags }}" role="alert" style="
+            margin: 0 auto 24px auto;
+            max-width: 720px;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            background: {% if message.tags == 'success' %}#d4edda{% else %}#f8d7da{% endif %};
+            color: {% if message.tags == 'success' %}#155724{% else %}#721c24{% endif %};
+            border: 1px solid {% if message.tags == 'success' %}#c3e6cb{% else %}#f5c6cb{% endif %};
+          ">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
       <div class="denuncia-layout">
         <div class="denuncia-info">
           <h3>Antes de preencher, leia:</h3>
@@ -19,56 +54,110 @@
             Se você foi vítima de um crime, registre também um Boletim de Ocorrência na delegacia mais próxima ou pelo site da Polícia Civil do Tocantins.
           </div>
         </div>
-        
-        {% if sucesso %}
-        <div class="form-card" style="text-align: center; padding: 64px 24px;">
-           <svg viewBox="0 0 24 24" style="width: 56px; height: 56px; fill: #059669; margin-bottom: 20px;">
-             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-           </svg>
-           <h3 style="font-family: var(--fonte-titulo); font-size: 1.4rem; color: #065F46; margin-bottom: 12px; font-weight: 700;">Denúncia Registrada!</h3>
-           <p style="color: var(--cinza-texto); margin-bottom: 32px; font-size: 0.95rem;">Sua denúncia foi enviada para moderação. Agradecemos sua contribuição para a segurança digital.</p>
-           <a href="{% url 'portal:home' %}" class="btn-form" style="text-decoration: none; display: inline-block; width: auto; padding: 14px 40px;">Voltar para o Início</a>
-        </div>
-        {% elif user.is_authenticated %}
-        <form class="form-card" method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="form-row">
-            <label>Título da Denúncia (opcional)</label>
-            <input type="text" name="titulo" placeholder="Ex: Golpe do falso boleto">
-          </div>
-          
-          <div class="form-row">
-            <label>Descrição do ocorrido <span class="obr">*</span></label>
-            <textarea name="descricao" required
-              placeholder="Descreva brevemente o que aconteceu. Quanto mais detalhes, melhor para o mapeamento..."></textarea>
-          </div>
 
-          <div class="form-grid-2">
+        {% if user.is_authenticated %}
+        <div class="form-card">
+
+          <form method="POST" action="{% url 'portal:denuncia' %}" id="form-denuncia" novalidate>
+            {% csrf_token %}
+
+            <!-- Tipo de golpe -->
             <div class="form-row">
-              <label>Delegacia Vinculada (opcional)</label>
-              <select name="delegacia">
-                <option value="">Selecione se souber...</option>
-                {% for d in delegacias %}
-                <option value="{{ d.id }}">{{ d.nome }}</option>
+              <label for="form-tipo-golpe">Tipo de golpe <span class="obr">*</span></label>
+              <select name="tipo_golpe" id="form-tipo-golpe">
+                <option value="">Selecione o tipo de golpe...</option>
+                {% for valor, rotulo in form.tipo_golpe.field.choices %}
+                  {% if valor %}
+                    <option value="{{ valor }}" {% if form.tipo_golpe.value == valor %}selected{% endif %}>{{ rotulo }}</option>
+                  {% endif %}
                 {% endfor %}
               </select>
+              {% if form.tipo_golpe.errors %}
+                <span class="form-erro">{{ form.tipo_golpe.errors|join:", " }}</span>
+              {% endif %}
             </div>
+
+            <!-- Data e Cidade -->
+            <div class="form-grid-2">
+              <div class="form-row">
+                <label for="form-data">Data da ocorrencia</label>
+                <input type="date" name="data_ocorrencia" id="form-data"
+                       value="{{ form.data_ocorrencia.value|default:'' }}" />
+              </div>
+              <div class="form-row">
+                <label for="form-cidade">Cidade</label>
+                <input type="text" name="cidade" id="form-cidade"
+                       placeholder="Ex.: Palmas — TO"
+                       value="{{ form.cidade.value|default:'' }}" />
+              </div>
+            </div>
+
+            <!-- Descrição -->
             <div class="form-row">
-              <label>Anexos (Imagens ou PDFs)</label>
-              <input type="file" name="arquivos" multiple>
+              <label for="form-descricao">Descricao do ocorrido <span class="obr">*</span></label>
+              <textarea name="descricao" id="form-descricao"
+                placeholder="Descreva brevemente o que aconteceu. Quanto mais detalhes, melhor para o mapeamento...">{{ form.descricao.value|default:'' }}</textarea>
+              {% if form.descricao.errors %}
+                <span class="form-erro">{{ form.descricao.errors|join:", " }}</span>
+              {% endif %}
             </div>
-          </div>
-          
-          <div class="form-checkbox" style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">
-            <input type="checkbox" name="anonimo" id="form-anonimo" style="width: auto; cursor: pointer;">
-            <label for="form-anonimo" style="font-size: 0.9rem; color: var(--cinza-texto); font-weight: 600; cursor: pointer; margin: 0;">
-              Desejo fazer esta denúncia de forma anônima (não vincular meu usuário)
-            </label>
-          </div>
-          <button type="submit" class="btn-form">
-            Enviar Denúncia
-          </button>
-        </form>
+
+            <!-- Nome e Faixa etária -->
+            <div class="form-grid-2">
+              <div class="form-row">
+                <label for="form-nome">Nome (opcional)</label>
+                <input type="text" name="nome_informado" id="form-nome"
+                       placeholder="Pode deixar em branco"
+                       value="{{ form.nome_informado.value|default:'' }}" />
+              </div>
+              <div class="form-row">
+                <label for="form-idade">Faixa etaria</label>
+                <select name="faixa_etaria" id="form-idade">
+                  <option value="">Selecione...</option>
+                  {% for valor, rotulo in form.faixa_etaria.field.choices %}
+                    {% if valor %}
+                      <option value="{{ valor }}" {% if form.faixa_etaria.value == valor %}selected{% endif %}>{{ rotulo }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <!-- Checkbox anonimato -->
+            <div class="form-checkbox" style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <input type="checkbox" name="anonima" id="form-anonimo"
+                     style="width: auto; cursor: pointer;"
+                     {% if form.anonima.value %}checked{% endif %}>
+              <label for="form-anonimo" style="font-size: 0.9rem; color: var(--cinza-texto); font-weight: 600; cursor: pointer; margin: 0;">
+                Desejo fazer esta denúncia de forma anônima (não vincular meu usuário)
+              </label>
+            </div>
+
+            <!-- Aviso de anonimato (oculto por padrão) -->
+            <div id="aviso-anonimo" style="
+              display: none;
+              background: #fff3cd;
+              border: 1px solid #ffc107;
+              border-left: 4px solid #e65100;
+              border-radius: 8px;
+              padding: 14px 16px;
+              margin-bottom: 20px;
+              font-size: 0.88rem;
+              color: #664d03;
+            " role="alert" aria-live="polite">
+              <strong>⚠️ Atenção — Denúncia Anônima:</strong>
+              Esta denúncia será registrada de forma <strong>irreversivelmente anônima</strong>.
+              Após o envio, <strong>não será possível</strong> vincular este relato à sua conta,
+              editar ou reivindicar a autoria. Nenhum dado de identificação será armazenado.
+            </div>
+
+            <button class="btn-form" id="btn-enviar-denuncia" type="submit">
+              Enviar Denuncia
+            </button>
+
+          </form>
+
+        </div>
         {% else %}
         <div class="form-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 64px 24px;">
           <svg viewBox="0 0 24 24" style="width: 56px; height: 56px; fill: var(--azul-gov); margin-bottom: 20px;">
@@ -82,5 +171,52 @@
       </div>
     </div>
   </section>
+
+<script>
+(function () {
+  'use strict';
+
+  const checkbox = document.getElementById('form-anonimo');
+  const aviso    = document.getElementById('aviso-anonimo');
+  const btnEnviar = document.getElementById('btn-enviar-denuncia');
+
+  if (!checkbox || !aviso) return;
+
+  function atualizarAviso() {
+    if (checkbox.checked) {
+      aviso.style.display = 'block';
+      // Suaviza a exibição
+      aviso.style.opacity = '0';
+      aviso.style.transition = 'opacity 0.3s ease';
+      requestAnimationFrame(function () {
+        aviso.style.opacity = '1';
+      });
+    } else {
+      aviso.style.display = 'none';
+    }
+  }
+
+  // Inicializa estado (útil quando o form é reexibido com erros)
+  atualizarAviso();
+
+  checkbox.addEventListener('change', atualizarAviso);
+
+  // Confirmação antes de enviar uma denúncia anônima
+  if (btnEnviar) {
+    btnEnviar.addEventListener('click', function (e) {
+      if (checkbox.checked) {
+        var confirmado = window.confirm(
+          'Você está prestes a enviar uma denúncia ANÔNIMA.\n\n' +
+          'Após o envio, não será possível identificar ou reivindicar esta denúncia.\n\n' +
+          'Deseja continuar?'
+        );
+        if (!confirmado) {
+          e.preventDefault();
+        }
+      }
+    });
+  }
+})();
+</script>
 
 {% endblock %}

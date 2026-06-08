@@ -1,0 +1,38 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<section class="secao">
+  <div class="container">
+    
+    <div class="secao-header">
+      <h2 class="section-title">Cadastrar Novo Vídeo Educativo</h2>
+      <p class="section-desc">Adicione conteúdos educativos sobre segurança digital no portal.</p>
+    </div>
+
+    <form method="POST" autocomplete="off" style="max-width: 500px; margin: 0 auto;">
+      {% csrf_token %}
+      
+      <div style="margin-bottom: 1rem;">
+        <label style="display:block; margin-bottom: .5rem; font-weight: bold;">Título do Vídeo *</label>
+        <input type="text" name="titulo" placeholder="Título do Vídeo" required style="width: 100%; padding: 0.5rem;">
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+        <label style="display:block; margin-bottom: .5rem; font-weight: bold;">URL do Vídeo (YouTube) *</label>
+        <input type="url" name="url_youtube" placeholder="https://www.youtube.com/..." required style="width: 100%; padding: 0.5rem;">
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label style="display:block; margin-bottom: .5rem; font-weight: bold;">Descrição curta</label>
+        <textarea name="descricao" placeholder="Descrição curta do vídeo" style="width: 100%; padding: 0.5rem; min-height: 80px;"></textarea>
+      </div>
+
+      <div style="display: flex; gap: 1rem;">
+        <button type="submit" class="btn">Salvar Vídeo</button>
+        <a href="{% url 'portal:videos' %}" class="btn" style="background: #666; text-align: center; text-decoration: none;">Cancelar</a>
+      </div>
+    </form>
+
+  </div>
+</section>
+{% endblock %}

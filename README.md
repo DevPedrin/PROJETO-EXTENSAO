@@ -1,43 +1,39 @@
-#  Portal Segurança Digital
+# Portal Segurança Digital
 
-Portal informativo para prevenção de golpes e acesso a conteúdos de
-segurança digital.
+Portal informativo para prevenção de golpes e acesso a conteúdos de segurança digital.
 
-------------------------------------------------------------------------
+---
 
-##  Membros
+## Membros
 
--   Elias Giovanni de Oliveira Brandão
--   Gabriel Victor Silva Vilarinho
--   Samuel Ulsan Cavalcante Luz
--   Wanderson das Neves Morais
--   Pedro Henrique Pereira Rocha
+- Elias Giovanni de Oliveira Brandão
+- Gabriel Victor Silva Vilarinho
+- Samuel Ulsan Cavalcante Luz
+- Wanderson das Neves Morais
+- Pedro Henrique Pereira Rocha
 
-------------------------------------------------------------------------
+---
 
-##  Requisitos
+## Requisitos
 
--   Python
--   pip
--   PostgreSQL **ou** Docker + Docker Compose
+- Python
+- pip
+- PostgreSQL **ou** Docker + Docker Compose
 
-------------------------------------------------------------------------
+---
 
-##  Setup
+## Setup
 
 ### 1. Clonar o projeto
 
-``` bash
-git clone https://github.com/DevPedrin/PROJETO-EXTENSAO
-cd PROJETO-EXTENSAO
-```
+    git clone https://github.com/DevPedrin/PROJETO-EXTENSAO
+    cd PROJETO-EXTENSAO
 
-------------------------------------------------------------------------
+---
+
 ### 2. Criar `.env`
 
-```bash
-cp .env.example .env
-```
+    cp .env.example .env
 
 O projeto já possui um `.env.example` configurado.
 
@@ -51,9 +47,7 @@ Escolha uma das opções abaixo.
 
 Subir containers:
 
-```bash
-docker compose up --build -d
-```
+    docker compose up --build -d
 
 Acesse:
 
@@ -63,9 +57,7 @@ http://127.0.0.1:8000/
 
 Sempre que houver alteração nos models ou após atualizar o projeto:
 
-```bash
-docker compose exec application python manage.py migrate
-```
+    docker compose exec application python manage.py migrate
 
 ---
 
@@ -75,25 +67,19 @@ docker compose exec application python manage.py migrate
 
 #### Linux/Mac
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
+    python3 -m venv venv
+    source venv/bin/activate
 
 #### Windows
 
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
+    python -m venv venv
+    venv\Scripts\activate
 
 ---
 
 ### 4. Instalar dependências
 
-```bash
-pip install -r requirements.txt
-```
+    pip install -r requirements.txt
 
 ---
 
@@ -108,17 +94,13 @@ pip install -r requirements.txt
 
 ## Aplicar migrations
 
-```bash
-python manage.py migrate
-```
+    python manage.py migrate
 
 ---
 
 ## Rodar o projeto
 
-```bash
-python manage.py runserver
-```
+    python manage.py runserver
 
 Acesse:
 
@@ -128,7 +110,11 @@ http://127.0.0.1:8000/
 
 ## Observações
 
-- O arquivo `.env` é obrigatório
-- O banco deve estar rodando antes das migrations
-- Não versionar o `.env`
-- O projeto pode ser executado com ou sem Docker
+- O arquivo `.env` é obrigatório.
+- O banco deve estar rodando antes das migrations.
+- Não versionar o `.env`.
+- O projeto pode ser executado com ou sem Docker.
+- **Usuários de Teste:** O banco de dados já inicia automaticamente povoado com um usuário de cada tipo de nível de acesso do sistema. Todos compartilham a mesma senha padrão: `ifto2026`. Os usernames disponíveis são:
+  - `admin` (Administrador do Sistema)
+  - `moderador` (Moderador de Conteúdo)
+  - `usuario` (Cidadão Comum)

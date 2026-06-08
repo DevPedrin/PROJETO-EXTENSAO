@@ -8,7 +8,6 @@
 </head>
 <body>
 
-  <!-- BARRA ACESSIBILIDADE -->
   <div class="barra-acesso">
     <div class="container">
       <span>Portal de Utilidade Publica — Instituto Federal do Tocantins</span>
@@ -21,7 +20,6 @@
     </div>
   </div>
 
-  <!-- HEADER -->
   <header>
     <div class="header-inner">
       <a class="logo" href="{% url 'portal:home' %}">
@@ -45,7 +43,6 @@
     </div>
   </header>
 
-  <!-- CONTEÚDO -->
   <div class="auth-wrapper">
     <div class="auth-card">
 
@@ -72,14 +69,37 @@
 
       <form method="post" class="auth-form">
         {% csrf_token %}
+        
         <div class="form-row">
-          <label for="id_username">Usuário</label>
-          <input id="id_username" name="username" type="text" placeholder="Escolha um nome de usuário" autocomplete="username">
+          <label for="id_username">Usuário (Nome de login)</label>
+          <input id="id_username" name="username" type="text" placeholder="Escolha um nome de usuário" required autocomplete="username">
         </div>
+
+        <div class="form-row">
+          <label for="id_nome_completo">Nome Completo</label>
+          <input id="id_nome_completo" name="nome_completo" type="text" placeholder="Digite seu nome completo" required>
+        </div>
+
+        <div class="form-row">
+          <label for="id_email">E-mail</label>
+          <input id="id_email" name="email" type="email" placeholder="exemplo@email.com" required>
+        </div>
+
+        <div class="form-row">
+          <label for="id_telefone">Telefone</label>
+          <input id="id_telefone" name="telefone" type="text" placeholder="(63) 99999-9999">
+        </div>
+
+        <div class="form-row">
+          <label for="id_cpf">CPF</label>
+          <input id="id_cpf" name="cpf" type="text" placeholder="000.000.000-00">
+        </div>
+
         <div class="form-row">
           <label for="id_password">Senha</label>
-          <input id="id_password" name="password" type="password" placeholder="Crie uma senha" autocomplete="new-password">
+          <input id="id_password" name="password" type="password" placeholder="Crie uma senha" required autocomplete="new-password">
         </div>
+
         <button type="submit" class="btn-form">Criar conta</button>
       </form>
 
@@ -90,7 +110,6 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer>
     <div class="container">
       <div class="footer-grid">

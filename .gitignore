@@ -1,5 +1,31 @@
+# Ambientes Virtuais e Dependencias
+venv/
+.venv/
+env/
+python-local-env/
+DEVELOPMENT_SECRET_KEY
+
+# Cache do Python
 __pycache__/
 *.pyc
-.env
-venv/
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Banco de Dados Local
 db.sqlite3
+*.db
+*.sqlite3_analyzer
+
+# Configuracoes e Seguranca
+.env
+
+# Docker (Opcional: ignore se nao quiser salvar logs locais no Git)
+*.log
+.docker/
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db

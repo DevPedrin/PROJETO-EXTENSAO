@@ -1,0 +1,41 @@
+{% extends 'portal/base.html' %}
+{% block content %}
+<h2>Painel Administrativo Supremo</h2>
+<p>Acesso Restrito: <strong>{{ request.user.username }}</strong></p>
+<hr>
+
+<div>
+    <p>📊 <strong>Métricas de Controle:</strong> Análises Pendentes: {{ total_analise }} | Aprovadas: {{ total_aprovadas }}</p>
+    <a href="{% url 'portal:cadastrar_video' %}" style="background-color: blue; color: white; padding: 10px; text-decoration: none; display: inline-block; margin-bottom: 20px;">➕ Cadastrar Novo Vídeo</a>
+</div>
+
+<h3>Gerenciamento de Todas as Ocorrências</h3>
+<table border="1" style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Autor</th>
+            <th>Tipo do Golpe</th>
+            <th>Status</th>
+            <th>Ações Judiciais / Moderação</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in denuncias %}
+        <tr>
+            <td>#{{ d.pk }}</td>
+            <td><em>{{ d.exibir_autor }}</em> {% if d.anonima %}(Anônima){% endif %}</td>
+            <td>{{ d.get_tipo_golpe_display }}</td>
+            <td><strong>{{ d.get_status_display }}</strong></td>
+            <td>
+                <a href="{% url 'portal:alterar_status_denuncia' d.pk 'aprovar' %}" style="color: green;">Aprovar</a> | 
+                <a href="{% url 'portal:alterar_status_denuncia' d.pk 'rejeitar' %}" style="color: orange;">Rejeitar</a> | 
+                <a href="{% url 'portal:alterar_status_denuncia' d.pk 'apagar' %}" style="color: red;" onclick="return confirm('Tem certeza que deseja DELETAR esta denúncia do banco de dados?');">Deletar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">Nenhuma denúncia inserida no sistema.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
