@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.conf import settings
 from django.http import HttpResponse, Http404
+from django.db import models  # 👈 Adicionado para permitir o agrupamento (Count)
 import os
 
 from .forms import DenunciaForm
@@ -23,31 +24,42 @@ def home(request):
 
 
 def delegacias(request):
-    todas_delegacias = Delegacia.objects.all()
-    return render(request, 'portal/delegacias.html', {'delegacias': todas_delegacias})
+    return render(request, 'portal/delegacias.html')
 
 
 def estatisticas(request):
-    # Estatísticas reais baseadas em denúncias aprovadas
-    total_denuncias = Denuncia.objects.filter(status='APROVADA').count()
-    denuncias_por_delegacia = Delegacia.objects.filter(denuncias__status='APROVADA').annotate(total=models.Count('denuncias')).order_by('-total')
+    """Gera estatísticas baseadas nos tipos de golpes das denúncias aprovadas."""
+    # Filtro corrigido para 'aprovada' (minúsculo) conforme definido no Choice do Model
+    total_denuncias = Denuncia.objects.filter(status='aprovada').count()
     
-    # Adiciona porcentagem a cada delegacia para o gráfico
-    for del_item in denuncias_por_delegacia:
+    # Agrupa e conta o número de denúncias por tipo de golpe cadastrado
+    denuncias_por_tipo = (
+        Denuncia.objects.filter(status='aprovada')
+        .values('tipo_golpe')
+        .annotate(total=models.Count('id'))
+        .order_by('-total')
+    )
+    
+    # Mapeamento para exibir os labels amigáveis do Choice no template
+    escolhas_golpe = dict(Denuncia.TIPOS_GOLPE)
+    
+    # Adiciona a porcentagem e o nome amigável a cada item do agrupamento
+    for item in denuncias_por_tipo:
+        item['nome_golpe'] = escolhas_golpe.get(item['tipo_golpe'], item['tipo_golpe'])
         if total_denuncias > 0:
-            del_item.porcentagem = (del_item.total / total_denuncias) * 100
+            item['porcentagem'] = (item['total'] / total_denuncias) * 100
         else:
-            del_item.porcentagem = 0
+            item['porcentagem'] = 0
 
     context = {
         'total_denuncias': total_denuncias,
-        'denuncias_por_delegacia': denuncias_por_delegacia,
+        'denuncias_por_tipo': denuncias_por_tipo,
     }
     return render(request, 'portal/estatisticas.html', context)
 
 
 def videos(request):
-    # Agora lista dinamicamente os vídeos cadastrados no banco
+    # Lista dinamicamente os vídeos cadastrados no banco
     lista_videos = Video.objects.all().order_by('-criado_em')
     return render(request, 'portal/videos.html', {'videos': lista_videos})
 
