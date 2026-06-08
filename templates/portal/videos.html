@@ -4,10 +4,20 @@
 
   <section class="secao" id="videos">
     <div class="container">
+      
       <div class="secao-header">
         <span class="section-label">Educação Digital</span>
         <h2 class="section-title">Vídeos Educativos</h2>
         <p class="section-desc">Conteúdos em linguagem acessível para ajudar cidadãos de todas as idades a se proteger de fraudes digitais.</p>
+        
+        {# Botão simples alinhado por margem padrão #}
+        {% if user.is_authenticated and user.tipo_usuario != 'usuario' or user.is_staff %}
+          <div style="margin-top: 15px;">
+            <a href="{% url 'portal:cadastrar_video' %}" class="btn">
+              + Novo Vídeo
+            </a>
+          </div>
+        {% endif %}
       </div>
       
       <div class="videos-grid">

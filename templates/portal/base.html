@@ -43,6 +43,9 @@
           <a href="{% url 'portal:documentacao' %}" target="_blank">Documentação</a>
         {% endif %}
         {% if user.is_authenticated %}
+          <!-- Links inseridos limpos, sem quebrar o CSS do menu -->
+          <a href="{% url 'portal:dashboard' %}">Dashboard</a>
+          <a href="{% url 'profile' %}">Perfil</a>
           <span class="nav-usuario">Olá, {{ user.username }}</span>
           <a href="{% url 'logout' %}" class="nav-btn-sair">Sair</a>
         {% else %}

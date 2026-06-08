@@ -1,0 +1,73 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<section class="secao" style="padding: 2rem 0; min-height: 80vh;">
+  <div class="container" style="max-width: 600px; background: #fff; padding: 2.5rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 0 auto;">
+    
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h2 class="section-title" style="font-size: 2rem; margin-bottom: 0.5rem; color: #0b2f59;">Meu Perfil</h2>
+      <p style="color: #666;">Gerencie suas informações cadastrais e credenciais de acesso.</p>
+      <span style="display: inline-block; background: #e2e8f0; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold; color: #4a5568; margin-top: 0.5rem;">
+        Nível: {{ user_profile.get_tipo_usuario_display }}
+      </span>
+    </div>
+
+    {% if error %}
+      <div style="background: #fff5f5; color: #c53030; padding: 1rem; border-left: 4px solid #f56565; margin-bottom: 1.5rem; border-radius: 4px;">
+        <strong>Erro:</strong> {{ error }}
+      </div>
+    {% endif %}
+
+    {% if success %}
+      <div style="background: #f0fff4; color: #22543d; padding: 1rem; border-left: 4px solid #48bb78; margin-bottom: 1.5rem; border-radius: 4px;">
+        <strong>Sucesso:</strong> {{ success }}
+      </div>
+    {% endif %}
+
+    <form method="post" autocomplete="off">
+      {% csrf_token %}
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem;">
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #333;">Username *</label>
+          <input type="text" name="username" value="{{ user_profile.username }}" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #333;">E-mail *</label>
+          <input type="email" name="email" value="{{ user_profile.email }}" required style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+        </div>
+      </div>
+
+      <div style="margin-bottom: 1.2rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #333;">Nome Completo</label>
+        <input type="text" name="nome_completo" value="{{ user_profile.nome_completo }}" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem;">
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #333;">CPF</label>
+          <input type="text" name="cpf" value="{{ user_profile.cpf|default:'' }}" placeholder="000.000.000-00" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #333;">Telefone</label>
+          <input type="text" name="telefone" value="{{ user_profile.telefone }}" placeholder="(00) 00000-0000" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+        </div>
+      </div>
+
+      <hr style="border: 0; border-top: 1px solid #eee; margin: 2rem 0;">
+
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #333;">Alterar Senha</label>
+        <input type="password" name="nova_senha" placeholder="Digite apenas se desejar alterar a senha" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+        <small style="color: #777; display: block; margin-top: 0.4rem;">Deixe este campo em branco para manter a senha atual.</small>
+      </div>
+
+      <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+        <a href="{% url 'portal:home' %}" style="padding: 0.75rem 1.5rem; background: #e2e8f0; color: #4a5568; text-decoration: none; border-radius: 4px; font-weight: bold; text-align: center;">Voltar</a>
+        <button type="submit" style="padding: 0.75rem 2rem; background: #0b2f59; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Salvar Alterações</button>
+      </div>
+
+    </form>
+  </div>
+</section>
+{% endblock %}

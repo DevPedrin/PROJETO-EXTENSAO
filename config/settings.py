@@ -64,10 +64,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # ─── Banco de Dados ───────────────────────────────────────────────────────────
-# Chaveado pela variável USE_SQLITE do .env
-# USE_SQLITE=True  → SQLite local (padrão para desenvolvimento)
-# USE_SQLITE=False → PostgreSQL (produção / Docker)
-
 if USE_SQLITE:
     DATABASES = {
         'default': {
@@ -83,7 +79,7 @@ else:
             'USER': config('POSTGRES_USER'),
             'PASSWORD': config('POSTGRES_PASSWORD'),
             'HOST': config('DB_HOST'),
-            'PORT': config('DB_PORT', default='5432'),
+            'PORT': config('DB_PORT', default=5432, cast=int),
         }
     }
 
@@ -105,25 +101,22 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# ─── Configurações de Autenticação ────────────────────────────────────────────
 AUTH_USER_MODEL = 'accounts.User'
-
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 # ─── Anonimato de denúncias ───────────────────────────────────────────────────
-# Username do usuário técnico fixo para denúncias anônimas.
-# Esse usuário é criado automaticamente via data migration (0002).
-# Nunca altere este valor após o banco ser populado em produção.
-
-AUTH_USER_MODEL = 'accounts.User'
-
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/dashboard/'  # Modificado para cair direto no roteador dinâmico
-LOGOUT_REDIRECT_URL = '/accounts/login/'
-
-# Username do usuário técnico fixo para denúncias anônimas.
 ANONYMOUS_COMPLAINT_USERNAME = 'anonimo_sistema'
 
-# Simulação de disparo de e-mails via console para depuração local
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# ─── Configuração Dinâmica de E-mails ─────────────────────────────────────────
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = config('EMAIL_HOST', default='')
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER if EMAIL_HOST_USER else 'webmaster@localhost'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL

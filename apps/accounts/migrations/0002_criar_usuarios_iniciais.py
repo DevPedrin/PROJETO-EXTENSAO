@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import make_password
 
 def criar_usuarios(apps, schema_editor):
     User = apps.get_model('accounts', 'User')
-    senha_hash = make_password('Senha123@')
+    senha_hash = make_password('ifto2026')
 
     if not User.objects.filter(username='admin').exists():
         User.objects.create(

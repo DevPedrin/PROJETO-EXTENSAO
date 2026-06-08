@@ -10,7 +10,6 @@ class Video(models.Model):
     def __str__(self):
         return self.titulo
 
-
 class Denuncia(models.Model):
     """
     Model que representa uma denúncia de golpe digital.
