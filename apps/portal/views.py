@@ -47,13 +47,23 @@ def estatisticas(request):
     for item in denuncias_por_tipo:
         item['nome_golpe'] = escolhas_golpe.get(item['tipo_golpe'], item['tipo_golpe'])
         if total_denuncias > 0:
-            item['porcentagem'] = (item['total'] / total_denuncias) * 100
+            item['porcentagem'] = round((item['total'] / total_denuncias) * 100)
         else:
             item['porcentagem'] = 0
+
+    # Golpe mais comum
+    golpe_mais_comum = "Nenhum registrado"
+    if denuncias_por_tipo:
+        golpe_mais_comum = denuncias_por_tipo[0]['nome_golpe']
+
+    # Total de cidades atendidas/afetadas pelas denúncias aprovadas
+    total_cidades = Denuncia.objects.filter(status='aprovada').exclude(cidade='').values('cidade').distinct().count()
 
     context = {
         'total_denuncias': total_denuncias,
         'denuncias_por_tipo': denuncias_por_tipo,
+        'golpe_mais_comum': golpe_mais_comum,
+        'total_cidades': total_cidades,
     }
     return render(request, 'portal/estatisticas.html', context)
 

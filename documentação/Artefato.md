@@ -94,7 +94,7 @@ Acesso público — não requer autenticação.
 | **Painel de Filtros** | — | — | — | — | Apresentado à esquerda da listagem de delegacias. |
 | Filtrar por tipo | O | — | N | S | Combo com as opções: *Todos os tipos*, *Delegacia de Crimes Cibernéticos*, *Delegacia de Atendimento ao Idoso*, *Procon*, *Canal Online*. Filtra a lista ao ser alterado. **RN006** |
 | Buscar por nome | A | — | N | P | Campo de texto livre. Filtra os itens da lista pelo nome do órgão ao ser digitado. **RN006** |
-| Filtrar por município | O | — | N | S | Combo com as opções: *Todos os municípios*, *Palmas*, *Araguaína*, *Gurupi*, *Porto Nacional*. Filtra a lista ao ser alterado. **RN006** |
+| Filtrar por município | O | — | N | S | Combo com as opções: *Palmas — TO* (foco exclusivo). Filtra a lista ao ser alterado. **RN006** |
 | **Lista de Delegacias** | — | — | — | — | Apresentada à direita do painel de filtros. Cada item contém: nome, endereço, telefone, horário e botão de ação. |
 | Nome da delegacia/canal | A | — | — | — | Apresenta o nome completo do órgão ou canal. |
 | Endereço | A | — | — | — | Apresenta o logradouro e município. Ícone de localização à esquerda. |
@@ -132,7 +132,7 @@ Navegação: Menu principal → **Denunciar**
 |---|---|---|---|---|---|
 | **Bloco informativo** | — | — | — | — | Apresentado à esquerda do formulário, para todos os usuários. |
 | Texto de instrução | A | — | — | — | Exibe orientações sobre o preenchimento e a opção de anonimato. |
-| Caixa de dica importante | A | — | — | — | Apresenta o texto: *"Se você foi vítima de um crime, registre também um Boletim de Ocorrência na delegacia mais próxima ou pelo site da Polícia Civil do Tocantins."* |
+| Caixa de dica importante | A | — | — | — | Apresenta o texto: *"Se você foi vítima de um crime, registre também um Boletim de Ocorrência na delegacia de Palmas/TO ou pelo site da Polícia Civil."* |
 | **Formulário de Denúncia** (usuário autenticado) | — | — | — | — | Exibido somente para usuários com sessão ativa. **RN001** |
 | Tipo de golpe | O | — | S | S | Combo com as opções: *Golpe do WhatsApp / Redes Sociais*, *Falso funcionário de banco*, *Golpe do Pix*, *Promoção ou Prêmio falso*, *Link ou página falsa*, *Outro*. Campo obrigatório. |
 | Data da ocorrência | N | 10 | N | P | Campo de data no formato DD/MM/AAAA. |

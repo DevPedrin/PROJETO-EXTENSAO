@@ -3,13 +3,18 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Portal Segurança Digital</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Segurança Digital — Prevenção a Golpes | IFTO</title>
+    <meta name="description" content="Portal de utilidade pública do IFTO para prevenção a golpes digitais, registro de denúncias e orientação à população.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
   <div class="barra-acesso">
     <div class="container">
-      <span>Portal de Utilidade Publica — Instituto Federal do Tocantins</span>
+      <span>Portal de Utilidade Pública — Palmas — TO</span>
       <div class="acesso-btns">
         <span style="margin-right:4px">Tamanho do texto:</span>
         <button onclick="document.documentElement.style.fontSize='120%'">A+</button>
@@ -29,23 +34,27 @@
           </svg>
         </div>
         <div class="logo-nome">
-          <h1>Portal Seguranca Digital</h1>
-          <span>Prevencao a Golpes — IFTO / 2026</span>
+          <h1>Portal Segurança Digital</h1>
+          <span>Prevenção a Golpes — IFTO / 2026</span>
         </div>
       </a>
-      <nav>
-        <a href="{% url 'portal:home'%}" class="ativo">Inicio</a>
-        <a href="{%  url 'portal:denuncia'%}">Denunciar</a>
-        <a href="{%  url 'portal:delegacias'%}">Delegacias</a>
-        <a href="{% url 'portal:estatisticas'%}">Estatisticas</a>
-        <a href="{% url 'portal:videos'%}">Videos</a>
+      <button class="nav-hamburguer" id="nav-toggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="nav-menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="nav-menu">
+        <a href="{% url 'portal:home'%}" {% if request.resolver_match.url_name == 'home' %}class="ativo"{% endif %}>Início</a>
+        <a href="{% url 'portal:delegacias'%}" {% if request.resolver_match.url_name == 'delegacias' %}class="ativo"{% endif %}>Delegacias</a>
+        <a href="{% url 'portal:denuncia'%}" {% if request.resolver_match.url_name == 'denuncia' %}class="ativo"{% endif %}>Denunciar</a>
         {% if user.is_staff or user.is_superuser %}
-          <a href="{% url 'portal:documentacao' %}" target="_blank">Documentação</a>
+          <a href="{% url 'portal:documentacao' %}" target="_blank" {% if request.resolver_match.url_name == 'documentacao' or request.resolver_match.url_name == 'documentacao_alt' %}class="ativo"{% endif %}>Documentação</a>
         {% endif %}
+        <a href="{% url 'portal:estatisticas'%}" {% if request.resolver_match.url_name == 'estatisticas' %}class="ativo"{% endif %}>Estatísticas</a>
         {% if user.is_authenticated %}
-          <!-- Links inseridos limpos, sem quebrar o CSS do menu -->
-          <a href="{% url 'portal:dashboard' %}">Dashboard</a>
-          <a href="{% url 'profile' %}">Perfil</a>
+          <a href="{% url 'portal:dashboard' %}" {% if 'dashboard' in request.resolver_match.url_name or request.resolver_match.url_name == 'minhas_denuncias' or request.resolver_match.url_name == 'todas_denuncias' %}class="ativo"{% endif %}>Painel</a>
+          <a href="{% url 'profile' %}" {% if request.resolver_match.url_name == 'profile' %}class="ativo"{% endif %}>Perfil</a>
+        {% endif %}
+        <a href="{% url 'portal:videos'%}" {% if request.resolver_match.url_name == 'videos' %}class="ativo"{% endif %}>Vídeos</a>
+        {% if user.is_authenticated %}
           <span class="nav-usuario">Olá, {{ user.username }}</span>
           <a href="{% url 'logout' %}" class="nav-btn-sair">Sair</a>
         {% else %}
@@ -68,8 +77,8 @@
         </svg>
       </div>
       <span>
-        <strong>Atencao:</strong> Nenhuma instituicao bancaria ou orgao publico solicita senhas, codigos ou
-        transferencias por telefone ou mensagem. Desconfie sempre e confirme por outros canais antes de qualquer acao.
+        <strong>Atenção:</strong> Nenhuma instituição bancária ou órgão público solicita senhas, códigos ou
+        transferências por telefone ou mensagem. Desconfie sempre e confirme por outros canais antes de qualquer ação.
       </span>
     </div>
   </div>
@@ -83,17 +92,24 @@
       <div class="footer-grid">
         <div>
           <h4>Sobre o Portal</h4>
-          <p>Projeto de Extensao desenvolvido por alunos do curso de Sistemas para Internet do Instituto Federal do
-            Tocantins, sob orientacao do Prof. Jonas de Macedo Sousa Junior. Ano: 2026.</p>
+          <p>Projeto de Extensão desenvolvido por alunos do curso de Sistemas para Internet do Instituto Federal do
+            Tocantins, sob orientação do Prof. Jonas de Macedo Sousa Junior. Ano: 2026.</p>
         </div>
         <div>
-          <h4>Navegacao</h4>
+          <h4>Navegação</h4>
           <ul>
-            <li><a href="{% url 'portal:home' %}">Inicio</a></li>
-            <li><a href="{% url 'portal:denuncia' %}">Registrar Denuncia</a></li>
+            <li><a href="{% url 'portal:home' %}">Início</a></li>
             <li><a href="{% url 'portal:delegacias' %}">Delegacias</a></li>
-            <li><a href="{% url 'portal:estatisticas' %}">Estatisticas</a></li>
-            <li><a href="{% url 'portal:videos' %}">Videos Educativos</a></li>
+            <li><a href="{% url 'portal:denuncia' %}">Denunciar</a></li>
+            {% if user.is_staff or user.is_superuser %}
+              <li><a href="{% url 'portal:documentacao' %}" target="_blank">Documentação</a></li>
+            {% endif %}
+            <li><a href="{% url 'portal:estatisticas' %}">Estatísticas</a></li>
+            {% if user.is_authenticated %}
+              <li><a href="{% url 'portal:dashboard' %}">Painel</a></li>
+              <li><a href="{% url 'profile' %}">Perfil</a></li>
+            {% endif %}
+            <li><a href="{% url 'portal:videos' %}">Vídeos</a></li>
           </ul>
         </div>
         <div>
@@ -102,22 +118,22 @@
             <li><a href="#">Sobre o Projeto</a></li>
             <li><a href="#">Equipe</a></li>
             <li><a href="https://www.ifto.edu.br/" target="_blank">IFTO</a></li>
-            <li><a href="#">Extensao I — 2026</a></li>
+            <li><a href="#">Extensão I — 2026</a></li>
           </ul>
         </div>
         <div>
-          <h4>Links Uteis</h4>
+          <h4>Links Úteis</h4>
           <ul>
-            <li><a href="#">Policia Civil do Tocantins</a></li>
+            <li><a href="#">Polícia Civil (Palmas/TO)</a></li>
             <li><a href="#">SaferNet Brasil</a></li>
-            <li><a href="#">Procon Tocantins</a></li>
-            <li><a href="#">Banco Central</a></li>
+            <li><a href="#">Procon Palmas — Palmas/TO</a></li>
+            <li><a href="#">Banco Central do Brasil</a></li>
           </ul>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
-      &copy; 2026 Portal Seguranca Digital — Instituto Federal do Tocantins. Projeto academico sem fins lucrativos.
+      &copy; 2026 Portal Segurança Digital — Instituto Federal do Tocantins. Projeto acadêmico sem fins lucrativos.
     </div>
   </footer>
 

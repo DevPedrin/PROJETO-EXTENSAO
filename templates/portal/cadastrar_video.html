@@ -1,37 +1,41 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
-<section class="secao">
+<section class="secao" aria-labelledby="titulo-cadastrar-video">
   <div class="container">
-    
+
     <div class="secao-header">
-      <h2 class="section-title">Cadastrar Novo Vídeo Educativo</h2>
-      <p class="section-desc">Adicione conteúdos educativos sobre segurança digital no portal.</p>
+      <span class="golpe-tipo tipo-dica" aria-hidden="true">Administração</span>
+      <h2 id="titulo-cadastrar-video" class="gov-subtitle">Cadastrar Vídeo Educativo</h2>
+      <p class="gov-text">Adicione conteúdos educativos sobre segurança digital ao portal.</p>
     </div>
 
-    <form method="POST" autocomplete="off" style="max-width: 500px; margin: 0 auto;">
-      {% csrf_token %}
-      
-      <div style="margin-bottom: 1rem;">
-        <label style="display:block; margin-bottom: .5rem; font-weight: bold;">Título do Vídeo *</label>
-        <input type="text" name="titulo" placeholder="Título do Vídeo" required style="width: 100%; padding: 0.5rem;">
-      </div>
+    <div class="form-card" style="max-width: 560px;">
+      <form method="POST" autocomplete="off" novalidate>
+        {% csrf_token %}
 
-      <div style="margin-bottom: 1rem;">
-        <label style="display:block; margin-bottom: .5rem; font-weight: bold;">URL do Vídeo (YouTube) *</label>
-        <input type="url" name="url_youtube" placeholder="https://www.youtube.com/..." required style="width: 100%; padding: 0.5rem;">
-      </div>
+        <div class="form-row">
+          <label for="id-titulo-video">Título do vídeo <span class="obr" aria-hidden="true">*</span></label>
+          <input type="text" id="id-titulo-video" name="titulo" placeholder="Ex.: Como identificar golpes pelo WhatsApp" required aria-required="true">
+        </div>
 
-      <div style="margin-bottom: 1.5rem;">
-        <label style="display:block; margin-bottom: .5rem; font-weight: bold;">Descrição curta</label>
-        <textarea name="descricao" placeholder="Descrição curta do vídeo" style="width: 100%; padding: 0.5rem; min-height: 80px;"></textarea>
-      </div>
+        <div class="form-row">
+          <label for="id-url-video">URL do YouTube <span class="obr" aria-hidden="true">*</span></label>
+          <input type="url" id="id-url-video" name="url_youtube" placeholder="https://www.youtube.com/watch?v=..." required aria-required="true">
+        </div>
 
-      <div style="display: flex; gap: 1rem;">
-        <button type="submit" class="btn">Salvar Vídeo</button>
-        <a href="{% url 'portal:videos' %}" class="btn" style="background: #666; text-align: center; text-decoration: none;">Cancelar</a>
-      </div>
-    </form>
+        <div class="form-row">
+          <label for="id-descricao-video">Descrição curta</label>
+          <textarea id="id-descricao-video" name="descricao" placeholder="Resumo do conteúdo abordado no vídeo (até 3 linhas)"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px;">
+          <button type="submit" class="btn-form" style="width: auto; padding: 12px 32px;">Salvar</button>
+          <a href="{% url 'portal:videos' %}" class="btn btn-outline" style="background: #666; color: #fff; border-color: #666;" aria-label="Cancelar e voltar para Vídeos">Cancelar</a>
+        </div>
+
+      </form>
+    </div>
 
   </div>
 </section>
