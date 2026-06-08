@@ -23,11 +23,27 @@ def home(request):
 
 
 def delegacias(request):
-    return render(request, 'portal/delegacias.html')
+    todas_delegacias = Delegacia.objects.all()
+    return render(request, 'portal/delegacias.html', {'delegacias': todas_delegacias})
 
 
 def estatisticas(request):
-    return render(request, 'portal/estatisticas.html')
+    # Estatísticas reais baseadas em denúncias aprovadas
+    total_denuncias = Denuncia.objects.filter(status='APROVADA').count()
+    denuncias_por_delegacia = Delegacia.objects.filter(denuncias__status='APROVADA').annotate(total=models.Count('denuncias')).order_by('-total')
+    
+    # Adiciona porcentagem a cada delegacia para o gráfico
+    for del_item in denuncias_por_delegacia:
+        if total_denuncias > 0:
+            del_item.porcentagem = (del_item.total / total_denuncias) * 100
+        else:
+            del_item.porcentagem = 0
+
+    context = {
+        'total_denuncias': total_denuncias,
+        'denuncias_por_delegacia': denuncias_por_delegacia,
+    }
+    return render(request, 'portal/estatisticas.html', context)
 
 
 def videos(request):
