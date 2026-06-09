@@ -16,19 +16,23 @@
             </div>
         </div>
 
-        <div class="estatisticas-detalhe">
-            <h3>Denúncias por Delegacia</h3>
-            <div class="grafico-simulado">
-                {% for delegacia in denuncias_por_delegacia %}
-                <div class="barra-item">
-                    <span class="barra-nome">{{ delegacia.nome }}</span>
-                    <div class="barra-fundo">
-                        <div class="barra-preenchimento" style="width: {{ delegacia.porcentagem }}%"></div>
+        <div class="estatisticas-detalhe" style="max-width: 800px; margin: 0 auto;">
+            <h3 style="font-family: var(--fonte-titulo); color: var(--azul-gov); margin-bottom: 24px; text-align: center;">Denúncias por Tipo de Golpe</h3>
+            <div class="barras">
+                {% for item in denuncias_por_tipo %}
+                <div class="barra-row">
+                    <div class="barra-meta">
+                        <span>{{ item.nome_golpe }}</span>
+                        <span>{{ item.total }} ({{ item.porcentagem|floatformat:1 }}%)</span>
                     </div>
-                    <span class="barra-valor">{{ delegacia.total }}</span>
+                    <div class="barra-track">
+                        <div class="barra-fill bf-{{ forloop.counter|default:"1" }}" style="width: {{ item.porcentagem }}%"></div>
+                    </div>
                 </div>
                 {% empty %}
-                <p>Nenhuma denúncia aprovada até o momento.</p>
+                <div style="text-align: center; color: var(--cinza-texto); padding: 40px; border: 1px dashed var(--cinza-linha); border-radius: var(--raio);">
+                    Nenhuma denúncia aprovada até o momento para gerar estatísticas.
+                </div>
                 {% endfor %}
             </div>
         </div>
@@ -47,27 +51,23 @@
         padding: 30px;
         border-radius: 8px;
         text-align: center;
-        min-width: 200px;
+        min-width: 240px;
+        box-shadow: 0 4px 12px rgba(13, 59, 110, 0.1);
+        border-bottom: 4px solid var(--amarelo-gov);
     }
     .estat-valor {
         display: block;
         font-size: 3rem;
         font-weight: 800;
         color: var(--amarelo-gov);
+        line-height: 1.1;
+        margin-bottom: 4px;
     }
-    .barra-item {
-        margin-bottom: 15px;
-    }
-    .barra-fundo {
-        background: #eee;
-        height: 20px;
-        border-radius: 10px;
-        overflow: hidden;
-        margin: 5px 0;
-    }
-    .barra-preenchimento {
-        background: var(--azul-gov);
-        height: 100%;
+    .estat-label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 </style>
 {% endblock %}

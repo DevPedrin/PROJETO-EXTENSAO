@@ -12,9 +12,9 @@
   --cinza-texto: #333333;
   --branco: #ffffff;
   --texto: #1a1a1a;
-  --fonte-principal: "Rawline", "Open Sans", sans-serif;
-  --fonte-titulo: "Rawline", sans-serif;
-  --fonte-corpo: "Open Sans", sans-serif;
+  --fonte-principal: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --fonte-titulo: "Inter", sans-serif;
+  --fonte-corpo: "Inter", sans-serif;
   --max-w: 1200px;
   --raio: 4px;
   --gov-azul-escuro: #004587;
@@ -1321,3 +1321,232 @@
         grid-template-columns: 1fr;
       }
     }
+}
+
+/* ─── PAINÉIS DE DASHBOARD E TABELAS MODERNAS (PADRÃO GOV.BR) ── */
+.painel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--amarelo-gov);
+  padding-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.painel-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--azul-gov);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+}
+
+.metricas-cards {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.metricas-card {
+  background: var(--branco);
+  border: 1px solid var(--cinza-linha);
+  border-left: 5px solid var(--azul-gov);
+  border-radius: var(--raio);
+  padding: 16px 20px;
+  flex: 1;
+  min-width: 220px;
+  box-shadow: none; /* Estilo Flat Gov.br: sem sombra flutuante */
+}
+
+.metricas-card.alerta {
+  border-left-color: var(--vermelho-alerta);
+}
+
+.metricas-card.sucesso {
+  border-left-color: #15803d;
+}
+
+.metricas-card h4 {
+  font-size: 0.8rem;
+  color: var(--cinza-texto);
+  text-transform: uppercase;
+  margin: 0 0 6px 0;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+.metricas-card .valor {
+  font-family: var(--fonte-titulo);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--azul-gov);
+  line-height: 1;
+}
+
+.tabela-wrapper {
+  background: var(--branco);
+  border: 1px solid var(--cinza-linha);
+  border-radius: var(--raio);
+  overflow-x: auto;
+  box-shadow: none; /* Estilo Flat: sem sombra */
+  margin-bottom: 32px;
+}
+
+.tabela-dashboard {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.tabela-dashboard th {
+  background: var(--cinza-bg);
+  color: var(--azul-gov);
+  font-weight: 700;
+  padding: 14px 18px;
+  border-bottom: 2px solid var(--cinza-linha);
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+}
+
+.tabela-dashboard td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--cinza-linha);
+  color: var(--texto);
+  vertical-align: middle;
+}
+
+.tabela-dashboard tr:last-child td {
+  border-bottom: none;
+}
+
+.tabela-dashboard tr:hover {
+  background: #f8fafc;
+}
+
+.badge-status {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--raio);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border: 1px solid transparent;
+}
+
+.badge-status.analise {
+  background: #fff8e1;
+  color: #b78103;
+  border-color: #ffe0b2;
+}
+
+.badge-status.aprovada {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-color: #c8e6c9;
+}
+
+.badge-status.rejeitada {
+  background: #ffebee;
+  color: #c62828;
+  border-color: #ffcdd2;
+}
+
+.btn-acao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: var(--raio);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.btn-acao.aprovar {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-color: #c8e6c9;
+}
+
+.btn-acao.aprovar:hover {
+  background: #2e7d32;
+  color: var(--branco);
+}
+
+.btn-acao.rejeitar {
+  background: #ffebee;
+  color: #c62828;
+  border-color: #ffcdd2;
+}
+
+.btn-acao.rejeitar:hover {
+  background: #c62828;
+  color: var(--branco);
+}
+
+.btn-acao.deletar {
+  background: var(--cinza-bg);
+  color: var(--cinza-texto);
+  border-color: var(--cinza-linha);
+}
+
+.btn-acao.deletar:hover {
+  background: var(--vermelho-alerta);
+  color: var(--branco);
+  border-color: var(--vermelho-alerta);
+}
+
+.btn-add-dashboard {
+  background: var(--azul-gov);
+  color: var(--branco);
+  padding: 10px 18px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: var(--raio);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s ease;
+  border: 1px solid var(--azul-gov);
+  cursor: pointer;
+}
+
+.btn-add-dashboard:hover {
+  background: var(--azul-claro);
+  border-color: var(--azul-claro);
+}
+
+/* ─── MELHORIAS VISUAIS DE INTERATIVIDADE INSTITUCIONAL ─── */
+.golpe-card, .delegacia-item {
+  box-shadow: none !important; /* Remove sombras estilo IA/SaaS */
+  border: 1px solid var(--cinza-linha) !important;
+  transition: border-color 0.2s ease, background-color 0.2s ease !important;
+}
+
+.golpe-card:hover, .delegacia-item:hover {
+  transform: none !important; /* Remove efeito de elevação vertical tipo startup */
+  border-color: var(--azul-gov) !important;
+  background-color: #f8fafc !important;
+}
+
+.btn {
+  box-shadow: none !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+}
+
+.btn:hover {
+  transform: none !important; /* Sem flutuação vertical */
+}

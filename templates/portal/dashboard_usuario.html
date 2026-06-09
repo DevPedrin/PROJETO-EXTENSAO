@@ -1,31 +1,64 @@
 {% extends 'portal/base.html' %}
+
 {% block content %}
-<h2>Meu Painel Geral</h2>
-<p>Bem-vindo, <strong>{{ request.user.nome_completo|default:request.user.username }}</strong>.</p>
-<hr>
-<h3>Minhas Denúncias Registradas (Identificadas)</h3>
-<table>
-    <thead>
-        <tr>
-            <th>Protocolo</th>
-            <th>Tipo do Golpe</th>
-            <th>Cidade</th>
-            <th>Data da Ocorrência</th>
-            <th>Status Interno</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for d in denuncias %}
-        <tr>
-            <td>#{{ d.pk }}</td>
-            <td>{{ d.get_tipo_golpe_display }}</td>
-            <td>{{ d.cidade|default:"Não Informada" }}</td>
-            <td>{{ d.data_ocorrencia|date:"d/m/Y"|default:"-" }}</td>
-            <td><strong>{{ d.get_status_display }}</strong></td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="5">Você não possui denúncias identificadas abertas.</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+<section class="secao">
+    <div class="container">
+        
+        <div class="painel-header">
+            <h2 class="painel-titulo">Meu Painel Geral</h2>
+            <span class="nav-usuario">Cidadão: <strong>{{ request.user.nome_completo|default:request.user.username }}</strong></span>
+        </div>
+
+        <div class="info-box" style="margin-bottom: 28px; max-width: 100%; border-radius: var(--raio);">
+            <strong>Nota sobre Privacidade:</strong>
+            As denúncias que você optou por registrar de forma <strong>anônima</strong> não são exibidas nesta lista. Para a sua segurança e sigilo absoluto, elas foram permanentemente desvinculadas da sua conta e associadas ao usuário padrão do sistema.
+        </div>
+
+        <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <h3 style="font-family: var(--fonte-titulo); color: var(--azul-gov); margin: 0; font-size: 1.25rem;">Minhas Denúncias Registradas (Identificadas)</h3>
+            <a href="{% url 'portal:denuncia' %}" class="btn-add-dashboard">
+                <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                Registrar Nova Denúncia
+            </a>
+        </div>
+
+        <div class="tabela-wrapper">
+            <table class="tabela-dashboard">
+                <thead>
+                    <tr>
+                        <th>Protocolo</th>
+                        <th>Tipo do Golpe</th>
+                        <th>Cidade</th>
+                        <th>Data da Ocorrência</th>
+                        <th>Data de Registro</th>
+                        <th>Status do Relato</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in denuncias %}
+                    <tr>
+                        <td><strong>#{{ d.pk }}</strong></td>
+                        <td><span style="font-weight: 600; color: var(--azul-gov);">{{ d.get_tipo_golpe_display }}</span></td>
+                        <td>{{ d.cidade|default:"Não informada" }}</td>
+                        <td>{{ d.data_ocorrencia|date:"d/m/Y"|default:"-" }}</td>
+                        <td>{{ d.criado_em|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <span class="badge-status {{ d.status }}">
+                                {{ d.get_status_display }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--cinza-texto); padding: 40px;">
+                            Você não possui nenhuma denúncia identificada cadastrada.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</section>
 {% endblock %}

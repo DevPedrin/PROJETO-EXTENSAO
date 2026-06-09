@@ -1,20 +1,61 @@
 {% extends 'portal/base.html' %}
+
 {% block content %}
-<h2>Painel de Moderação - Denúncias Pendentes</h2>
-<table>
-    <tr><th>ID</th><th>Tipo</th><th>Descrição</th><th>Ações</th></tr>
-    {% for d in denuncias %}
-    <tr>
-        <td>{{ d.pk }}</td>
-        <td>{{ d.get_tipo_golpe_display }}</td>
-        <td>{{ d.descricao }}</td>
-        <td>
-            <a href="{% url 'alterar_status_denuncia' d.pk 'aprovar' %}" style="color:green;">Aprovar</a> | 
-            <a href="{% url 'alterar_status_denuncia' d.pk 'rejeitar' %}" style="color:orange;">Rejeitar</a>
-        </td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="4">Nenhuma denúncia aguardando análise.</td></tr>
-    {% endfor %}
-</table>
+<section class="secao">
+    <div class="container">
+        
+        <div class="painel-header">
+            <h2 class="painel-titulo">Painel de Moderação — Denúncias Pendentes</h2>
+            <span class="nav-usuario">Moderador: <strong>{{ request.user.username }}</strong></span>
+        </div>
+
+        <div class="tabela-wrapper">
+            <table class="tabela-dashboard">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tipo do Golpe</th>
+                        <th>Descrição do Relato</th>
+                        <th>Data Ocorrência</th>
+                        <th>Cidade</th>
+                        <th style="text-align: right;">Ações de Triagem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in denuncias %}
+                    <tr>
+                        <td><strong>#{{ d.pk }}</strong></td>
+                        <td><span style="font-weight: 600; color: var(--azul-gov);">{{ d.get_tipo_golpe_display }}</span></td>
+                        <td>
+                            <div style="max-width: 400px; font-size: 0.88rem; line-height: 1.45; color: var(--texto);">
+                                {{ d.descricao }}
+                            </div>
+                            {% if d.nome_informado %}
+                                <div style="font-size: 0.8rem; color: var(--cinza-texto); margin-top: 4px; font-weight: 600;">
+                                    Nome voluntário: {{ d.nome_informado }} (Faixa: {{ d.get_faixa_etaria_display|default:"Não informada" }})
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>{{ d.data_ocorrencia|date:"d/m/Y"|default:"-" }}</td>
+                        <td>{{ d.cidade|default:"Não informada" }}</td>
+                        <td style="text-align: right;">
+                            <div style="display: inline-flex; gap: 6px;">
+                                <a href="{% url 'portal:alterar_status_denuncia' d.pk 'aprovar' %}" class="btn-acao aprovar" title="Aprovar e publicar estatística">Aprovar</a>
+                                <a href="{% url 'portal:alterar_status_denuncia' d.pk 'rejeitar' %}" class="btn-acao rejeitar" title="Rejeitar denúncia">Rejeitar</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--cinza-texto); padding: 40px;">
+                            Não há nenhuma denúncia aguardando análise de moderação no momento.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</section>
 {% endblock %}
