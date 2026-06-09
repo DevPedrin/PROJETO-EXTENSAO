@@ -42,27 +42,23 @@
         <span></span><span></span><span></span>
       </button>
       <nav id="nav-menu">
-        <a href="{% url 'portal:home'%}" {% if request.resolver_match.url_name == 'home' %}class="ativo"{% endif %}>Início</a>
-        <a href="{% url 'portal:delegacias'%}" {% if request.resolver_match.url_name == 'delegacias' %}class="ativo"{% endif %}>Delegacias</a>
-        <a href="{% url 'portal:denuncia'%}" {% if request.resolver_match.url_name == 'denuncia' %}class="ativo"{% endif %}>Denunciar</a>
-        {% if user.is_staff or user.is_superuser %}
-          <a href="{% url 'portal:documentacao' %}" target="_blank" {% if request.resolver_match.url_name == 'documentacao' or request.resolver_match.url_name == 'documentacao_alt' %}class="ativo"{% endif %}>Documentação</a>
-        {% endif %}
-        <a href="{% url 'portal:estatisticas'%}" {% if request.resolver_match.url_name == 'estatisticas' %}class="ativo"{% endif %}>Estatísticas</a>
+        <a href="{% url 'portal:home' %}" {% if request.resolver_match.url_name == 'home' %}class="ativo"{% endif %}>Início</a>
+        <a href="{% url 'portal:denuncia' %}" {% if request.resolver_match.url_name == 'denuncia' %}class="ativo"{% endif %}>Denunciar</a>
+        <a href="{% url 'portal:delegacias' %}" {% if request.resolver_match.url_name == 'delegacias' %}class="ativo"{% endif %}>Delegacias</a>
+        <a href="{% url 'portal:estatisticas' %}" {% if request.resolver_match.url_name == 'estatisticas' %}class="ativo"{% endif %}>Estatísticas</a>
+        <a href="{% url 'portal:videos' %}" {% if request.resolver_match.url_name == 'videos' %}class="ativo"{% endif %}>Vídeos</a>
+
+        <span class="nav-divisor"></span>
+
         {% if user.is_authenticated %}
           <a href="{% url 'portal:dashboard' %}" {% if 'dashboard' in request.resolver_match.url_name or request.resolver_match.url_name == 'minhas_denuncias' or request.resolver_match.url_name == 'todas_denuncias' %}class="ativo"{% endif %}>Painel</a>
+          
           <a href="{% url 'profile' %}" {% if request.resolver_match.url_name == 'profile' %}class="ativo"{% endif %}>Perfil</a>
-        {% endif %}
-        <a href="{% url 'portal:videos'%}" {% if request.resolver_match.url_name == 'videos' %}class="ativo"{% endif %}>Vídeos</a>
-        {% if user.is_authenticated %}
-          <span class="nav-usuario">Olá, {{ user.username }}</span>
+          
+          <span class="nav-usuario" title="Nível de acesso">Olá, <strong>{{ user.username }}</strong></span>
           <a href="{% url 'logout' %}" class="nav-btn-sair">Sair</a>
         {% else %}
-          {% if request.resolver_match.url_name == 'denuncia' %}
-            <a href="{% url 'login' %}?next={{ request.path }}" class="nav-btn-entrar">Entrar</a>
-          {% else %}
-            <a href="{% url 'login' %}" class="nav-btn-entrar">Entrar</a>
-          {% endif %}
+          <a href="{% url 'login' %}{% if request.resolver_match.url_name == 'denuncia' %}?next={{ request.path }}{% endif %}" class="nav-btn-entrar">Entrar</a>
         {% endif %}
       </nav>
     </div>
