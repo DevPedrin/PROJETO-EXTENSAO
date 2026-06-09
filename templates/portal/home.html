@@ -1,80 +1,78 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
-  <section class="hero" id="inicio">
+  <section class="hero" id="inicio" aria-label="Apresentação do portal">
     <div class="hero-inner">
       <div>
-        <div class="hero-tag">Servico de Utilidade Publica</div>
-        <h2>Proteja-se contra Golpes e Fraudes Digitais</h2>
-        <p>Este portal oferece informacoes educativas, orientacoes de seguranca e canais de denuncia para ajudar a
-          populacao a identificar e se proteger de fraudes na internet.</p>
+        <div class="hero-tag" aria-hidden="true">Serviço de Utilidade Pública — Palmas/TO</div>
+        <h2 class="gov-subtitle">Proteja-se contra Golpes e Fraudes Digitais em Palmas</h2>
+        <p>Este portal oferece informações educativas, orientações de segurança e canais de denúncia para ajudar os moradores de Palmas — TO a identificar e se proteger de fraudes na internet.</p>
         <div class="hero-btns">
-          <a href="#golpes" class="btn btn-amarelo">Conhecer os Principais Golpes</a>
-          <a href="{% url 'portal:denuncia' %}" class="btn btn-outline">Registrar uma Denuncia</a>
+          <a href="#golpes" class="btn btn-amarelo">Conhecer os Golpes</a>
+          <a href="{% url 'portal:denuncia' %}" class="btn btn-outline">Registrar Denúncia</a>
         </div>
       </div>
-      <div class="hero-panel">
-        <h3>Numeros de Emergencia</h3>
-        <ul class="numeros-lista">
-          <li><span class="orgao">Policia Militar</span> <span class="num">190</span></li>
-          <li><span class="orgao">Policia Civil</span> <span class="num">197</span></li>
-          <li><span class="orgao">Procon</span> <span class="num">151</span></li>
-          <li><span class="orgao">Banco Central</span> <span class="num">145</span></li>
+      <div class="hero-panel" role="complementary" aria-label="Números de emergência">
+        <h3>Números de Emergência</h3>
+        <ul class="numeros-lista" aria-label="Contatos de emergência">
+          <li><span class="orgao">Polícia Militar</span> <span class="num" aria-label="190">190</span></li>
+          <li><span class="orgao">Polícia Civil</span>   <span class="num" aria-label="197">197</span></li>
+          <li><span class="orgao">Procon</span>          <span class="num" aria-label="151">151</span></li>
+          <li><span class="orgao">Banco Central</span>   <span class="num" aria-label="145">145</span></li>
         </ul>
       </div>
     </div>
   </section>
 
-  <section class="secao secao-alt" id="golpes">
+  <section class="secao secao-alt" id="golpes" aria-labelledby="titulo-golpes">
     <div class="container">
       <div class="secao-header">
-        <span class="section-label">Seguranca Digital</span>
-        <h2 class="section-title">Principais Tipos de Golpes Digitais</h2>
-        <p class="section-desc">Conhecer as modalidades de fraude e o primeiro passo para nao ser vitima. Leia com
-          atencao e compartilhe com sua familia.</p>
+        <span class="golpe-tipo tipo-dica" aria-hidden="true">Segurança Digital</span>
+        <h2 id="titulo-golpes" class="gov-subtitle">Principais Tipos de Golpes Digitais</h2>
+        <p class="gov-text">Conhecer as modalidades de fraude é o primeiro passo para não ser vítima. Leia com atenção e compartilhe com sua família.</p>
       </div>
-      <div class="golpes-grid">
-        <div class="golpe-card golpe-destaque">
+
+      <div class="golpes-grid" role="list" aria-label="Tipos de golpes digitais">
+        <div class="golpe-card golpe-destaque" role="listitem">
           <span class="golpe-tipo tipo-alto">Risco Alto</span>
-          <h3>Golpe do WhatsApp</h3>
-          <p>Criminosos clonam numeros ou fingem ser familiares pedindo transferencias urgentes. Sempre confirme por
-            ligacao antes de qualquer pagamento.</p>
-          <a href="#" class="leia-mais">Saiba mais e como se proteger</a>
+          <h3 class="gov-card-title">Golpe do WhatsApp</h3>
+          <p class="gov-card-description">Criminosos clonam números ou fingem ser familiares pedindo transferências urgentes. Sempre confirme por ligação antes de qualquer pagamento.</p>
+          <a href="#" class="leia-mais gov-link" aria-label="Saiba mais sobre o golpe do WhatsApp">Saiba como se proteger</a>
         </div>
-        <div class="golpe-card">
+
+        <div class="golpe-card" role="listitem">
           <span class="golpe-tipo tipo-alto">Risco Alto</span>
-          <h3>Falso Funcionario de Banco</h3>
-          <p>Ligacoes ou mensagens simulando centrais bancarias para obter senhas e dados. Bancos nunca solicitam essas
-            informacoes remotamente.</p>
-          <a href="#" class="leia-mais">Saiba mais e como se proteger</a>
+          <h3 class="gov-card-title">Falso Funcionário de Banco</h3>
+          <p class="gov-card-description">Ligações ou mensagens simulando centrais bancárias para obter senhas e dados. Bancos nunca solicitam essas informações remotamente.</p>
+          <a href="#" class="leia-mais gov-link" aria-label="Saiba mais sobre falso funcionário de banco">Saiba como se proteger</a>
         </div>
-        <div class="golpe-card">
+
+        <div class="golpe-card" role="listitem">
           <span class="golpe-tipo tipo-alto">Risco Alto</span>
-          <h3>Golpe do Pix</h3>
-          <p>Falsas cobracas, QR Codes adulterados ou transferencias induzidas por urgencia. Confira sempre o nome do
-            destinatario antes de confirmar.</p>
-          <a href="#" class="leia-mais">Saiba mais e como se proteger</a>
+          <h3 class="gov-card-title">Golpe do Pix</h3>
+          <p class="gov-card-description">Falsas cobranças, QR Codes adulterados ou transferências induzidas por urgência. Confira sempre o nome do destinatário antes de confirmar.</p>
+          <a href="#" class="leia-mais gov-link" aria-label="Saiba mais sobre o golpe do Pix">Saiba como se proteger</a>
         </div>
-        <div class="golpe-card">
-          <span class="golpe-tipo tipo-medio">Atencao</span>
-          <h3>Promocoes e Premios Falsos</h3>
-          <p>Promessas de premios, sorteios e beneficios inexistentes que exigem dados pessoais ou pagamento para
-            liberacao.</p>
-          <a href="#" class="leia-mais">Saiba mais e como se proteger</a>
+
+        <div class="golpe-card" role="listitem">
+          <span class="golpe-tipo tipo-medio">Atenção</span>
+          <h3 class="gov-card-title">Promoções e Prêmios Falsos</h3>
+          <p class="gov-card-description">Promessas de prêmios, sorteios e benefícios inexistentes que exigem dados pessoais ou pagamento para liberação.</p>
+          <a href="#" class="leia-mais gov-link" aria-label="Saiba mais sobre promoções falsas">Saiba como se proteger</a>
         </div>
-        <div class="golpe-card">
-          <span class="golpe-tipo tipo-medio">Atencao</span>
-          <h3>Links e Paginas Falsas</h3>
-          <p>Mensagens com links que imitam sites de bancos, lojas ou orgaos publicos. Verifique sempre o endereco da
-            pagina antes de inserir dados.</p>
-          <a href="#" class="leia-mais">Saiba mais e como se proteger</a>
+
+        <div class="golpe-card" role="listitem">
+          <span class="golpe-tipo tipo-medio">Atenção</span>
+          <h3 class="gov-card-title">Links e Páginas Falsas</h3>
+          <p class="gov-card-description">Mensagens com links que imitam sites de bancos, lojas ou órgãos públicos. Verifique sempre o endereço da página antes de inserir dados.</p>
+          <a href="#" class="leia-mais gov-link" aria-label="Saiba mais sobre links e páginas falsas">Saiba como se proteger</a>
         </div>
-        <div class="golpe-card">
-          <span class="golpe-tipo tipo-dica">Orientacao</span>
-          <h3>Como se Proteger no Dia a Dia</h3>
-          <p>Desconfie de urgencias. Confirme informacoes por outros canais. Nunca informe senhas. Consulte um familiar
-            de confianca antes de agir.</p>
-          <a href="#" class="leia-mais">Ver todas as orientacoes</a>
+
+        <div class="golpe-card" role="listitem">
+          <span class="golpe-tipo tipo-dica">Orientação</span>
+          <h3 class="gov-card-title">Como se Proteger no Dia a Dia</h3>
+          <p class="gov-card-description">Desconfie de urgências. Confirme informações por outros canais. Nunca informe senhas. Consulte um familiar de confiança antes de agir.</p>
+          <a href="{% url 'portal:videos' %}" class="leia-mais gov-link" aria-label="Ver todas as orientações de segurança">Ver orientações</a>
         </div>
       </div>
     </div>

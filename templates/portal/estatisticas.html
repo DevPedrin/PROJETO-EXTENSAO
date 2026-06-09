@@ -1,73 +1,72 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
-<section class="secao secao-alt">
-    <div class="container">
-        <div class="secao-header">
-            <span class="section-label">Dados Oficiais</span>
-            <h2 class="section-title">Estatísticas de Denúncias</h2>
-            <p class="section-desc">Dados baseados em denúncias validadas e processadas pelo nosso sistema de moderação.</p>
-        </div>
-
-        <div class="estatisticas-resumo">
-            <div class="estat-card">
-                <span class="estat-valor">{{ total_denuncias }}</span>
-                <span class="estat-label">Denúncias Aprovadas</span>
-            </div>
-        </div>
-
-        <div class="estatisticas-detalhe">
-            <h3>Denúncias por Delegacia</h3>
-            <div class="grafico-simulado">
-                {% for delegacia in denuncias_por_delegacia %}
-                <div class="barra-item">
-                    <span class="barra-nome">{{ delegacia.nome }}</span>
-                    <div class="barra-fundo">
-                        <div class="barra-preenchimento" style="width: {{ delegacia.porcentagem }}%"></div>
-                    </div>
-                    <span class="barra-valor">{{ delegacia.total }}</span>
-                </div>
-                {% empty %}
-                <p>Nenhuma denúncia aprovada até o momento.</p>
-                {% endfor %}
-            </div>
-        </div>
+<section class="secao secao-alt" aria-labelledby="titulo-estatisticas">
+  <div class="container">
+    <div class="secao-header" style="text-align: center; margin-bottom: 48px;">
+      <span class="golpe-tipo tipo-dica" aria-hidden="true">Dados Consolidados</span>
+      <h1 id="titulo-estatisticas" class="gov-title">Estatísticas de Ocorrências</h1>
+      <p class="gov-text" style="margin: 0 auto; max-width: 70ch;">Indicadores e estatísticas em tempo real gerados a partir dos relatos validados pela moderação. Esses dados ajudam a mapear e combater fraudes digitais em <strong>Palmas — TO</strong>.</p>
     </div>
-</section>
 
-<style>
-    .estatisticas-resumo {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 40px;
-    }
-    .estat-card {
-        background: var(--azul-gov);
-        color: white;
-        padding: 30px;
-        border-radius: 8px;
-        text-align: center;
-        min-width: 200px;
-    }
-    .estat-valor {
-        display: block;
-        font-size: 3rem;
-        font-weight: 800;
-        color: var(--amarelo-gov);
-    }
-    .barra-item {
-        margin-bottom: 15px;
-    }
-    .barra-fundo {
-        background: #eee;
-        height: 20px;
-        border-radius: 10px;
-        overflow: hidden;
-        margin: 5px 0;
-    }
-    .barra-preenchimento {
-        background: var(--azul-gov);
-        height: 100%;
-    }
-</style>
+    <!-- Painel de Indicadores Principais (Números em Destaque) -->
+    <div class="estat-resumo-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 48px;">
+      
+      <!-- Card 1: Total -->
+      <div class="gov-stat-card blue-border">
+        <div>
+          <p class="stat-title">Total de Ocorrências</p>
+          <span class="stat-val" aria-label="{{ total_denuncias }} denúncias aprovadas">{{ total_denuncias }}</span>
+        </div>
+        <p class="stat-desc">Casos validados e processados</p>
+      </div>
+
+      <!-- Card 2: Cidades -->
+      <div class="gov-stat-card yellow-border">
+        <div>
+          <p class="stat-title">Área de Atendimento</p>
+          <span class="stat-val" style="font-size: 1.5rem; font-weight: 700; padding: 12px 0;">Palmas — TO</span>
+        </div>
+        <p class="stat-desc">Foco exclusivo municipal</p>
+      </div>
+
+      <!-- Card 3: Golpe mais comum -->
+      <div class="gov-stat-card red-border">
+        <div>
+          <p class="stat-title">Incidência Principal</p>
+          <span class="stat-val" style="font-size: 1.25rem; font-weight: 700; padding: 12px 0;">
+            {{ golpe_mais_comum }}
+          </span>
+        </div>
+        <p class="stat-desc">Maior volume de registros</p>
+      </div>
+
+    </div>
+
+    <!-- Seção de Gráficos e Distribuição -->
+    <div class="graficos-grid" role="region" aria-label="Distribuição das denúncias">
+      <div class="grafico-card" style="background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.02); border: 1px solid var(--cinza-linha);">
+        <h3 class="gov-card-title" style="font-size: 1.3rem; margin-bottom: 8px;">Denúncias por Tipo de Golpe</h3>
+        <p class="grafico-sub" style="color: var(--cinza-texto); margin-bottom: 32px;">Proporção de ocorrências de acordo com a categoria da fraude</p>
+        
+        <div class="barras" role="list" aria-label="Gráfico de barras por tipo de golpe" style="display: flex; flex-direction: column; gap: 20px;">
+          {% for golpe in denuncias_por_tipo %}
+            <div class="barra-row" role="listitem" style="display: flex; flex-direction: column; gap: 6px;">
+              <div class="barra-meta" style="display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 600; color: var(--cinza-escuro);">
+                <span>{{ golpe.nome_golpe }}</span>
+                <span aria-label="{{ golpe.total }} ocorrências" style="color: var(--azul-gov);">{{ golpe.total }} ({{ golpe.porcentagem }}%)</span>
+              </div>
+              <div class="barra-track" role="progressbar" aria-valuenow="{{ golpe.porcentagem }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ golpe.nome_golpe }}: {{ golpe.porcentagem }}%" style="background: #e9ecef; height: 16px; border-radius: 8px; overflow: hidden; width: 100%;">
+                <div class="barra-fill" data-width="{{ golpe.porcentagem }}%" style="width: {{ golpe.porcentagem }}%; background: var(--azul-claro); height: 100%; border-radius: 8px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+              </div>
+            </div>
+          {% empty %}
+            <p class="gov-text" style="color: var(--cinza-texto); padding: 24px 0; text-align: center;">Nenhuma denúncia aprovada no sistema para consolidação de estatísticas.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
 {% endblock %}

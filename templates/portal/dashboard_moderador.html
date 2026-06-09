@@ -1,20 +1,54 @@
 {% extends 'portal/base.html' %}
+
 {% block content %}
-<h2>Painel de Moderação - Denúncias Pendentes</h2>
-<table>
-    <tr><th>ID</th><th>Tipo</th><th>Descrição</th><th>Ações</th></tr>
-    {% for d in denuncias %}
-    <tr>
-        <td>{{ d.pk }}</td>
-        <td>{{ d.get_tipo_golpe_display }}</td>
-        <td>{{ d.descricao }}</td>
-        <td>
-            <a href="{% url 'alterar_status_denuncia' d.pk 'aprovar' %}" style="color:green;">Aprovar</a> | 
-            <a href="{% url 'alterar_status_denuncia' d.pk 'rejeitar' %}" style="color:orange;">Rejeitar</a>
-        </td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="4">Nenhuma denúncia aguardando análise.</td></tr>
-    {% endfor %}
-</table>
+
+  <section class="secao secao-alt" aria-labelledby="titulo-dashboard-moderador">
+    <div class="container">
+      <div class="secao-header">
+        <span class="golpe-tipo tipo-alto" aria-hidden="true">Acesso Restrito</span>
+        <h2 id="titulo-dashboard-moderador" class="gov-subtitle">Painel de Moderação</h2>
+        <p class="gov-text">Bem-vindo, <strong>{{ request.user.username }}</strong>. Abaixo estão listadas as denúncias pendentes de análise para aprovação ou rejeição.</p>
+      </div>
+
+      <h3 class="gov-card-title" style="font-size: 1.1rem; margin-bottom: 16px;">Ocorrências Pendentes</h3>
+
+      <div class="gov-table-container">
+        <table class="gov-table" aria-label="Lista de denúncias aguardando moderação">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Tipo do Golpe</th>
+              <th scope="col">Descrição</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for d in denuncias %}
+            <tr>
+              <td style="color: var(--cinza-texto);">#{{ d.pk }}</td>
+              <td style="font-weight: 600;">{{ d.get_tipo_golpe_display }}</td>
+              <td style="color: #555; max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ d.descricao }}
+              </td>
+              <td>
+                <a href="{% url 'portal:alterar_status_denuncia' d.pk 'aprovar' %}"
+                   style="color: #16a34a; font-weight: 700; margin-right: 16px;"
+                   aria-label="Aprovar denúncia #{{ d.pk }}">Aprovar</a>
+                <a href="{% url 'portal:alterar_status_denuncia' d.pk 'rejeitar' %}"
+                   style="color: #b45309; font-weight: 700;"
+                   aria-label="Rejeitar denúncia #{{ d.pk }}">Rejeitar</a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4" style="padding: 24px 16px; text-align: center; color: var(--cinza-texto);">Nenhuma denúncia aguardando análise de moderação.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
 {% endblock %}

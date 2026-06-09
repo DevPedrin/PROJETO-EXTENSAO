@@ -118,12 +118,8 @@ Esta regra define o comportamento dos filtros interativos na página de delegaci
 
   - **Busca por nome:** campo de texto livre que filtra os itens pelo nome do órgão.
 
-  - **Município:** combo com os municípios disponíveis:
-    - Todos os municípios *(padrão)*
-    - Palmas
-    - Araguaína
-    - Gurupi
-    - Porto Nacional
+  - **Município:** combo com as opções:
+    - Palmas — TO (foco exclusivo)
 
 - Os filtros devem ser aplicados dinamicamente, sem necessidade de recarregar a página (via JavaScript).
 - Cada item da lista de delegacias deve conter os atributos `data-tipo` e `data-cidade` para suportar a filtragem no lado do cliente.
