@@ -22,6 +22,7 @@
       
       <div class="videos-grid">
         {% for video in videos %}
+        <a href="{{ video.url_youtube }}" target="_blank" class="video-card" style="text-decoration: none; color: inherit; display: block;">
           <div class="video-card" data-video-url="{{ video.url_youtube }}" style="text-decoration: none; color: inherit; display: block; cursor: pointer;">
             <div class="video-thumb" style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('{{ video.thumbnail_url }}') no-repeat center center; background-size: cover;">
               <span class="video-num">VÍDEO {{ forloop.counter|stringformat:"02d" }}</span>
@@ -36,6 +37,7 @@
               <p>{{ video.descricao }}</p>
             </div>
           </div>
+        </a>
         {% empty %}
           <div class="sem-videos" style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #666;">
             <p>Nenhum vídeo educativo cadastrado no momento.</p>
