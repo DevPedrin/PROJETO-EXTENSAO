@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.conf import settings
 from django.http import HttpResponse, Http404
-from django.db import models  
+from django.db import models
 import os
 
 from .forms import DenunciaForm
@@ -35,42 +35,75 @@ def delegacias(request):
 
 
 def estatisticas(request):
-    """Gera estatísticas baseadas nos tipos de golpes das denúncias aprovadas."""
-    # Filtro corrigido para 'aprovada' (minúsculo) conforme definido no Choice do Model
-    total_denuncias = Denuncia.objects.filter(status='aprovada').count()
-    
-    # Agrupa e conta o número de denúncias por tipo de golpe cadastrado
-    denuncias_por_tipo = (
-        Denuncia.objects.filter(status='aprovada')
-        .values('tipo_golpe')
+    """Estatísticas enriquecidas das denúncias aprovadas."""
+    from django.db.models.functions import TruncMonth
+    import json
+
+    aprovadas = Denuncia.objects.filter(status='aprovada')
+    total_denuncias = aprovadas.count()
+    total_em_analise = Denuncia.objects.filter(status='analise').count()
+    total_rejeitadas = Denuncia.objects.filter(status='rejeitada').count()
+
+    escolhas_golpe = dict(Denuncia.TIPOS_GOLPE)
+    escolhas_faixa = dict(Denuncia.FAIXAS_ETARIAS)
+
+    # Por tipo de golpe
+    denuncias_por_tipo = list(
+        aprovadas.values('tipo_golpe')
         .annotate(total=models.Count('id'))
         .order_by('-total')
     )
-    
-    # Mapeamento para exibir os labels amigáveis do Choice no template
-    escolhas_golpe = dict(Denuncia.TIPOS_GOLPE)
-    
-    # Adiciona a porcentagem e o nome amigável a cada item do agrupamento
     for item in denuncias_por_tipo:
         item['nome_golpe'] = escolhas_golpe.get(item['tipo_golpe'], item['tipo_golpe'])
-        if total_denuncias > 0:
-            item['porcentagem'] = round((item['total'] / total_denuncias) * 100)
-        else:
-            item['porcentagem'] = 0
+        item['porcentagem'] = round((item['total'] / total_denuncias) * 100, 1) if total_denuncias else 0
 
-    # Golpe mais comum
-    golpe_mais_comum = "Nenhum registrado"
-    if denuncias_por_tipo:
-        golpe_mais_comum = denuncias_por_tipo[0]['nome_golpe']
+    # Por faixa etária
+    denuncias_por_faixa = list(
+        aprovadas.exclude(faixa_etaria='')
+        .values('faixa_etaria')
+        .annotate(total=models.Count('id'))
+        .order_by('faixa_etaria')
+    )
+    for item in denuncias_por_faixa:
+        item['nome_faixa'] = escolhas_faixa.get(item['faixa_etaria'], item['faixa_etaria'])
+        item['porcentagem'] = round((item['total'] / total_denuncias) * 100, 1) if total_denuncias else 0
 
-    # Total de cidades atendidas/afetadas pelas denúncias aprovadas
-    total_cidades = Denuncia.objects.filter(status='aprovada').exclude(cidade='').values('cidade').distinct().count()
+    # Por cidade (top 5)
+    denuncias_por_cidade = list(
+        aprovadas.exclude(cidade='')
+        .values('cidade')
+        .annotate(total=models.Count('id'))
+        .order_by('-total')[:5]
+    )
+    for item in denuncias_por_cidade:
+        item['porcentagem'] = round((item['total'] / total_denuncias) * 100, 1) if total_denuncias else 0
+
+    # Evolução mensal (últimos 6 meses)
+    from datetime import date
+    from dateutil.relativedelta import relativedelta
+    hoje = date.today()
+    seis_meses_atras = hoje - relativedelta(months=5)
+
+    mensal_qs = (
+        Denuncia.objects
+        .filter(criado_em__date__gte=seis_meses_atras)
+        .annotate(mes=TruncMonth('criado_em'))
+        .values('mes')
+        .annotate(total=models.Count('id'))
+        .order_by('mes')
+    )
+    meses_labels = [item['mes'].strftime('%b/%Y') for item in mensal_qs]
+    meses_valores = [item['total'] for item in mensal_qs]
 
     context = {
         'total_denuncias': total_denuncias,
+        'total_em_analise': total_em_analise,
+        'total_rejeitadas': total_rejeitadas,
         'denuncias_por_tipo': denuncias_por_tipo,
-        'golpe_mais_comum': golpe_mais_comum,
-        'total_cidades': total_cidades,
+        'denuncias_por_faixa': denuncias_por_faixa,
+        'denuncias_por_cidade': denuncias_por_cidade,
+        'meses_labels_json': json.dumps(meses_labels),
+        'meses_valores_json': json.dumps(meses_valores),
     }
     return render(request, 'portal/estatisticas.html', context)
 
@@ -233,3 +266,49 @@ def todas_denuncias(request):
     if not (request.user.is_staff or request.user.is_superuser or request.user.tipo_usuario in ['admin', 'moderador']):
         raise Http404("Página não encontrada.")
     return redirect('portal:dashboard')
+
+# ─── Painel de Gerenciamento de Delegacias (Admin) ───────────────────────────
+@login_required
+@user_passes_test(eh_admin)
+def painel_delegacias(request):
+    from .models import Delegacia
+    from .forms import DelegaciaForm
+
+    if request.method == 'POST':
+        pk = request.POST.get('pk')
+        acao = request.POST.get('acao')
+
+        if acao == 'excluir' and pk:
+            Delegacia.objects.filter(pk=pk).delete()
+            messages.success(request, 'Delegacia removida com sucesso.')
+            return redirect('portal:painel_delegacias')
+
+        if acao == 'toggle_ativo' and pk:
+            d = get_object_or_404(Delegacia, pk=pk)
+            d.ativo = not d.ativo
+            d.save()
+            messages.success(request, f'Delegacia {"ativada" if d.ativo else "desativada"}.')
+            return redirect('portal:painel_delegacias')
+
+        pk_editar = request.POST.get('pk_editar')
+        if pk_editar:
+            instancia = get_object_or_404(Delegacia, pk=pk_editar)
+            form = DelegaciaForm(request.POST, instance=instancia)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Delegacia atualizada com sucesso.')
+                return redirect('portal:painel_delegacias')
+        else:
+            form = DelegaciaForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Delegacia cadastrada com sucesso.')
+                return redirect('portal:painel_delegacias')
+    else:
+        form = DelegaciaForm()
+
+    delegacias = Delegacia.objects.all()
+    return render(request, 'portal/painel_delegacias.html', {
+        'form': form,
+        'delegacias': delegacias,
+    })

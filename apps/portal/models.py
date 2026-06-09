@@ -10,6 +10,19 @@ class Video(models.Model):
     def __str__(self):
         return self.titulo
 
+    @property
+    def thumbnail_url(self):
+        """Retorna o link da imagem de capa (thumbnail) do vídeo do YouTube."""
+        import re
+        url = self.url_youtube
+        reg_exp = r'^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*'
+        match = re.match(reg_exp, url)
+        if match and len(match.group(2)) == 11:
+            video_id = match.group(2)
+            return f"https://img.youtube.com/vi/{video_id}/mqdefault.jpg"
+        return ""
+
+
 class Denuncia(models.Model):
     """
     Model que representa uma denúncia de golpe digital.

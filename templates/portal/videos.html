@@ -2,53 +2,57 @@
 
 {% block content %}
 
-  <section class="secao" id="videos" aria-labelledby="titulo-videos">
+  <section class="secao" id="videos">
     <div class="container">
-
+      
       <div class="secao-header">
-        <span class="golpe-tipo tipo-dica" aria-hidden="true">Educação Digital</span>
-        <h2 id="titulo-videos" class="gov-subtitle">Vídeos Educativos</h2>
-        <p class="gov-text">Conteúdos em linguagem acessível para ajudar cidadãos de todas as idades a se proteger de fraudes digitais.</p>
-
+        <span class="section-label">Educação Digital</span>
+        <h2 class="section-title">Vídeos Educativos</h2>
+        <p class="section-desc">Conteúdos em linguagem acessível para ajudar cidadãos de todas as idades a se proteger de fraudes digitais.</p>
+        
+        {# Botão simples alinhado por margem padrão #}
         {% if user.is_authenticated and user.tipo_usuario != 'usuario' or user.is_staff %}
-          <div style="margin-top: 18px;">
-            <a href="{% url 'portal:cadastrar_video' %}" class="btn btn-primario" aria-label="Cadastrar novo vídeo educativo">
-              + Adicionar Vídeo
+          <div style="margin-top: 15px;">
+            <a href="{% url 'portal:cadastrar_video' %}" class="btn">
+              + Novo Vídeo
             </a>
           </div>
         {% endif %}
       </div>
-
-      <div class="videos-grid" role="list" aria-label="Lista de vídeos educativos">
+      
+      <div class="videos-grid">
         {% for video in videos %}
-          <a href="{{ video.url_youtube }}"
-             target="_blank"
-             rel="noopener noreferrer"
-             class="video-card"
-             role="listitem"
-             aria-label="Assistir: {{ video.titulo }}"
-             style="text-decoration: none; color: inherit; display: flex; flex-direction: column;">
-            <div class="video-thumb" aria-hidden="true">
-              <span class="video-num">Vídeo {{ forloop.counter|stringformat:"02d" }}</span>
+          <div class="video-card" data-video-url="{{ video.url_youtube }}" style="text-decoration: none; color: inherit; display: block; cursor: pointer;">
+            <div class="video-thumb" style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('{{ video.thumbnail_url }}') no-repeat center center; background-size: cover;">
+              <span class="video-num">VÍDEO {{ forloop.counter|stringformat:"02d" }}</span>
               <div class="play-circle">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </div>
             </div>
             <div class="video-body">
-              <h3 class="gov-card-title">{{ video.titulo }}</h3>
-              <p class="gov-card-description">{{ video.descricao }}</p>
+              <h3>{{ video.titulo }}</h3>
+              <p>{{ video.descricao }}</p>
             </div>
-          </a>
+          </div>
         {% empty %}
-          <div class="sem-videos" style="grid-column: 1/-1; text-align: center; padding: 3rem 2rem;" role="status">
-            <p class="gov-text" style="color: var(--cinza-texto); margin: 0 auto;">Nenhum vídeo educativo cadastrado no momento.</p>
+          <div class="sem-videos" style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #666;">
+            <p>Nenhum vídeo educativo cadastrado no momento.</p>
           </div>
         {% endfor %}
       </div>
-
     </div>
   </section>
+
+  <!-- Modal de Reprodução de Vídeo (Estilo Gov.br / Premium) -->
+  <div class="modal-overlay" id="video-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close" aria-label="Fechar Modal">&times;</button>
+      <div class="video-container">
+        <iframe id="modal-iframe" src="" allowfullscreen allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+    </div>
+  </div>
 
 {% endblock %}

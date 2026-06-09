@@ -5,8 +5,10 @@ env/
 python-local-env/
 DEVELOPMENT_SECRET_KEY
 
-# Cache do Python
+tests/
+
 __pycache__/
+.vscode
 *.pyc
 *.pyo
 *.pyd
