@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.conf import settings
 from django.http import HttpResponse, Http404
-from django.db import models  # 👈 Adicionado para permitir o agrupamento (Count)
+from django.db import models  
 import os
 
 from .forms import DenunciaForm
@@ -24,7 +24,14 @@ def home(request):
 
 
 def delegacias(request):
-    return render(request, 'portal/delegacias.html')
+    from .models import Delegacia
+    lista = Delegacia.objects.filter(ativo=True)
+    context = {
+        'delegacias': lista,
+        'cidades': lista.exclude(cidade='').values_list('cidade', flat=True).distinct().order_by('cidade'),
+        'tipos': Delegacia.TIPOS,
+    }
+    return render(request, 'portal/delegacias.html', context)
 
 
 def estatisticas(request):

@@ -1,118 +1,97 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
-
-  <section class="secao secao-alt" id="delegacias" aria-labelledby="titulo-delegacias">
-    <div class="container">
-      <div class="secao-header">
-        <span class="golpe-tipo tipo-dica" aria-hidden="true">Onde Buscar Ajuda em Palmas</span>
-        <h2 id="titulo-delegacias" class="gov-subtitle">Delegacias e Canais Oficiais em Palmas</h2>
-        <p class="gov-text">Localize delegacias e órgãos competentes em Palmas — TO para registrar ocorrências e obter orientação especializada.</p>
+<section class="secao secao-alt" id="delegacias">
+  <div class="container">
+    <div class="secao-header">
+      <span class="section-label">Onde Buscar Ajuda</span>
+      <h2 class="section-title">Delegacias e Canais Oficiais</h2>
+      <p class="section-desc">Localize delegacias e orgaos competentes para registrar ocorrencias e obter orientacao.</p>
+    </div>
+    <div class="delegacias-layout">
+      <div class="filtro-panel">
+        <h4>Filtrar por</h4>
+        <select id="filtro-tipo">
+          <option value="">Todos os tipos</option>
+          {% for valor, label in tipos %}
+          <option value="{{ valor }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+        <input type="text" id="filtro-texto" placeholder="Buscar por nome..." />
+        <select id="filtro-cidade">
+          <option value="">Todos os municipios</option>
+          {% for cidade in cidades %}
+          <option value="{{ cidade }}">{{ cidade }}</option>
+          {% endfor %}
+        </select>
       </div>
 
-      <div class="delegacias-layout">
-        <aside class="filtro-panel" aria-label="Filtros de busca">
-          <h4>Filtrar por</h4>
-          <label for="filtro-tipo" class="sr-only">Tipo de órgão</label>
-          <select id="filtro-tipo" aria-label="Filtrar por tipo de órgão">
-            <option value="">Todos os tipos</option>
-            <option value="Ciberneticos">Crimes Cibernéticos</option>
-            <option value="Idoso">Atendimento ao Idoso</option>
-            <option value="Procon">Procon</option>
-            <option value="Canal Online">Canal Online</option>
-          </select>
-
-          <label for="busca-delegacia" class="sr-only">Buscar por nome</label>
-          <input type="text" id="busca-delegacia" placeholder="Buscar por nome..." aria-label="Buscar delegacia por nome" autocomplete="off" />
-
-          <label for="filtro-cidade" class="sr-only">Filtrar por tipo</label>
-          <select id="filtro-cidade" aria-label="Filtrar por tipo de atendimento">
-            <option value="">Todos os tipos</option>
-            <option value="Palmas">Palmas — TO</option>
-          </select>
-        </aside>
-
-        <div class="delegacias-lista" id="lista-delegacias" role="list" aria-label="Lista de delegacias e canais">
-
-          <div class="delegacia-item" data-tipo="Ciberneticos" data-cidade="Palmas" role="listitem">
-            <div>
-              <h3 class="gov-card-title">Delegacia de Crimes Cibernéticos — Palmas/TO</h3>
-              <div class="del-infos">
-                <span class="del-info">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
-                  Av. Teotônio Segurado, s/n — Palmas, TO
-                </span>
-                <span class="del-info">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" /></svg>
-                  (63) 3218-0000
-                </span>
-                <span class="del-info">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z" /></svg>
-                  Seg. a Sex., 8h às 18h
-                </span>
-              </div>
+      <div class="delegacias-lista" id="lista-delegacias">
+        {% for d in delegacias %}
+        <div class="delegacia-item" data-tipo="{{ d.tipo }}" data-cidade="{{ d.cidade }}">
+          <div>
+            <h3>{{ d.nome }}</h3>
+            <div class="del-infos">
+              {% if d.endereco %}
+              <span class="del-info">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                {{ d.endereco }}{% if d.cidade %} — {{ d.cidade }}, TO{% endif %}
+              </span>
+              {% endif %}
+              {% if d.telefone %}
+              <span class="del-info">
+                <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                {{ d.telefone }}
+              </span>
+              {% endif %}
+              {% if d.horario %}
+              <span class="del-info">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z"/></svg>
+                {{ d.horario }}
+              </span>
+              {% endif %}
+              {% if d.url %}
+              <span class="del-info">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                {{ d.url }}
+              </span>
+              {% endif %}
             </div>
-            <button class="btn-mapa" aria-label="Ver Delegacia de Crimes Cibernéticos de Palmas no mapa">Ver no mapa</button>
           </div>
-
-          <div class="delegacia-item" data-tipo="Canal Online" data-cidade="" role="listitem">
-            <div>
-              <h3 class="gov-card-title">SaferNet Brasil — Canal Online de Denúncia</h3>
-              <div class="del-infos">
-                <span class="del-info">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" /></svg>
-                  safernet.org.br — Atendimento nacional
-                </span>
-                <span class="del-info">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z" /></svg>
-                  Disponível 24 horas
-                </span>
-              </div>
-            </div>
-            <a href="https://www.safernet.org.br/" target="_blank" rel="noopener noreferrer" class="btn-mapa" aria-label="Acessar site da SaferNet Brasil">Acessar</a>
-          </div>
-
-          <div class="delegacia-item" data-tipo="Procon" data-cidade="Palmas" role="listitem">
-            <div>
-              <h3 class="gov-card-title">Procon Palmas — Defesa do Consumidor</h3>
-              <div class="del-infos">
-                <span class="del-info">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
-                  Quadra 103 Sul — Palmas, TO
-                </span>
-                <span class="del-info">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" /></svg>
-                  151 (ligação gratuita)
-                </span>
-                <span class="del-info">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z" /></svg>
-                  Seg. a Sex., 8h às 17h
-                </span>
-              </div>
-            </div>
-            <button class="btn-mapa" aria-label="Ver Procon Palmas no mapa">Ver no mapa</button>
-          </div>
-
-          <div class="delegacia-item" data-tipo="Canal Online" data-cidade="Palmas" role="listitem">
-            <div>
-              <h3 class="gov-card-title">Banco Central do Brasil — Canal do Cidadão</h3>
-              <div class="del-infos">
-                <span class="del-info">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" /></svg>
-                  Atendimento online — bcb.gov.br/meubc
-                </span>
-                <span class="del-info">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" /></svg>
-                  145 (ligação gratuita)
-                </span>
-              </div>
-            </div>
-            <a href="https://www.bcb.gov.br/meubc" target="_blank" rel="noopener noreferrer" class="btn-mapa" aria-label="Acessar canal do cidadão do Banco Central">Acessar</a>
-          </div>
-
+          {% if d.url %}
+          <a href="{{ d.url }}" target="_blank" rel="noopener" class="btn-mapa">Acessar site</a>
+          {% else %}
+          <button class="btn-mapa">Ver no mapa</button>
+          {% endif %}
         </div>
+        {% empty %}
+        <p style="color:#9ca3af;font-style:italic;">Nenhuma delegacia cadastrada no momento.</p>
+        {% endfor %}
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
+<script>
+  const filtroTipo   = document.getElementById('filtro-tipo');
+  const filtroTexto  = document.getElementById('filtro-texto');
+  const filtroCidade = document.getElementById('filtro-cidade');
+  const itens = document.querySelectorAll('.delegacia-item');
+
+  function filtrar() {
+    const tipo   = filtroTipo.value.toLowerCase();
+    const texto  = filtroTexto.value.toLowerCase();
+    const cidade = filtroCidade.value.toLowerCase();
+    itens.forEach(item => {
+      const ok =
+        (!tipo   || item.dataset.tipo.toLowerCase()   === tipo) &&
+        (!cidade || item.dataset.cidade.toLowerCase() === cidade) &&
+        (!texto  || item.innerText.toLowerCase().includes(texto));
+      item.style.display = ok ? '' : 'none';
+    });
+  }
+  filtroTipo.addEventListener('change', filtrar);
+  filtroTexto.addEventListener('input', filtrar);
+  filtroCidade.addEventListener('change', filtrar);
+</script>
 {% endblock %}
