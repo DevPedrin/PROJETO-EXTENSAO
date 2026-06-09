@@ -1,6 +1,39 @@
 from django.db import models
 from django.conf import settings
 
+
+
+class Delegacia(models.Model):
+    TIPOS = [
+        ('Ciberneticos', 'Delegacia de Crimes Cibernéticos'),
+        ('Idoso', 'Delegacia de Atendimento ao Idoso'),
+        ('Procon', 'Procon'),
+        ('Canal Online', 'Canal Online'),
+    ]
+
+    nome = models.CharField(max_length=200, verbose_name='Nome')
+    tipo = models.CharField(max_length=20, choices=TIPOS, verbose_name='Tipo')
+    cidade = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name='Cidade',
+        help_text='Deixe em branco para canais online/nacionais.',
+    )
+    endereco = models.CharField(max_length=255, blank=True, verbose_name='Endereço')
+    telefone = models.CharField(max_length=50, blank=True, verbose_name='Telefone')
+    horario = models.CharField(max_length=100, blank=True, verbose_name='Horário de funcionamento')
+    url = models.URLField(blank=True, verbose_name='Link (para canais online)')
+    ativo = models.BooleanField(default=True, verbose_name='Ativo')
+
+    class Meta:
+        verbose_name = 'Delegacia / Órgão'
+        verbose_name_plural = 'Delegacias / Órgãos'
+        ordering = ['cidade', 'nome']
+
+    def __str__(self):
+        cidade_str = f' — {self.cidade}' if self.cidade else ''
+        return f'{self.nome}{cidade_str}'
+
 class Video(models.Model):
     titulo = models.CharField(max_length=200, verbose_name="Título")
     descricao = models.TextField(verbose_name="Descrição", blank=True)

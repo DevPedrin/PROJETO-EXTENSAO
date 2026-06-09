@@ -29,5 +29,6 @@ urlpatterns = [
     path('documentação/', views.documentacao, name='documentacao_alt'),
     path('minhas-denuncias/', views.minhas_denuncias, name='minhas_denuncias'),
     path('todas-denuncias/', views.todas_denuncias, name='todas_denuncias'),
+    path('painel/delegacias/', views.painel_delegacias, name='painel_delegacias'),
     path('admin/', admin.site.urls),
 ]

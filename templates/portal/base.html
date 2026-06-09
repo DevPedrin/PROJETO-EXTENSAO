@@ -44,6 +44,9 @@
         {% endif %}
         {% if user.is_authenticated %}
           <!-- Links inseridos limpos, sem quebrar o CSS do menu -->
+        {% if user.is_authenticated and user.tipo_usuario == 'admin' %}
+          <a href="{% url 'portal:painel_delegacias' %}">Gerenciar Delegacias</a>
+        {% endif %}
           <a href="{% url 'portal:dashboard' %}">Dashboard</a>
           <a href="{% url 'profile' %}">Perfil</a>
           <span class="nav-usuario">Olá, {{ user.username }}</span>

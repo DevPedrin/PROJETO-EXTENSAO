@@ -2,72 +2,176 @@
 
 {% block content %}
 <section class="secao secao-alt">
-    <div class="container">
-        <div class="secao-header">
-            <span class="section-label">Dados Oficiais</span>
-            <h2 class="section-title">Estatísticas de Denúncias</h2>
-            <p class="section-desc">Dados baseados em denúncias validadas e processadas pelo nosso sistema de moderação.</p>
-        </div>
+  <div class="container">
 
-        <div class="estatisticas-resumo">
-            <div class="estat-card">
-                <span class="estat-valor">{{ total_denuncias }}</span>
-                <span class="estat-label">Denúncias Aprovadas</span>
-            </div>
-        </div>
-
-        <div class="estatisticas-detalhe">
-            <h3>Denúncias por Delegacia</h3>
-            <div class="grafico-simulado">
-                {% for delegacia in denuncias_por_delegacia %}
-                <div class="barra-item">
-                    <span class="barra-nome">{{ delegacia.nome }}</span>
-                    <div class="barra-fundo">
-                        <div class="barra-preenchimento" style="width: {{ delegacia.porcentagem }}%"></div>
-                    </div>
-                    <span class="barra-valor">{{ delegacia.total }}</span>
-                </div>
-                {% empty %}
-                <p>Nenhuma denúncia aprovada até o momento.</p>
-                {% endfor %}
-            </div>
-        </div>
+    <div class="secao-header">
+      <span class="section-label">Dados Oficiais</span>
+      <h2 class="section-title">Estatísticas de Denúncias</h2>
+      <p class="section-desc">Dados baseados em denúncias registradas e processadas pelo sistema de moderação.</p>
     </div>
+
+    <div class="estat-resumo-grid">
+      <div class="estat-card estat-card--aprovada">
+        <span class="estat-valor">{{ total_denuncias }}</span>
+        <span class="estat-label">Aprovadas</span>
+      </div>
+      <div class="estat-card estat-card--analise">
+        <span class="estat-valor">{{ total_em_analise }}</span>
+        <span class="estat-label">Em Análise</span>
+      </div>
+      <div class="estat-card estat-card--rejeitada">
+        <span class="estat-valor">{{ total_rejeitadas }}</span>
+        <span class="estat-label">Rejeitadas</span>
+      </div>
+    </div>
+
+    <div class="estat-bloco">
+      <h3 class="estat-titulo-secao">Evolução Mensal (últimos 6 meses)</h3>
+      <canvas id="graficoMensal" height="100"></canvas>
+    </div>
+
+    <div class="estat-bloco">
+      <h3 class="estat-titulo-secao">Denúncias por Tipo de Golpe</h3>
+      {% if denuncias_por_tipo %}
+        <div class="grafico-barras">
+          {% for item in denuncias_por_tipo %}
+          <div class="barra-item">
+            <span class="barra-nome">{{ item.nome_golpe }}</span>
+            <div class="barra-fundo">
+              <div class="barra-preenchimento" style="width: {{ item.porcentagem }}%"></div>
+            </div>
+            <span class="barra-valor">{{ item.total }} <small>({{ item.porcentagem }}%)</small></span>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="estat-vazio">Nenhuma denúncia aprovada até o momento.</p>
+      {% endif %}
+    </div>
+
+    <div class="estat-bloco">
+      <h3 class="estat-titulo-secao">Denúncias por Faixa Etária</h3>
+      {% if denuncias_por_faixa %}
+        <div class="grafico-barras">
+          {% for item in denuncias_por_faixa %}
+          <div class="barra-item">
+            <span class="barra-nome">{{ item.nome_faixa }}</span>
+            <div class="barra-fundo">
+              <div class="barra-preenchimento barra-preenchimento--faixa" style="width: {{ item.porcentagem }}%"></div>
+            </div>
+            <span class="barra-valor">{{ item.total }} <small>({{ item.porcentagem }}%)</small></span>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="estat-vazio">Nenhuma denúncia com faixa etária informada.</p>
+      {% endif %}
+    </div>
+
+    {% if denuncias_por_cidade %}
+    <div class="estat-bloco">
+      <h3 class="estat-titulo-secao">Cidades com Mais Denúncias (Top 5)</h3>
+      <div class="grafico-barras">
+        {% for item in denuncias_por_cidade %}
+        <div class="barra-item">
+          <span class="barra-nome">{{ item.cidade }}</span>
+          <div class="barra-fundo">
+            <div class="barra-preenchimento barra-preenchimento--cidade" style="width: {{ item.porcentagem }}%"></div>
+          </div>
+          <span class="barra-valor">{{ item.total }} <small>({{ item.porcentagem }}%)</small></span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  const labels = {{ meses_labels_json|safe }};
+  const valores = {{ meses_valores_json|safe }};
+  const ctx = document.getElementById('graficoMensal').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Denúncias registradas',
+        data: valores,
+        borderColor: 'var(--azul-gov, #1351b4)',
+        backgroundColor: 'rgba(19,81,180,0.1)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 5,
+        pointBackgroundColor: 'var(--azul-gov, #1351b4)',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+    }
+  });
+</script>
+
 <style>
-    .estatisticas-resumo {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 40px;
-    }
-    .estat-card {
-        background: var(--azul-gov);
-        color: white;
-        padding: 30px;
-        border-radius: 8px;
-        text-align: center;
-        min-width: 200px;
-    }
-    .estat-valor {
-        display: block;
-        font-size: 3rem;
-        font-weight: 800;
-        color: var(--amarelo-gov);
-    }
-    .barra-item {
-        margin-bottom: 15px;
-    }
-    .barra-fundo {
-        background: #eee;
-        height: 20px;
-        border-radius: 10px;
-        overflow: hidden;
-        margin: 5px 0;
-    }
-    .barra-preenchimento {
-        background: var(--azul-gov);
-        height: 100%;
-    }
+  .estat-resumo-grid {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .estat-card {
+    padding: 28px 36px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 160px;
+    color: white;
+  }
+  .estat-card--aprovada  { background: var(--azul-gov, #1351b4); }
+  .estat-card--analise   { background: #b45309; }
+  .estat-card--rejeitada { background: #6b7280; }
+  .estat-valor {
+    display: block;
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--amarelo-gov, #ffcd07);
+  }
+  .estat-card--analise .estat-valor,
+  .estat-card--rejeitada .estat-valor { color: #fff; }
+  .estat-label { font-size: 0.95rem; opacity: 0.9; }
+  .estat-bloco {
+    background: #fff;
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .estat-titulo-secao {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1a1a2e;
+  }
+  .grafico-barras { display: flex; flex-direction: column; gap: 14px; }
+  .barra-item {
+    display: grid;
+    grid-template-columns: 220px 1fr 100px;
+    align-items: center;
+    gap: 12px;
+  }
+  .barra-nome { font-size: 0.9rem; color: #374151; }
+  .barra-fundo { background: #e5e7eb; height: 18px; border-radius: 9px; overflow: hidden; }
+  .barra-preenchimento         { background: var(--azul-gov, #1351b4); height: 100%; border-radius: 9px; transition: width .4s; }
+  .barra-preenchimento--faixa  { background: #0d9488; }
+  .barra-preenchimento--cidade { background: #7c3aed; }
+  .barra-valor { font-size: 0.88rem; color: #6b7280; }
+  .estat-vazio { color: #9ca3af; font-style: italic; }
+  @media (max-width: 640px) {
+    .barra-item { grid-template-columns: 1fr; }
+  }
 </style>
 {% endblock %}

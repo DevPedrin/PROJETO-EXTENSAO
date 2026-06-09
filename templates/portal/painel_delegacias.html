@@ -1,0 +1,202 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<section class="secao secao-alt">
+  <div class="container">
+
+    <div class="secao-header">
+      <span class="section-label">Administração</span>
+      <h2 class="section-title">Gerenciar Delegacias</h2>
+      <p class="section-desc">Cadastre, edite ou desative delegacias e canais exibidos na página pública.</p>
+    </div>
+
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="alerta-msg alerta-{{ msg.tags }}">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="painel-grid">
+
+      <!-- FORMULÁRIO DE CADASTRO -->
+      <div class="painel-form-bloco">
+        <h3>Cadastrar Nova Delegacia</h3>
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="campo-grupo">
+              <label>{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}
+                <small>{{ field.help_text }}</small>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <button type="submit" class="btn-gov">Cadastrar</button>
+        </form>
+      </div>
+
+      <!-- LISTAGEM -->
+      <div class="painel-lista-bloco">
+        <h3>Delegacias Cadastradas ({{ delegacias.count }})</h3>
+        {% if delegacias %}
+          <table class="painel-tabela">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Cidade</th>
+                <th>Ativo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for d in delegacias %}
+              <tr class="{% if not d.ativo %}linha-inativa{% endif %}">
+                <td>{{ d.nome }}</td>
+                <td>{{ d.get_tipo_display }}</td>
+                <td>{{ d.cidade|default:"—" }}</td>
+                <td>{% if d.ativo %}✅{% else %}❌{% endif %}</td>
+                <td class="acoes-col">
+                  <!-- Toggle ativo/inativo -->
+                  <form method="post" style="display:inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="pk" value="{{ d.pk }}">
+                    <input type="hidden" name="acao" value="toggle_ativo">
+                    <button type="submit" class="btn-tabela btn-toggle">
+                      {% if d.ativo %}Desativar{% else %}Ativar{% endif %}
+                    </button>
+                  </form>
+                  <!-- Editar (abre formulário inline) -->
+                  <button class="btn-tabela btn-editar" onclick="abrirEdicao({{ d.pk }}, '{{ d.nome|escapejs }}', '{{ d.tipo }}', '{{ d.cidade|escapejs }}', '{{ d.endereco|escapejs }}', '{{ d.telefone|escapejs }}', '{{ d.horario|escapejs }}', '{{ d.url|escapejs }}', {{ d.ativo|yesno:'true,false' }})">Editar</button>
+                  <!-- Excluir -->
+                  <form method="post" style="display:inline" onsubmit="return confirm('Excluir permanentemente?')">
+                    {% csrf_token %}
+                    <input type="hidden" name="pk" value="{{ d.pk }}">
+                    <input type="hidden" name="acao" value="excluir">
+                    <button type="submit" class="btn-tabela btn-excluir">Excluir</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p style="color:#9ca3af;font-style:italic;">Nenhuma delegacia cadastrada ainda.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- MODAL DE EDIÇÃO -->
+    <div id="modal-edicao" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
+      <div style="background:#fff; border-radius:8px; padding:32px; max-width:540px; width:90%; max-height:90vh; overflow-y:auto;">
+        <h3 style="margin-bottom:20px;">Editar Delegacia</h3>
+        <form method="post" id="form-edicao">
+          {% csrf_token %}
+          <input type="hidden" name="pk_editar" id="edit-pk">
+          <div class="campo-grupo"><label>Nome</label><input type="text" name="nome" id="edit-nome" class="form-control"></div>
+          <div class="campo-grupo">
+            <label>Tipo</label>
+            <select name="tipo" id="edit-tipo" class="form-control">
+              <option value="Ciberneticos">Delegacia de Crimes Cibernéticos</option>
+              <option value="Idoso">Delegacia de Atendimento ao Idoso</option>
+              <option value="Procon">Procon</option>
+              <option value="Canal Online">Canal Online</option>
+            </select>
+          </div>
+          <div class="campo-grupo"><label>Cidade</label><input type="text" name="cidade" id="edit-cidade" class="form-control"></div>
+          <div class="campo-grupo"><label>Endereço</label><input type="text" name="endereco" id="edit-endereco" class="form-control"></div>
+          <div class="campo-grupo"><label>Telefone</label><input type="text" name="telefone" id="edit-telefone" class="form-control"></div>
+          <div class="campo-grupo"><label>Horário</label><input type="text" name="horario" id="edit-horario" class="form-control"></div>
+          <div class="campo-grupo"><label>URL</label><input type="url" name="url" id="edit-url" class="form-control"></div>
+          <div class="campo-grupo" style="display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" name="ativo" id="edit-ativo" value="True">
+            <label for="edit-ativo" style="margin:0">Ativo</label>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:20px;">
+            <button type="submit" class="btn-gov">Salvar</button>
+            <button type="button" onclick="fecharModal()" style="background:#6b7280;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+function abrirEdicao(pk, nome, tipo, cidade, endereco, telefone, horario, url, ativo) {
+  document.getElementById('edit-pk').value = pk;
+  document.getElementById('edit-nome').value = nome;
+  document.getElementById('edit-tipo').value = tipo;
+  document.getElementById('edit-cidade').value = cidade;
+  document.getElementById('edit-endereco').value = endereco;
+  document.getElementById('edit-telefone').value = telefone;
+  document.getElementById('edit-horario').value = horario;
+  document.getElementById('edit-url').value = url;
+  document.getElementById('edit-ativo').checked = ativo;
+  document.getElementById('modal-edicao').style.display = 'flex';
+}
+function fecharModal() {
+  document.getElementById('modal-edicao').style.display = 'none';
+}
+</script>
+
+<style>
+  .painel-grid {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  .painel-form-bloco, .painel-lista-bloco {
+    background: #fff;
+    border-radius: 8px;
+    padding: 28px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .painel-form-bloco h3, .painel-lista-bloco h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1a1a2e;
+  }
+  .campo-grupo { margin-bottom: 14px; }
+  .campo-grupo label { display:block; font-size:0.88rem; font-weight:600; margin-bottom:4px; color:#374151; }
+  .campo-grupo small { color:#9ca3af; font-size:0.8rem; }
+  .form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+  }
+  .btn-gov {
+    background: var(--azul-gov, #1351b4);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .painel-tabela { width:100%; border-collapse:collapse; font-size:0.88rem; }
+  .painel-tabela th { background:#f3f4f6; padding:10px 12px; text-align:left; font-weight:700; color:#374151; }
+  .painel-tabela td { padding:10px 12px; border-bottom:1px solid #e5e7eb; vertical-align:middle; }
+  .linha-inativa td { opacity: 0.5; }
+  .acoes-col { display:flex; gap:6px; flex-wrap:wrap; }
+  .btn-tabela { border:none; padding:5px 10px; border-radius:4px; font-size:0.8rem; cursor:pointer; color:#fff; }
+  .btn-toggle  { background:#0d9488; }
+  .btn-editar  { background:#1351b4; }
+  .btn-excluir { background:#dc2626; }
+  .alerta-msg { padding:12px 16px; border-radius:6px; margin-bottom:16px; font-size:0.9rem; }
+  .alerta-success { background:#d1fae5; color:#065f46; }
+  .alerta-warning { background:#fef3c7; color:#92400e; }
+  .alerta-error   { background:#fee2e2; color:#991b1b; }
+  @media (max-width: 768px) {
+    .painel-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}

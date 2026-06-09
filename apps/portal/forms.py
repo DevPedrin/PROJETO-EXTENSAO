@@ -73,3 +73,21 @@ class DenunciaForm(forms.ModelForm):
             self.add_error('tipo_golpe', 'Selecione o tipo de golpe.')
 
         return cleaned_data
+
+
+from .models import Delegacia
+
+class DelegaciaForm(forms.ModelForm):
+    class Meta:
+        model = Delegacia
+        fields = ['nome', 'tipo', 'cidade', 'endereco', 'telefone', 'horario', 'url', 'ativo']
+        widgets = {
+            'nome':     forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome da delegacia ou órgão'}),
+            'tipo':     forms.Select(attrs={'class': 'form-control'}),
+            'cidade':   forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Cidade (vazio para canais online)'}),
+            'endereco': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Endereço completo'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: (63) 3218-0000'}),
+            'horario':  forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Seg a Sex, 8h às 18h'}),
+            'url':      forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://...'}),
+            'ativo':    forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }

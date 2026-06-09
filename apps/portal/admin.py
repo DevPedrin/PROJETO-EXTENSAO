@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.conf import settings
-from .models import Denuncia
+from .models import Denuncia, Delegacia
 
 
 @admin.register(Denuncia)
@@ -77,3 +77,11 @@ class DenunciaAdmin(admin.ModelAdmin):
         lógica de anonimato da view). Criar via admin pularia essa lógica.
         """
         return False
+
+
+@admin.register(Delegacia)
+class DelegaciaAdmin(admin.ModelAdmin):
+    list_display = ['nome', 'tipo', 'cidade', 'telefone', 'ativo']
+    list_filter = ['tipo', 'cidade', 'ativo']
+    search_fields = ['nome', 'cidade', 'endereco']
+    list_editable = ['ativo']
