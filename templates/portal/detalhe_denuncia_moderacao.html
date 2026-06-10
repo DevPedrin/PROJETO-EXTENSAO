@@ -1,0 +1,104 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<section class="secao secao-alt">
+  <div class="container" style="max-width:750px;">
+    <div class="secao-header">
+      <span class="golpe-tipo tipo-alto" aria-hidden="true">Moderação</span>
+      <h2 class="gov-subtitle">Detalhe da Denúncia</h2>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:32px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <span style="font-size:0.78rem;color:var(--cinza-texto);">Protocolo</span>
+          <p style="font-weight:700;">{{ denuncia.protocolo }}</p>
+        </div>
+        <div>
+          <span style="font-size:0.78rem;color:var(--cinza-texto);">Status</span>
+          <p>
+            <span class="status-badge {{ denuncia.status }}">
+              {{ denuncia.get_status_display }}
+            </span>
+          </p>
+        </div>
+        <div>
+          <span style="font-size:0.78rem;color:var(--cinza-texto);">Tipo de Golpe</span>
+          <p>{{ denuncia.get_tipo_golpe_display }}</p>
+        </div>
+        <div>
+          <span style="font-size:0.78rem;color:var(--cinza-texto);">Autor</span>
+          <p>
+            {% if denuncia.anonima %}
+              <span style="font-size:0.78rem;background:#fee2e2;color:#dc2626;padding:2px 8px;border-radius:10px;font-weight:700;">Anônima</span>
+            {% else %}
+              {{ denuncia.nome_autor }}
+            {% endif %}
+          </p>
+        </div>
+        {% if denuncia.cidade %}
+        <div>
+          <span style="font-size:0.78rem;color:var(--cinza-texto);">Cidade</span>
+          <p>{{ denuncia.cidade }}</p>
+        </div>
+        {% endif %}
+        {% if denuncia.faixa_etaria %}
+        <div>
+          <span style="font-size:0.78rem;color:var(--cinza-texto);">Faixa Etária</span>
+          <p>{{ denuncia.get_faixa_etaria_display }}</p>
+        </div>
+        {% endif %}
+        {% if denuncia.data_ocorrencia %}
+        <div>
+          <span style="font-size:0.78rem;color:var(--cinza-texto);">Data da Ocorrência</span>
+          <p>{{ denuncia.data_ocorrencia|date:"d/m/Y" }}</p>
+        </div>
+        {% endif %}
+        <div>
+          <span style="font-size:0.78rem;color:var(--cinza-texto);">Registrada em</span>
+          <p>{{ denuncia.criado_em|date:"d/m/Y H:i" }}</p>
+        </div>
+      </div>
+
+      <div>
+        <span style="font-size:0.78rem;color:var(--cinza-texto);">Descrição</span>
+        <div style="margin-top:8px;padding:16px;background:#f8f8f8;border-radius:4px;border-left:3px solid var(--azul-principal);">
+          {{ denuncia.descricao|linebreaks }}
+        </div>
+      </div>
+
+      {% if denuncia.motivo_moderacao %}
+      <div>
+        <span style="font-size:0.78rem;color:var(--cinza-texto);">Motivo da Decisão</span>
+        <div style="margin-top:8px;padding:16px;background:#fff7ed;border-radius:4px;border-left:3px solid #d97706;">
+          {{ denuncia.motivo_moderacao }}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if denuncia.moderado_por %}
+      <div>
+        <span style="font-size:0.78rem;color:var(--cinza-texto);">Moderado por</span>
+        <p>{{ denuncia.moderado_por.nome_completo|default:denuncia.moderado_por.username }} em {{ denuncia.moderado_em|date:"d/m/Y H:i" }}</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      {% if denuncia.status == 'analise' %}
+        <a href="{% url 'portal:aprovar_denuncia' denuncia.pk %}"
+           class="btn btn-primario" style="background:#16a34a;">Aprovar</a>
+        <a href="{% url 'portal:rejeitar_denuncia' denuncia.pk %}"
+           class="btn btn-primario" style="background:#d97706;">Rejeitar</a>
+      {% endif %}
+      {% if denuncia.status == 'aprovada' and not denuncia.publicada %}
+        <a href="{% url 'portal:publicar_denuncia' denuncia.pk %}"
+           class="btn btn-primario">Publicar</a>
+      {% endif %}
+      <a href="{% url 'portal:dashboard' %}" class="btn btn-primario"
+         style="background:var(--cinza-linha);color:var(--cinza-texto);">← Voltar</a>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

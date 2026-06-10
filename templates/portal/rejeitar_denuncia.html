@@ -1,0 +1,32 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<section class="secao secao-alt">
+  <div class="container" style="max-width:600px;">
+    <div class="secao-header">
+      <span class="golpe-tipo tipo-alto" aria-hidden="true">Moderação</span>
+      <h2 class="gov-subtitle">Rejeitar Denúncia</h2>
+      <p class="gov-text">Protocolo: <strong>{{ denuncia.protocolo }}</strong></p>
+    </div>
+
+    <form method="post" style="display:flex;flex-direction:column;gap:16px;">
+      {% csrf_token %}
+      <label for="motivo_moderacao" style="font-weight:600;">Motivo da rejeição</label>
+      <textarea
+        id="motivo_moderacao"
+        name="motivo_moderacao"
+        rows="5"
+        required
+        style="padding:12px;border:1px solid var(--cinza-linha);border-radius:4px;font-size:1rem;"
+        placeholder="Descreva o motivo da rejeição desta denúncia..."
+      ></textarea>
+      <div style="display:flex;gap:12px;">
+        <button type="submit" class="btn btn-primario" style="background:var(--vermelho-alerta);">
+          Confirmar Rejeição
+        </button>
+        <a href="{% url 'portal:moderacao_denuncias' %}" class="btn btn-primario">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

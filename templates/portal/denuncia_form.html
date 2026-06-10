@@ -1,0 +1,27 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<section class="secao secao-alt" aria-labelledby="titulo-denuncia">
+  <div class="container" style="max-width: 700px;">
+    <div class="secao-header">
+      <span class="golpe-tipo tipo-dica" aria-hidden="true">Denúncia</span>
+      <h2 id="titulo-denuncia" class="gov-subtitle">Registrar Denúncia</h2>
+      <p class="gov-text">Utilize este formulário para relatar tentativas de golpe ou fraudes digitais. Sua contribuição é importante para proteger outras pessoas.</p>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alerta-icone" style="margin-bottom:16px;">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" style="display:flex; flex-direction:column; gap:16px;">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primario" style="align-self:flex-start;">
+        Enviar Denúncia
+      </button>
+    </form>
+  </div>
+</section>
+{% endblock %}

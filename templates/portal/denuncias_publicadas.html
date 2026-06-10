@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Denúncias Publicadas</h1>
+
+{% for denuncia in denuncias %}
+
+<article>
+
+    <h2>
+        {{ denuncia.get_tipo_golpe_display }}
+    </h2>
+
+    <p>
+        <strong>Cidade:</strong>
+        {{ denuncia.cidade }}
+    </p>
+
+    {% if denuncia.data_ocorrencia %}
+    <p>
+        <strong>Data da ocorrência:</strong>
+        {{ denuncia.data_ocorrencia }}
+    </p>
+    {% endif %}
+
+    <div>
+        {{ denuncia.descricao|linebreaks }}
+    </div>
+
+    <small>
+        Publicado em {{ denuncia.publicada_em }}
+    </small>
+
+</article>
+
+<hr>
+
+{% empty %}
+
+<p>
+    Nenhuma denúncia publicada até o momento.
+</p>
+
+{% endfor %}
+
+{% endblock %}

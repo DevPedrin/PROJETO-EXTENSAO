@@ -1,38 +1,10 @@
 from django.db import models
 from django.conf import settings
-
-class Video(models.Model):
-    titulo = models.CharField(max_length=200, verbose_name="Título")
-    descricao = models.TextField(verbose_name="Descrição", blank=True)
-    url_youtube = models.URLField(verbose_name="Link do Vídeo (YouTube, etc.)")
-    criado_em = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.titulo
-
-    @property
-    def thumbnail_url(self):
-        """Retorna o link da imagem de capa (thumbnail) do vídeo do YouTube."""
-        import re
-        url = self.url_youtube
-        reg_exp = r'^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*'
-        match = re.match(reg_exp, url)
-        if match and len(match.group(2)) == 11:
-            video_id = match.group(2)
-            return f"https://img.youtube.com/vi/{video_id}/mqdefault.jpg"
-        return ""
+from django.utils import timezone
+import uuid
 
 
 class Denuncia(models.Model):
-    """
-    Model que representa uma denúncia de golpe digital.
-
-    Regra de anonimato:
-        Quando `anonima=True`, o campo `usuario` aponta SEMPRE para o
-        usuário técnico fixo (anonimo_sistema), independentemente de quem
-        esteja autenticado. Essa lógica é garantida exclusivamente no backend
-        (view), nunca no frontend.
-    """
 
     TIPOS_GOLPE = [
         ('whatsapp_redes', 'Golpe do WhatsApp / Redes Sociais'),
@@ -43,105 +15,200 @@ class Denuncia(models.Model):
         ('outro', 'Outro'),
     ]
 
-    FAIXAS_ETARIAS = [
-        ('18_29', '18 a 29 anos'),
-        ('30_44', '30 a 44 anos'),
-        ('45_59', '45 a 59 anos'),
-        ('60_mais', '60 anos ou mais'),
-    ]
-
     STATUS_DENUNCIA = [
         ('analise', 'Em Análise'),
         ('aprovada', 'Aprovada'),
         ('rejeitada', 'Rejeitada'),
     ]
 
-    usuario = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
-        related_name='denuncias',
-        verbose_name='Usuário',
-        help_text=(
-            'Para denúncias anônimas, aponta para o usuário técnico '
-            '"anonimo_sistema" — nunca para o usuário real autenticado.'
-        ),
+    FAIXAS_ETARIAS = [
+        ('18_25', '18 a 25 anos'),
+        ('26_35', '26 a 35 anos'),
+        ('36_50', '36 a 50 anos'),
+        ('51_65', '51 a 65 anos'),
+        ('65_mais', 'Acima de 65 anos'),
+    ]
+
+    protocolo = models.CharField(
+        max_length=30,
+        unique=True,
+        editable=False,
+        verbose_name='Protocolo'
     )
 
     anonima = models.BooleanField(
         default=False,
-        verbose_name='Denúncia anônima',
-        help_text=(
-            'Se True, o usuário real NÃO é rastreável. '
-            'O campo "usuario" aponta para o usuário técnico fixo.'
-        ),
+        verbose_name='Denúncia anônima'
+    )
+
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='denuncias',
+        verbose_name='Usuário'
+    )
+
+    autor_hash = models.CharField(
+        max_length=64,
+        blank=True,
+        editable=False,
+        db_index=True,
+        verbose_name='Identificador do autor'
     )
 
     tipo_golpe = models.CharField(
         max_length=30,
         choices=TIPOS_GOLPE,
-        verbose_name='Tipo de golpe',
-    )
-
-    data_ocorrencia = models.DateField(
-        null=True,
-        blank=True,
-        verbose_name='Data da ocorrência',
-    )
-
-    cidade = models.CharField(
-        max_length=120,
-        blank=True,
-        verbose_name='Cidade',
-    )
-
-    descricao = models.TextField(
-        verbose_name='Descrição do ocorrido',
-        help_text='Descrição fornecida pelo denunciante.',
-    )
-
-    nome_informado = models.CharField(
-        max_length=150,
-        blank=True,
-        verbose_name='Nome informado (opcional)',
-        help_text='Nome fornecido voluntariamente no formulário, se houver.',
+        verbose_name='Tipo de golpe'
     )
 
     faixa_etaria = models.CharField(
         max_length=10,
         choices=FAIXAS_ETARIAS,
         blank=True,
-        verbose_name='Faixa etária',
+        verbose_name='Faixa etária'
+    )
+
+    data_ocorrencia = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Data da ocorrência'
+    )
+
+
+    cidade = models.CharField(
+        max_length=120,
+        blank=True,
+        verbose_name='Cidade'
+    )
+
+    descricao = models.TextField(
+        verbose_name='Descrição'
     )
 
     status = models.CharField(
         max_length=15,
         choices=STATUS_DENUNCIA,
         default='analise',
-        verbose_name='Status da Denúncia'
+        verbose_name='Status'
+    )
+
+    moderado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='denuncias_moderadas',
+        verbose_name='Moderado por'
+    )
+
+    moderado_em = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name='Data da moderação'
+    )
+
+    motivo_moderacao = models.TextField(
+        blank=True,
+        verbose_name='Motivo da decisão'
+    )
+
+    publicada = models.BooleanField(
+        default=False,
+        verbose_name='Publicada'
+    )
+
+    publicada_em = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name='Data da publicação'
     )
 
     criado_em = models.DateTimeField(
         auto_now_add=True,
-        verbose_name='Registrado em',
+        verbose_name='Criado em'
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Atualizado em'
     )
 
     class Meta:
         verbose_name = 'Denúncia'
         verbose_name_plural = 'Denúncias'
         ordering = ['-criado_em']
+        indexes = [
+            models.Index(fields=['status']),
+            models.Index(fields=['criado_em']),
+            models.Index(fields=['autor_hash']),
+        ]
+
+    def save(self, *args, **kwargs):
+        if not self.protocolo:
+            ano = timezone.now().year
+            codigo = uuid.uuid4().hex[:6].upper()
+            self.protocolo = f'DEN-{ano}-{codigo}'
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        tipo = self.get_tipo_golpe_display()
-        status = 'Anônima' if self.anonima else f'por {self.usuario.username}'
-        return f'[{self.pk}] {tipo} — {status} ({self.criado_em:%d/%m/%Y})'
+        return f'{self.protocolo} - {self.get_tipo_golpe_display()}'
 
     @property
     def exibir_autor(self):
-        if self.anonima:
-            return 'Anônimo'
-        return self.usuario.username
+        return 'Anônimo' if self.anonima else 'Identificado'
     
+    @property
+    def nome_autor(self):
+        if self.anonima or not self.usuario:
+            return 'Anônimo'
+        return self.usuario.nome_completo or self.usuario.username
+
+    @property
+    def pode_ser_moderada(self):
+        return self.status == 'analise'
+
+    @property
+    def foi_aprovada(self):
+        return self.status == 'aprovada'
+
+    @property
+    def foi_rejeitada(self):
+        return self.status == 'rejeitada'
+
+    @property
+    def esta_publicada(self):
+        return self.publicada
+    
+    
+
+
+class Video(models.Model):
+    titulo = models.CharField(max_length=200, verbose_name="Título")
+    descricao = models.TextField(blank=True, verbose_name="Descrição")
+    url_youtube = models.URLField(verbose_name="Link do Vídeo")
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.titulo
+
+    @property
+    def thumbnail_url(self):
+        import re
+
+        reg_exp = r'^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*'
+        match = re.match(reg_exp, self.url_youtube)
+
+        if match and len(match.group(2)) == 11:
+            return f"https://img.youtube.com/vi/{match.group(2)}/mqdefault.jpg"
+
+        return ""
+
+
 class Delegacia(models.Model):
+
     TIPOS = [
         ('Ciberneticos', 'Delegacia de Crimes Cibernéticos'),
         ('Idoso', 'Delegacia de Atendimento ao Idoso'),
@@ -150,18 +217,46 @@ class Delegacia(models.Model):
     ]
 
     nome = models.CharField(max_length=200, verbose_name='Nome')
-    tipo = models.CharField(max_length=20, choices=TIPOS, verbose_name='Tipo')
+
+    tipo = models.CharField(
+        max_length=20,
+        choices=TIPOS,
+        verbose_name='Tipo'
+    )
+
     cidade = models.CharField(
         max_length=100,
         blank=True,
-        verbose_name='Cidade',
-        help_text='Deixe em branco para canais online/nacionais.',
+        verbose_name='Cidade'
     )
-    endereco = models.CharField(max_length=255, blank=True, verbose_name='Endereço')
-    telefone = models.CharField(max_length=50, blank=True, verbose_name='Telefone')
-    horario = models.CharField(max_length=100, blank=True, verbose_name='Horário de funcionamento')
-    url = models.URLField(blank=True, verbose_name='Link (para canais online)')
-    ativo = models.BooleanField(default=True, verbose_name='Ativo')
+
+    endereco = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='Endereço'
+    )
+
+    telefone = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name='Telefone'
+    )
+
+    horario = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name='Horário'
+    )
+
+    url = models.URLField(
+        blank=True,
+        verbose_name='Link'
+    )
+
+    ativo = models.BooleanField(
+        default=True,
+        verbose_name='Ativo'
+    )
 
     class Meta:
         verbose_name = 'Delegacia / Órgão'
@@ -169,5 +264,4 @@ class Delegacia(models.Model):
         ordering = ['cidade', 'nome']
 
     def __str__(self):
-        cidade_str = f' — {self.cidade}' if self.cidade else ''
-        return f'{self.nome}{cidade_str}'
+        return f'{self.nome} - {self.cidade}' if self.cidade else self.nome
