@@ -1,7 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .models import User
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
+from django.contrib.auth.decorators import (
+    login_required,
+    user_passes_test
+)
+
+def eh_admin(user):
+    return (
+        user.is_authenticated
+        and user.tipo_usuario == "admin"
+    )
 
 def login_view(request):
     if request.method == "POST":
@@ -135,3 +146,106 @@ def profile_view(request):
         "success": success_message,
         "user_profile": user # Passamos os dados do usuário para o template preencher os inputs
     })
+
+@login_required
+@user_passes_test(eh_admin)
+def usuarios_view(request):
+
+    usuarios = User.objects.all().order_by("username")
+
+    return render(
+        request,
+        "accounts/usuarios.html",
+        {
+            "usuarios": usuarios
+        }
+    )
+
+@login_required
+@user_passes_test(eh_admin)
+def editar_usuario_view(request, user_id):
+
+    usuario = get_object_or_404(
+        User,
+        id=user_id
+    )
+
+    if request.method == "POST":
+
+        usuario.username = request.POST.get("username")
+        usuario.email = request.POST.get("email")
+        usuario.nome_completo = request.POST.get("nome_completo")
+        usuario.telefone = request.POST.get("telefone")
+        usuario.tipo_usuario = request.POST.get("tipo_usuario")
+
+        usuario.save()
+
+        messages.success(
+            request,
+            "Usuário atualizado."
+        )
+
+        return redirect("usuarios")
+
+    return render(
+        request,
+        "accounts/usuario_editar.html",
+        {
+            "usuario": usuario
+        }
+    )
+
+@login_required
+@user_passes_test(eh_admin)
+def excluir_usuario_view(request, user_id):
+
+    usuario = get_object_or_404(
+        User,
+        id=user_id
+    )
+
+    if usuario.id == request.user.id:
+
+        messages.error(
+            request,
+            "Você não pode excluir sua própria conta."
+        )
+
+        return redirect("usuarios")
+
+    usuario.delete()
+
+    messages.success(
+        request,
+        "Usuário removido."
+    )
+
+    return redirect("usuarios")
+
+
+@login_required
+@user_passes_test(eh_admin)
+def criar_usuario_view(request):
+
+    if request.method == "POST":
+
+        User.objects.create_user(
+            username=request.POST.get("username"),
+            email=request.POST.get("email"),
+            password="123456",
+            nome_completo=request.POST.get("nome_completo"),
+            telefone=request.POST.get("telefone"),
+            tipo_usuario=request.POST.get("tipo_usuario"),
+        )
+
+        messages.success(
+            request,
+            "Usuário criado."
+        )
+
+        return redirect("usuarios")
+
+    return render(
+        request,
+        "accounts/usuario_criar.html"
+    )

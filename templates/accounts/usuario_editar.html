@@ -1,0 +1,91 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+
+<h1>Editar Usuário</h1>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <div>
+        <label>Username</label>
+        <input
+            type="text"
+            name="username"
+            value="{{ usuario.username }}"
+            required
+        >
+    </div>
+
+    <div>
+        <label>Email</label>
+        <input
+            type="email"
+            name="email"
+            value="{{ usuario.email }}"
+            required
+        >
+    </div>
+
+    <div>
+        <label>Nome Completo</label>
+        <input
+            type="text"
+            name="nome_completo"
+            value="{{ usuario.nome_completo }}"
+        >
+    </div>
+
+    <div>
+        <label>Telefone</label>
+        <input
+            type="text"
+            name="telefone"
+            value="{{ usuario.telefone }}"
+        >
+    </div>
+
+    <div>
+        <label>Tipo</label>
+
+        <select name="tipo_usuario">
+
+            <option
+                value="usuario"
+                {% if usuario.tipo_usuario == "usuario" %}
+                selected
+                {% endif %}
+            >
+                Usuário
+            </option>
+
+            <option
+                value="moderador"
+                {% if usuario.tipo_usuario == "moderador" %}
+                selected
+                {% endif %}
+            >
+                Moderador
+            </option>
+
+            <option
+                value="admin"
+                {% if usuario.tipo_usuario == "admin" %}
+                selected
+                {% endif %}
+            >
+                Administrador
+            </option>
+
+        </select>
+
+    </div>
+
+    <button type="submit">
+        Salvar
+    </button>
+
+</form>
+
+{% endblock %}

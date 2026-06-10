@@ -1,0 +1,72 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+
+<h1>Novo Usuário</h1>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <div>
+        <label>Username</label>
+        <input
+            type="text"
+            name="username"
+            required
+        >
+    </div>
+
+    <div>
+        <label>Email</label>
+        <input
+            type="email"
+            name="email"
+            required
+        >
+    </div>
+
+    <div>
+        <label>Nome Completo</label>
+        <input
+            type="text"
+            name="nome_completo"
+        >
+    </div>
+
+    <div>
+        <label>Telefone</label>
+        <input
+            type="text"
+            name="telefone"
+        >
+    </div>
+
+    <div>
+        <label>Tipo</label>
+
+        <select name="tipo_usuario">
+
+            <option value="usuario">
+                Usuário
+            </option>
+
+            <option value="moderador">
+                Moderador
+            </option>
+
+            <option value="admin">
+                Administrador
+            </option>
+
+        </select>
+
+    </div>
+
+    <button type="submit">
+        Criar Usuário
+    </button>
+
+</form>
+
+{% endblock %}
