@@ -1,0 +1,54 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+
+<h1>Gerenciar Usuários</h1>
+
+<a href="{% url 'usuario_criar' %}">
+    Novo Usuário
+</a>
+
+<hr>
+
+<table>
+
+    <tr>
+        <th>ID</th>
+        <th>Usuário</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Tipo</th>
+        <th>Ações</th>
+    </tr>
+
+    {% for usuario in usuarios %}
+    <tr>
+
+        <td>{{ usuario.id }}</td>
+
+        <td>{{ usuario.username }}</td>
+
+        <td>{{ usuario.nome_completo }}</td>
+
+        <td>{{ usuario.email }}</td>
+
+        <td>{{ usuario.get_tipo_usuario_display }}</td>
+
+        <td>
+
+            <a href="{% url 'usuario_editar' usuario.id %}">
+                Editar
+            </a>
+
+            <a href="{% url 'usuario_excluir' usuario.id %}">
+                Excluir
+            </a>
+
+        </td>
+
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% endblock %}
