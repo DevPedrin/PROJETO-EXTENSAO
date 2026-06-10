@@ -1,0 +1,55 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<section class="secao secao-alt">
+  <div class="container">
+    <div class="secao-header">
+      <span class="golpe-tipo tipo-dica" aria-hidden="true">Moderação</span>
+      <h2 class="gov-subtitle">Moderação de Denúncias</h2>
+    </div>
+
+    <div class="gov-table-container">
+      <table class="gov-table" aria-label="Lista de denúncias para moderação">
+        <thead>
+          <tr>
+            <th>Protocolo</th>
+            <th>Tipo</th>
+            <th>Cidade</th>
+            <th>Status</th>
+            <th>Criada em</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for denuncia in denuncias %}
+          <tr>
+            <td>{{ denuncia.protocolo }}</td>
+            <td>{{ denuncia.get_tipo_golpe_display }}</td>
+            <td>{{ denuncia.cidade|default:"—" }}</td>
+            <td>
+              <span class="status-badge {{ denuncia.status }}">
+                {{ denuncia.get_status_display }}
+              </span>
+            </td>
+            <td>{{ denuncia.criado_em|date:"d/m/Y" }}</td>
+            <td>
+              {% if denuncia.status == 'analise' %}
+                <a href="{% url 'portal:aprovar_denuncia' denuncia.pk %}">Aprovar</a>
+                <a href="{% url 'portal:rejeitar_denuncia' denuncia.pk %}">Rejeitar</a>
+              {% endif %}
+              {% if denuncia.status == 'aprovada' and not denuncia.publicada %}
+                <a href="{% url 'portal:publicar_denuncia' denuncia.pk %}">Publicar</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" style="padding:24px;text-align:center">Nenhuma denúncia encontrada.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

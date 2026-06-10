@@ -1,56 +1,60 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
-  <section class="secao secao-alt" aria-labelledby="titulo-dashboard-usuario">
-    <div class="container">
-      <div class="secao-header">
-        <span class="golpe-tipo tipo-dica" aria-hidden="true">Painel do Usuário</span>
-        <h2 id="titulo-dashboard-usuario" class="gov-subtitle">Meu Painel</h2>
-        <p class="gov-text">Bem-vindo, <strong>{{ request.user.nome_completo|default:request.user.username }}</strong>. Acompanhe suas denúncias registradas abaixo.</p>
-      </div>
-
-      <h3 class="gov-card-title" style="font-size: 1.05rem; margin-bottom: 16px;">Minhas Denúncias Identificadas</h3>
-
-      <div class="gov-table-container">
-        <table class="gov-table" aria-label="Lista das minhas denúncias">
-          <thead>
-            <tr>
-              <th scope="col">Protocolo</th>
-              <th scope="col">Tipo do Golpe</th>
-              <th scope="col">Cidade</th>
-              <th scope="col">Data da Ocorrência</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for d in denuncias %}
-            <tr>
-              <td style="color: var(--cinza-texto);">#{{ d.pk }}</td>
-              <td style="font-weight: 600;">{{ d.get_tipo_golpe_display }}</td>
-              <td>{{ d.cidade|default:"Não informada" }}</td>
-              <td>{{ d.data_ocorrencia|date:"d/m/Y"|default:"—" }}</td>
-              <td>
-                <span class="status-badge {{ d.status }}">
-                  {{ d.get_status_display }}
-                </span>
-              </td>
-            </tr>
-            {% empty %}
-            <tr>
-              <td colspan="5" style="padding: 24px 16px; text-align: center; color: var(--cinza-texto);">Você não possui denúncias identificadas abertas.</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
-      <div style="margin-top: 24px;">
-        <a href="{% url 'portal:denuncia' %}" class="btn btn-primario" aria-label="Registrar nova denúncia">
-          Registrar Denúncia
-        </a>
-      </div>
-
+<section class="secao secao-alt" aria-labelledby="titulo-dashboard-usuario">
+  <div class="container">
+    <div class="secao-header">
+      <span class="golpe-tipo tipo-dica" aria-hidden="true">Painel do Usuário</span>
+      <h2 id="titulo-dashboard-usuario" class="gov-subtitle">Meu Painel</h2>
+      <p class="gov-text">Bem-vindo, <strong>{{ request.user.nome_completo|default:request.user.username }}</strong>. Acompanhe suas denúncias registradas abaixo.</p>
     </div>
-  </section>
 
+    <div style="margin-bottom:24px;">
+      <a href="{% url 'portal:denuncia' %}" class="btn btn-primario">
+        + Registrar Nova Denúncia
+      </a>
+    </div>
+
+    <div class="gov-table-container">
+      <table class="gov-table" aria-label="Minhas denúncias">
+        <thead>
+          <tr>
+            <th scope="col">Protocolo</th>
+            <th scope="col">Tipo do Golpe</th>
+            <th scope="col">Cidade</th>
+            <th scope="col">Data</th>
+            <th scope="col">Status</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in denuncias %}
+          <tr>
+            <td style="font-weight:600;">{{ d.protocolo }}</td>
+            <td>{{ d.get_tipo_golpe_display }}</td>
+            <td>{{ d.cidade|default:"Não informada" }}</td>
+            <td>{{ d.criado_em|date:"d/m/Y" }}</td>
+            <td>
+              <span class="status-badge {{ d.status }}">
+                {{ d.get_status_display }}
+              </span>
+            </td>
+            <td>
+              <a href="{% url 'portal:detalhe_denuncia' d.pk %}"
+                 style="color:var(--azul-principal);font-weight:600;">Ver</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" style="padding:24px;text-align:center;color:var(--cinza-texto);">
+              Você ainda não registrou nenhuma denúncia.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
 {% endblock %}

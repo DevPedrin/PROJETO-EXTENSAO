@@ -1,63 +1,54 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
-
-  <section class="secao" aria-labelledby="titulo-minhas-denuncias">
-    <div class="container">
-      <div class="secao-header">
-        <span class="golpe-tipo tipo-dica" aria-hidden="true">Painel do Usuário</span>
-        <h2 id="titulo-minhas-denuncias" class="gov-subtitle">Minhas Denúncias</h2>
-        <p class="gov-text">Acompanhe o histórico das denúncias registradas em seu nome.</p>
-      </div>
-
-      <div class="info-box" style="margin-bottom: 36px; max-width: 800px;" role="note">
-        <strong>Nota sobre privacidade</strong>
-        As denúncias feitas de forma <strong>anônima</strong> não aparecem nesta lista — foram permanentemente desvinculadas da sua conta para garantir sigilo absoluto.
-      </div>
-
-      {% if denuncias %}
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;" role="list" aria-label="Lista de minhas denúncias">
-          {% for denuncia in denuncias %}
-            <article style="background: #fff; border: 1px solid var(--cinza-linha); border-radius: var(--raio); padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);" role="listitem">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
-                <span style="background: #e8f4f8; color: var(--azul-gov); padding: 4px 12px; border-radius: 16px; font-size: 0.82rem; font-weight: 700;">
-                  {{ denuncia.get_tipo_golpe_display }}
-                </span>
-                <time style="font-size: 0.82rem; color: var(--cinza-texto);" datetime="{{ denuncia.criado_em|date:'Y-m-d' }}">
-                  {{ denuncia.criado_em|date:"d/m/Y H\:i" }}
-                </time>
-              </div>
-
-              <h3 class="gov-card-title" style="font-size: 1rem; margin-bottom: 8px;">
-                {% if denuncia.cidade %}{{ denuncia.cidade }}{% else %}Local não informado{% endif %}
-              </h3>
-
-              <p class="gov-card-description">{{ denuncia.descricao }}</p>
-
-              <div style="font-size: 0.85rem; color: var(--cinza-texto); border-top: 1px solid var(--cinza-linha); padding-top: 12px; margin-top: 14px; line-height: 1.7;">
-                {% if denuncia.data_ocorrencia %}
-                  <strong>Ocorrido em:</strong>
-                  <time datetime="{{ denuncia.data_ocorrencia|date:'Y-m-d' }}">{{ denuncia.data_ocorrencia|date:"d/m/Y" }}</time><br>
-                {% endif %}
-                <strong>Identificação:</strong> {{ denuncia.nome_informado|default:"Nome não informado" }}
-              </div>
-            </article>
-          {% endfor %}
-        </div>
-
-      {% else %}
-        <div style="text-align: center; padding: 72px 20px; background: #fff; border: 1px dashed var(--cinza-linha); border-radius: var(--raio);" role="status" aria-live="polite">
-          <svg viewBox="0 0 24 24" style="width: 48px; height: 48px; fill: var(--cinza-texto); margin-bottom: 16px; opacity: 0.4;" aria-hidden="true">
-            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
-            <path d="M7 12h2v5H7zm4-3h2v8h-2zm4-3h2v11h-2z"/>
-          </svg>
-          <h3 class="gov-card-title" style="font-size: 1.1rem; margin-bottom: 8px;">Nenhuma denúncia encontrada</h3>
-          <p class="gov-text" style="margin: 0 auto 28px; text-align: center;">Você ainda não registrou nenhuma denúncia identificada.</p>
-          <a href="{% url 'portal:denuncia' %}" class="btn btn-primario" aria-label="Registrar nova denúncia">Registrar Denúncia</a>
-        </div>
-      {% endif %}
-
+<section class="secao secao-alt" aria-labelledby="titulo-minhas-denuncias">
+  <div class="container">
+    <div class="secao-header">
+      <span class="golpe-tipo tipo-dica" aria-hidden="true">Minha Conta</span>
+      <h2 id="titulo-minhas-denuncias" class="gov-subtitle">Minhas Denúncias</h2>
+      <p class="gov-text">Acompanhe o status das denúncias que você registrou.</p>
     </div>
-  </section>
 
+    <div class="gov-table-container">
+      <table class="gov-table" aria-label="Minhas denúncias">
+        <thead>
+          <tr>
+            <th>Protocolo</th>
+            <th>Tipo</th>
+            <th>Status</th>
+            <th>Publicada</th>
+            <th>Criada em</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for denuncia in denuncias %}
+          <tr>
+            <td>{{ denuncia.protocolo }}</td>
+            <td>{{ denuncia.get_tipo_golpe_display }}</td>
+            <td>
+              <span class="status-badge {{ denuncia.status }}">
+                {{ denuncia.get_status_display }}
+              </span>
+            </td>
+            <td>{% if denuncia.publicada %}Sim{% else %}Não{% endif %}</td>
+            <td>{{ denuncia.criado_em|date:"d/m/Y" }}</td>
+            <td>
+              <a href="{% url 'portal:detalhe_denuncia' denuncia.pk %}" style="color: var(--azul-principal); font-weight: 600;">Ver</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" style="padding:24px;text-align:center;color:var(--cinza-texto);">Nenhuma denúncia encontrada.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:24px;">
+      <a href="{% url 'portal:denuncia' %}" class="btn btn-primario">Registrar Nova Denúncia</a>
+    </div>
+  </div>
+</section>
 {% endblock %}
