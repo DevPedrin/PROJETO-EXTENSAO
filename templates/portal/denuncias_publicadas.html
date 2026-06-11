@@ -1,46 +1,44 @@
-{% extends 'base.html' %}
+{% extends 'portal/base.html' %}
 
 {% block content %}
-<h1>Denúncias Publicadas</h1>
+  <section class="secao secao-alt" aria-labelledby="titulo-publicadas">
+    <div class="container">
+      <div class="secao-header">
+        <span class="golpe-tipo tipo-dica" aria-hidden="true">Utilidade Pública</span>
+        <h2 id="titulo-publicadas" class="gov-subtitle">Denúncias Publicadas</h2>
+        <p class="gov-text">Relatos de golpes ocorridos recentemente, compartilhados de forma anônima para ajudar a alertar a comunidade.</p>
+      </div>
 
-{% for denuncia in denuncias %}
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;" role="list" aria-label="Lista de denúncias públicas">
+        {% for denuncia in denuncias %}
+          <article style="background: #fff; border: 1px solid var(--cinza-linha); border-radius: var(--raio); padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; flex-direction: column;" role="listitem">
+            <div style="margin-bottom: 12px;">
+              <span style="background: #e8f4f8; color: var(--azul-gov); padding: 4px 12px; border-radius: 16px; font-size: 0.82rem; font-weight: 700; display: inline-block; margin-bottom: 8px;">
+                {{ denuncia.get_tipo_golpe_display }}
+              </span><br>
+              <span style="font-size: 0.82rem; color: var(--cinza-texto);">
+                Publicado em: {{ denuncia.publicada_em|date:"d/m/Y" }}
+              </span>
+            </div>
 
-<article>
+            <h3 class="gov-card-title" style="font-size: 1.1rem; margin-bottom: 8px;">
+              {% if denuncia.cidade %}{{ denuncia.cidade }}{% else %}Local não especificado{% endif %}
+            </h3>
 
-    <h2>
-        {{ denuncia.get_tipo_golpe_display }}
-    </h2>
+            <p class="gov-card-description" style="flex-grow: 1;">{{ denuncia.descricao }}</p>
 
-    <p>
-        <strong>Cidade:</strong>
-        {{ denuncia.cidade }}
-    </p>
-
-    {% if denuncia.data_ocorrencia %}
-    <p>
-        <strong>Data da ocorrência:</strong>
-        {{ denuncia.data_ocorrencia }}
-    </p>
-    {% endif %}
-
-    <div>
-        {{ denuncia.descricao|linebreaks }}
+            <div style="font-size: 0.85rem; color: var(--cinza-texto); border-top: 1px solid var(--cinza-linha); padding-top: 12px; margin-top: 16px;">
+              {% if denuncia.data_ocorrencia %}
+                <strong>Data da ocorrência:</strong> {{ denuncia.data_ocorrencia|date:"d/m/Y" }}
+              {% endif %}
+            </div>
+          </article>
+        {% empty %}
+          <div style="grid-column: 1 / -1; text-align: center; padding: 48px 20px; background: #fff; border: 1px dashed var(--cinza-linha); border-radius: var(--raio);" role="status" aria-live="polite">
+            <p class="gov-text" style="color: var(--cinza-texto); font-style: italic; margin: 0;">Nenhuma denúncia publicada até o momento.</p>
+          </div>
+        {% endfor %}
+      </div>
     </div>
-
-    <small>
-        Publicado em {{ denuncia.publicada_em }}
-    </small>
-
-</article>
-
-<hr>
-
-{% empty %}
-
-<p>
-    Nenhuma denúncia publicada até o momento.
-</p>
-
-{% endfor %}
-
+  </section>
 {% endblock %}
