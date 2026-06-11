@@ -1,54 +1,84 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
+<section class="secao secao-alt" aria-labelledby="titulo-usuarios">
+  <div class="container">
 
-<h1>Gerenciar Usuários</h1>
+    <div class="secao-header">
+      <span class="golpe-tipo tipo-alto" aria-hidden="true">Administração</span>
+      <h2 id="titulo-usuarios" class="gov-subtitle">Gerenciar Usuários</h2>
+      <p class="gov-text">Lista de todos os usuários cadastrados na plataforma e seus respectivos níveis de acesso ao sistema.</p>
+    </div>
 
-<a href="{% url 'usuario_criar' %}">
-    Novo Usuário
-</a>
+    <!-- Mensagens de feedback -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alerta-form alerta-{{ message.tags }}" role="alert" style="
+          margin-bottom: 24px;
+          padding: 16px 20px;
+          border-radius: var(--raio);
+          font-size: 0.95rem;
+          font-weight: 600;
+          background: {% if message.tags == 'success' %}#d4edda{% else %}#f8d7da{% endif %};
+          color: {% if message.tags == 'success' %}#155724{% else %}#721c24{% endif %};
+          border: 1px solid {% if message.tags == 'success' %}#c3e6cb{% else %}#f5c6cb{% endif %};
+        ">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
 
-<hr>
+    <div style="margin-bottom: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
+      <a href="{% url 'usuario_criar' %}" class="btn btn-primario">
+        + Novo Usuário
+      </a>
+      <a href="{% url 'portal:dashboard' %}" class="btn" style="background: transparent; border: 1px solid var(--gray-600); color: var(--gray-600);">
+        Voltar ao Painel
+      </a>
+    </div>
 
-<table>
+    <div class="gov-table-container">
+      <table class="gov-table" aria-label="Lista de usuários cadastrados">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Usuário</th>
+            <th scope="col">Nome</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for usuario in usuarios %}
+          <tr>
+            <td>{{ usuario.id }}</td>
+            <td style="font-weight: 600;">{{ usuario.username }}</td>
+            <td>{{ usuario.nome_completo|default:"-" }}</td>
+            <td>{{ usuario.email }}</td>
+            <td>
+              <span class="status-badge {% if usuario.tipo_usuario == 'admin' %}aprovada{% elif usuario.tipo_usuario == 'moderador' %}analise{% else %}rejeitada{% endif %}">
+                {{ usuario.get_tipo_usuario_display }}
+              </span>
+            </td>
+            <td>
+              <div style="display: flex; gap: 14px; align-items: center;">
+                <a href="{% url 'usuario_editar' usuario.id %}" style="color: var(--azul-claro); font-weight: 700;">Editar</a>
+                {% if usuario.id != request.user.id %}
+                  <a href="{% url 'usuario_excluir' usuario.id %}" style="color: var(--vermelho-alerta); font-weight: 700;" onclick="return confirm('Deseja excluir permanentemente o usuário {{ usuario.username }}?')">Excluir</a>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" style="padding: 24px; text-align: center; color: var(--cinza-texto);">Nenhum usuário cadastrado.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
-    <tr>
-        <th>ID</th>
-        <th>Usuário</th>
-        <th>Nome</th>
-        <th>Email</th>
-        <th>Tipo</th>
-        <th>Ações</th>
-    </tr>
-
-    {% for usuario in usuarios %}
-    <tr>
-
-        <td>{{ usuario.id }}</td>
-
-        <td>{{ usuario.username }}</td>
-
-        <td>{{ usuario.nome_completo }}</td>
-
-        <td>{{ usuario.email }}</td>
-
-        <td>{{ usuario.get_tipo_usuario_display }}</td>
-
-        <td>
-
-            <a href="{% url 'usuario_editar' usuario.id %}">
-                Editar
-            </a>
-
-            <a href="{% url 'usuario_excluir' usuario.id %}">
-                Excluir
-            </a>
-
-        </td>
-
-    </tr>
-    {% endfor %}
-
-</table>
-
+  </div>
+</section>
 {% endblock %}

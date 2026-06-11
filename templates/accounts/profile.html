@@ -14,61 +14,61 @@
     </div>
 
     {% if error %}
-      <div style="background: #fff5f5; color: #c53030; padding: 16px; border-left: 4px solid #f56565; margin-bottom: 24px; border-radius: 6px; font-weight: 600;" role="alert">
-        Erro: {{ error }}
+      <div class="auth-erro" role="alert">
+        {{ error }}
       </div>
     {% endif %}
 
     {% if success %}
-      <div style="background: #f0fff4; color: #22543d; padding: 16px; border-left: 4px solid #48bb78; margin-bottom: 24px; border-radius: 6px; font-weight: 600;" role="alert">
-        Sucesso: {{ success }}
+      <div class="info-box" style="border-left: 4px solid var(--success); color: var(--success); background: #f0fff4;" role="alert">
+        {{ success }}
       </div>
     {% endif %}
 
-    <div class="form-card" style="background: #fff; border: 1px solid var(--cinza-linha); border-radius: 8px; padding: 32px;">
+    <div class="form-card">
       <form method="post" autocomplete="off" novalidate>
         {% csrf_token %}
 
-        <div class="form-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-          <div class="form-row">
-            <label for="username" style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--cinza-escuro);">Usuário *</label>
-            <input type="text" id="username" name="username" value="{{ user_profile.username }}" required style="width: 100%; padding: 10px; border: 1px solid var(--cinza-linha); border-radius: 4px;">
+        <div class="form-grid-2" style="margin-bottom: 16px;">
+          <div class="form-row" style="margin-bottom: 0;">
+            <label for="username">Usuário *</label>
+            <input type="text" id="username" name="username" value="{{ user_profile.username }}" required>
           </div>
-          <div class="form-row">
-            <label for="email" style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--cinza-escuro);">E-mail *</label>
-            <input type="email" id="email" name="email" value="{{ user_profile.email }}" required style="width: 100%; padding: 10px; border: 1px solid var(--cinza-linha); border-radius: 4px;">
+          <div class="form-row" style="margin-bottom: 0;">
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" name="email" value="{{ user_profile.email }}" required>
           </div>
         </div>
 
-        <div class="form-row" style="margin-bottom: 16px;">
-          <label for="nome_completo" style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--cinza-escuro);">Nome Completo</label>
-          <input type="text" id="nome_completo" name="nome_completo" value="{{ user_profile.nome_completo }}" style="width: 100%; padding: 10px; border: 1px solid var(--cinza-linha); border-radius: 4px;">
+        <div class="form-row">
+          <label for="nome_completo">Nome Completo</label>
+          <input type="text" id="nome_completo" name="nome_completo" value="{{ user_profile.nome_completo }}">
         </div>
 
-        <div class="form-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
-          <div class="form-row">
-            <label for="cpf" style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--cinza-escuro);">CPF</label>
-            <input type="text" id="cpf" name="cpf" value="{{ user_profile.cpf|default:'' }}" placeholder="000.000.000-00" style="width: 100%; padding: 10px; border: 1px solid var(--cinza-linha); border-radius: 4px;">
+        <div class="form-grid-2" style="margin-bottom: 24px;">
+          <div class="form-row" style="margin-bottom: 0;">
+            <label for="cpf">CPF</label>
+            <input type="text" id="cpf" name="cpf" value="{{ user_profile.cpf|default:'' }}" placeholder="000.000.000-00">
           </div>
-          <div class="form-row">
-            <label for="telefone" style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--cinza-escuro);">Telefone</label>
-            <input type="text" id="telefone" name="telefone" value="{{ user_profile.telefone }}" placeholder="(00) 00000-0000" style="width: 100%; padding: 10px; border: 1px solid var(--cinza-linha); border-radius: 4px;">
+          <div class="form-row" style="margin-bottom: 0;">
+            <label for="telefone">Telefone</label>
+            <input type="text" id="telefone" name="telefone" value="{{ user_profile.telefone }}" placeholder="(00) 00000-0000">
           </div>
         </div>
 
         <hr style="border: 0; border-top: 1px solid var(--cinza-linha); margin: 24px 0;">
 
         <div class="form-row" style="margin-bottom: 24px;">
-          <label for="nova_senha" style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--cinza-escuro);">Alterar Senha</label>
-          <input type="password" id="nova_senha" name="nova_senha" placeholder="Digite apenas se desejar alterar a senha" style="width: 100%; padding: 10px; border: 1px solid var(--cinza-linha); border-radius: 4px;">
+          <label for="nova_senha">Alterar Senha</label>
+          <input type="password" id="nova_senha" name="nova_senha" placeholder="Digite apenas se desejar alterar a senha">
           <small style="color: var(--cinza-texto); display: block; margin-top: 6px; font-size: 0.85rem;">Deixe este campo em branco para manter a sua credencial atual.</small>
         </div>
 
-        <div style="display: flex; gap: 16px; justify-content: flex-end;">
-          <a href="{% url 'portal:home' %}" class="btn-form" style="width: auto; padding: 10px 24px; background: transparent; color: var(--cinza-escuro); border: 2px solid var(--cinza-linha); text-decoration: none; text-align: center; border-radius: 4px; font-weight: 600;" aria-label="Voltar para a página inicial">
+        <div style="display: flex; gap: 16px; justify-content: flex-end; flex-wrap: wrap;">
+          <a href="{% url 'portal:home' %}" class="btn" style="background: transparent; border: 1px solid var(--gray-600); color: var(--gray-600);" aria-label="Voltar para a página inicial">
             Voltar
           </a>
-          <button type="submit" class="btn-form" style="width: auto; padding: 10px 32px; font-weight: 700;" aria-label="Salvar alterações de perfil">
+          <button type="submit" class="btn btn-primario" aria-label="Salvar alterações de perfil">
             Salvar Alterações
           </button>
         </div>

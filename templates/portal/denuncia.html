@@ -9,11 +9,11 @@
       {% if user.is_authenticated %}
         <!-- Botões de acesso rápido -->
         <div style="margin-bottom: 32px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
-          <a href="{% url 'portal:minhas_denuncias' %}" class="btn-form" style="width: auto; padding: 10px 24px; background: transparent; color: var(--azul-gov); border: 2px solid var(--azul-gov); font-size: 0.95rem;" aria-label="Consultar minhas denúncias cadastradas">
+          <a href="{% url 'portal:minhas_denuncias' %}" class="btn" style="background: transparent; color: var(--azul-gov); border: 2px solid var(--azul-gov);" aria-label="Consultar minhas denúncias cadastradas">
             Consultar Minhas Denúncias
           </a>
           {% if user.is_staff or user.is_superuser %}
-            <a href="{% url 'portal:todas_denuncias' %}" class="btn-form" style="width: auto; padding: 10px 24px; background: var(--azul-gov); color: #fff; font-size: 0.95rem;" aria-label="Acessar o Painel Geral Administrativo">
+            <a href="{% url 'portal:todas_denuncias' %}" class="btn btn-primario" aria-label="Acessar o Painel Geral Administrativo">
               Acessar Painel Geral (Administrador)
             </a>
           {% endif %}
@@ -33,7 +33,7 @@
             margin: 0 auto 24px auto;
             max-width: 720px;
             padding: 16px 20px;
-            border-radius: 8px;
+            border-radius: var(--raio);
             font-size: 0.95rem;
             font-weight: 600;
             background: {% if message.tags == 'success' %}#d4edda{% else %}#f8d7da{% endif %};
@@ -45,27 +45,27 @@
         {% endfor %}
       {% endif %}
 
-      <div class="denuncia-layout" style="display: grid; grid-template-columns: 1fr; gap: 32px; max-width: 800px; margin: 0 auto;">
+      <div class="denuncia-layout">
         
-        <div class="denuncia-info" style="background: #f8fafd; border-left: 4px solid var(--azul-gov); padding: 20px; border-radius: 8px;">
-          <h3 class="gov-card-title" style="font-size: 1.2rem; margin-top: 0; margin-bottom: 8px;">Diretrizes para o registro</h3>
-          <p class="gov-text" style="font-size: 0.95rem; margin-bottom: 12px;">Para garantir a integridade do sistema, é necessário estar logado na plataforma. Você poderá optar por realizar uma <strong>denúncia anônima</strong> marcando a opção indicada no formulário. Dessa forma, suas informações de cadastro não serão vinculadas a esta ocorrência.</p>
-          <div class="info-box" style="background: #fff; border: 1px solid var(--cinza-linha); border-radius: 6px; padding: 12px 16px; font-size: 0.9rem;">
-            <strong style="display: block; color: var(--azul-gov); margin-bottom: 4px;">Orientações de Segurança</strong>
+        <div class="denuncia-info" style="background: var(--cinza-bg); border-left: 4px solid var(--azul-gov); padding: 24px; border-radius: var(--raio);">
+          <h3 class="gov-card-title">Diretrizes para o registro</h3>
+          <p class="gov-text">Para garantir a integridade do sistema, é necessário estar logado na plataforma. Você poderá optar por realizar uma <strong>denúncia anônima</strong> marcando a opção indicada no formulário. Dessa forma, suas informações de cadastro não serão vinculadas a esta ocorrência públicos.</p>
+          <div class="info-box">
+            <strong>Orientações de Segurança</strong>
             Caso você tenha sido vítima direta de um crime financeiro ou cibernético, lembre-se de registrar formalmente um Boletim de Ocorrência na <strong>Delegacia de Crimes Cibernéticos de Palmas</strong> (Av. Teotônio Segurado, s/n — (63) 3218-0000) ou pelo portal da Polícia Civil (Palmas/TO).
           </div>
         </div>
 
         {% if user.is_authenticated %}
-        <div class="form-card" style="background: #fff; border: 1px solid var(--cinza-linha); border-radius: 8px; padding: 32px;">
+        <div class="form-card">
 
           <form method="POST" action="{% url 'portal:denuncia' %}" id="form-denuncia" novalidate>
             {% csrf_token %}
 
             <!-- Tipo de golpe -->
-            <div class="form-row" style="margin-bottom: 20px;">
-              <label for="form-tipo-golpe" style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--cinza-escuro);">Tipo de golpe <span class="obr" style="color: var(--vermelho-alerta);">*</span></label>
-              <select name="tipo_golpe" id="form-tipo-golpe" style="width: 100%; padding: 10px; border: 1px solid var(--cinza-linha); border-radius: 4px;">
+            <div class="form-row">
+              <label for="form-tipo-golpe">Tipo de golpe <span class="obr">*</span></label>
+              <select name="tipo_golpe" id="form-tipo-golpe">
                 <option value="">Selecione o tipo de golpe...</option>
                 {% for valor, rotulo in form.tipo_golpe.field.choices %}
                   {% if valor %}
@@ -79,24 +79,24 @@
             </div>
 
             <!-- Data e Cidade -->
-            <div class="form-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-              <div class="form-row">
-                <label for="form-data" style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--cinza-escuro);">Data da ocorrência</label>
-                <input type="date" name="data_ocorrencia" id="form-data" style="width: 100%; padding: 10px; border: 1px solid var(--cinza-linha); border-radius: 4px;"
+            <div class="form-grid-2" style="margin-bottom: 22px;">
+              <div class="form-row" style="margin-bottom: 0;">
+                <label for="form-data">Data da ocorrência</label>
+                <input type="date" name="data_ocorrencia" id="form-data"
                        value="{{ form.data_ocorrencia.value|default:'' }}" />
               </div>
-              <div class="form-row">
-                <label for="form-cidade" style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--cinza-escuro);">Cidade</label>
-                <input type="text" name="cidade" id="form-cidade" style="width: 100%; padding: 10px; border: 1px solid var(--cinza-linha); border-radius: 4px;"
+              <div class="form-row" style="margin-bottom: 0;">
+                <label for="form-cidade">Cidade</label>
+                <input type="text" name="cidade" id="form-cidade"
                        placeholder="Exemplo: Palmas — TO"
                        value="{{ form.cidade.value|default:'' }}" />
               </div>
             </div>
 
             <!-- Descrição -->
-            <div class="form-row" style="margin-bottom: 20px;">
-              <label for="form-descricao" style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--cinza-escuro);">Descrição do ocorrido <span class="obr" style="color: var(--vermelho-alerta);">*</span></label>
-              <textarea name="descricao" id="form-descricao" style="width: 100%; height: 120px; padding: 10px; border: 1px solid var(--cinza-linha); border-radius: 4px; resize: vertical;"
+            <div class="form-row">
+              <label for="form-descricao">Descrição do ocorrido <span class="obr">*</span></label>
+              <textarea name="descricao" id="form-descricao"
                 placeholder="Descreva detalhadamente o ocorrido. Informações como a abordagem inicial, meios de contato e valores ajudam a alertar a comunidade...">{{ form.descricao.value|default:'' }}</textarea>
               {% if form.descricao.errors %}
                 <span class="form-erro" style="color: var(--vermelho-alerta); font-size: 0.85rem; display: block; margin-top: 4px;">{{ form.descricao.errors|join:", " }}</span>
@@ -104,16 +104,16 @@
             </div>
 
             <!-- Nome e Faixa etária -->
-            <div class="form-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-              <div class="form-row">
-                <label for="form-nome" style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--cinza-escuro);">Nome (opcional)</label>
-                <input type="text" name="nome_informado" id="form-nome" style="width: 100%; padding: 10px; border: 1px solid var(--cinza-linha); border-radius: 4px;"
+            <div class="form-grid-2" style="margin-bottom: 22px;">
+              <div class="form-row" style="margin-bottom: 0;">
+                <label for="form-nome">Nome (opcional)</label>
+                <input type="text" name="nome_informado" id="form-nome"
                        placeholder="Pode deixar em branco"
                        value="{{ form.nome_informado.value|default:'' }}" />
               </div>
-              <div class="form-row">
-                <label for="form-idade" style="display: block; font-weight: 600; margin-bottom: 6px; color: var(--cinza-escuro);">Faixa etária</label>
-                <select name="faixa_etaria" id="form-idade" style="width: 100%; padding: 10px; border: 1px solid var(--cinza-linha); border-radius: 4px;">
+              <div class="form-row" style="margin-bottom: 0;">
+                <label for="form-idade">Faixa etária</label>
+                <select name="faixa_etaria" id="form-idade">
                   <option value="">Selecione...</option>
                   {% for valor, rotulo in form.faixa_etaria.field.choices %}
                     {% if valor %}
@@ -137,14 +137,14 @@
             <!-- Aviso de anonimato (oculto por padrão) -->
             <div id="aviso-anonimo" style="
               display: none;
-              background: #fff3cd;
-              border: 1px solid #ffc107;
-              border-left: 4px solid #e65100;
-              border-radius: 8px;
+              background: var(--amarelo-claro);
+              border: 1px solid var(--amarelo-linha);
+              border-left: 4px solid var(--amarelo-gov);
+              border-radius: var(--raio);
               padding: 14px 16px;
               margin-bottom: 20px;
               font-size: 0.88rem;
-              color: #664d03;
+              color: #78350F;
             " role="alert" aria-live="polite">
               <strong>⚠️ Atenção — Denúncia Anônima:</strong>
               Esta denúncia será registrada de forma <strong>irreversivelmente anônima</strong>.
@@ -152,7 +152,7 @@
               editar ou reivindicar a autoria. Nenhum dado pessoal identificável será associado a este registro.
             </div>
 
-            <button class="btn-form" id="btn-enviar-denuncia" type="submit" style="width: 100%; padding: 12px; font-weight: 700;">
+            <button class="btn-form" id="btn-enviar-denuncia" type="submit">
               Registrar Denúncia
             </button>
 
@@ -160,13 +160,13 @@
 
         </div>
         {% else %}
-        <div class="form-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 64px 24px; background: #fff; border: 1px solid var(--cinza-linha); border-radius: 8px;">
+        <div class="form-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 64px 24px;">
           <svg viewBox="0 0 24 24" style="width: 56px; height: 56px; fill: var(--azul-gov); margin-bottom: 20px;" aria-hidden="true">
             <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
           </svg>
           <h3 style="font-family: var(--fonte-titulo); font-size: 1.4rem; color: var(--azul-gov); margin-bottom: 12px; font-weight: 700;">Acesso Restrito</h3>
           <p style="color: var(--cinza-texto); margin-bottom: 32px; font-size: 0.95rem; max-width: 360px;">Para garantir a veracidade e segurança dos dados, é necessário acessar sua conta para registrar uma denúncia.</p>
-          <a href="{% url 'login' %}?next={% url 'portal:denuncia' %}" class="btn-form" style="text-decoration: none; display: inline-block; width: auto; padding: 14px 40px;" aria-label="Entrar no sistema para registrar denúncia">Fazer Login</a>
+          <a href="{% url 'login' %}?next={% url 'portal:denuncia' %}" class="btn btn-primario" aria-label="Entrar no sistema para registrar denúncia">Fazer Login</a>
         </div>
         {% endif %}
       </div>

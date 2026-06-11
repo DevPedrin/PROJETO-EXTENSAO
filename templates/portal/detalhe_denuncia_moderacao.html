@@ -87,16 +87,16 @@
     <div style="display:flex;gap:12px;flex-wrap:wrap;">
       {% if denuncia.status == 'analise' %}
         <a href="{% url 'portal:aprovar_denuncia' denuncia.pk %}"
-           class="btn btn-primario" style="background:#16a34a;">Aprovar</a>
+           class="btn" style="background: var(--success); color: #fff;">Aprovar</a>
         <a href="{% url 'portal:rejeitar_denuncia' denuncia.pk %}"
-           class="btn btn-primario" style="background:#d97706;">Rejeitar</a>
+           class="btn" style="background: var(--warning); color: var(--primary-dark);">Rejeitar</a>
       {% endif %}
       {% if denuncia.status == 'aprovada' and not denuncia.publicada %}
         <a href="{% url 'portal:publicar_denuncia' denuncia.pk %}"
            class="btn btn-primario">Publicar</a>
       {% endif %}
-      <a href="{% url 'portal:dashboard' %}" class="btn btn-primario"
-         style="background:var(--cinza-linha);color:var(--cinza-texto);">← Voltar</a>
+      <a href="{% url 'portal:dashboard' %}" class="btn"
+         style="background: transparent; border: 1px solid var(--gray-600); color: var(--gray-600);">← Voltar</a>
     </div>
 
   </div>
