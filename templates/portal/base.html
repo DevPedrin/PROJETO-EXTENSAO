@@ -43,7 +43,7 @@
       </button>
       <nav id="nav-menu">
         <a href="{% url 'portal:home' %}" {% if request.resolver_match.url_name == 'home' %}class="ativo"{% endif %}>Início</a>
-        <a href="{% url 'portal:denuncia' %}" {% if request.resolver_match.url_name == 'denuncia' %}class="ativo"{% endif %}>Denunciar</a>
+        <a href="{% url 'portal:denuncias_publicadas' %}" {% if request.resolver_match.url_name == 'denuncias_publicadas' %}class="ativo"{% endif %}>Denúncias</a>
         <a href="{% url 'portal:delegacias' %}" {% if request.resolver_match.url_name == 'delegacias' %}class="ativo"{% endif %}>Delegacias</a>
         <a href="{% url 'portal:estatisticas' %}" {% if request.resolver_match.url_name == 'estatisticas' %}class="ativo"{% endif %}>Estatísticas</a>
         <a href="{% url 'portal:videos' %}" {% if request.resolver_match.url_name == 'videos' %}class="ativo"{% endif %}>Vídeos</a>
@@ -64,25 +64,9 @@
     </div>
   </header>
 
-
-  <div class="faixa-alerta">
-    <div class="container">
-      <div class="alerta-icone">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-        </svg>
-      </div>
-      <span>
-        <strong>Atenção:</strong> Nenhuma instituição bancária ou órgão público solicita senhas, códigos ou
-        transferências por telefone ou mensagem. Desconfie sempre e confirme por outros canais antes de qualquer ação.
-      </span>
-    </div>
-  </div>
-<!-- CONTEÚDO DINÂMICO -->
 {% block content %}
 {% endblock %}
 
-  <!-- FOOTER -->
   <footer>
     <div class="container">
       <div class="footer-grid">

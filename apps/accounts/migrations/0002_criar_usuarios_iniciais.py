@@ -9,21 +9,21 @@ def criar_usuarios(apps, schema_editor):
         User.objects.create(
             username='admin', email='admin@sistema.local', password=senha_hash,
             is_superuser=True, is_staff=True, is_active=True,
-            nome_completo='Administrador do Sistema', tipo_usuario='admin'
+            nome_completo='Aldemir Nistrador de Sousa', tipo_usuario='admin'
         )
 
     if not User.objects.filter(username='moderador').exists():
         User.objects.create(
             username='moderador', email='mod@sistema.local', password=senha_hash,
             is_superuser=False, is_staff=False, is_active=True,
-            nome_completo='Moderador de Conteúdo', tipo_usuario='moderador'
+            nome_completo='Moderaderson da Silva', tipo_usuario='moderador'
         )
 
     if not User.objects.filter(username='usuario').exists():
         User.objects.create(
             username='usuario', email='user@sistema.local', password=senha_hash,
             is_superuser=False, is_staff=False, is_active=True,
-            nome_completo='Cidadão Comum', tipo_usuario='usuario'
+            nome_completo='Fulano de Tal', tipo_usuario='usuario'
         )
 
 def remover_usuarios(apps, schema_editor):

@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 def eh_moderador(user):
     return (
         user.is_authenticated
-        and user.tipo_usuario in ['moderador', 'admin']
+        and user.tipo_usuario == 'moderador'
     )
 
 

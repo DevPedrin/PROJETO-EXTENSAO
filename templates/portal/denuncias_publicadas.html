@@ -7,6 +7,16 @@
         <span class="golpe-tipo tipo-dica" aria-hidden="true">Utilidade Pública</span>
         <h2 id="titulo-publicadas" class="gov-subtitle">Denúncias Publicadas</h2>
         <p class="gov-text">Relatos de golpes ocorridos recentemente, compartilhados de forma anônima para ajudar a alertar a comunidade.</p>
+
+        {% if user.is_authenticated %}
+          <a href="{% url 'portal:denuncia' %}" class="btn btn-primario" style="margin-top: 16px;">
+            + Fazer Denúncia
+          </a>
+        {% else %}
+          <a href="{% url 'login' %}?next={% url 'portal:denuncia' %}" class="btn btn-primario" style="margin-top: 16px;">
+            + Fazer Denúncia
+          </a>
+        {% endif %}
       </div>
 
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;" role="list" aria-label="Lista de denúncias públicas">
