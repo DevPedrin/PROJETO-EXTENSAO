@@ -98,7 +98,7 @@ def publicar_denuncia(request, pk):
 
 
 @login_required
-@requer_moderador
+@requer_moderador_ou_admin
 def detalhe_denuncia_moderacao(request, pk):
     denuncia = get_object_or_404(Denuncia, pk=pk)
     return render(

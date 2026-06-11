@@ -85,19 +85,35 @@
     </div>
 
     <div style="display:flex;gap:12px;flex-wrap:wrap;">
-      {% if denuncia.status == 'analise' %}
-        <a href="{% url 'portal:aprovar_denuncia' denuncia.pk %}"
-           class="btn" style="background: var(--success); color: #fff;">Aprovar</a>
-        <a href="{% url 'portal:rejeitar_denuncia' denuncia.pk %}"
-           class="btn" style="background: var(--warning); color: var(--primary-dark);">Rejeitar</a>
-      {% endif %}
-      {% if denuncia.status == 'aprovada' and not denuncia.publicada %}
-        <a href="{% url 'portal:publicar_denuncia' denuncia.pk %}"
-           class="btn btn-primario">Publicar</a>
-      {% endif %}
-      <a href="{% url 'portal:dashboard' %}" class="btn"
-         style="background: transparent; border: 1px solid var(--gray-600); color: var(--gray-600);">← Voltar</a>
-    </div>
+  {% if not request.user.is_superuser %}
+    {% if denuncia.status == 'analise' %}
+      <a href="{% url 'portal:aprovar_denuncia' denuncia.pk %}"
+         class="btn"
+         style="background: var(--success); color: #fff;">
+        Aprovar
+      </a>
+
+      <a href="{% url 'portal:rejeitar_denuncia' denuncia.pk %}"
+         class="btn"
+         style="background: var(--warning); color: var(--primary-dark);">
+        Rejeitar
+      </a>
+    {% endif %}
+
+    {% if denuncia.status == 'aprovada' and not denuncia.publicada %}
+      <a href="{% url 'portal:publicar_denuncia' denuncia.pk %}"
+         class="btn btn-primario">
+        Publicar
+      </a>
+    {% endif %}
+  {% endif %}
+
+  <a href="{% url 'portal:dashboard' %}"
+     class="btn"
+     style="background: transparent; border: 1px solid var(--gray-600); color: var(--gray-600);">
+    ← Voltar
+  </a>
+</div>
 
   </div>
 </section>
