@@ -33,13 +33,15 @@
             </td>
             <td>{{ denuncia.criado_em|date:"d/m/Y" }}</td>
             <td>
-              {% if denuncia.status == 'analise' %}
-                <a href="{% url 'portal:aprovar_denuncia' denuncia.pk %}">Aprovar</a>
-                <a href="{% url 'portal:rejeitar_denuncia' denuncia.pk %}">Rejeitar</a>
-              {% endif %}
-              {% if denuncia.status == 'aprovada' and not denuncia.publicada %}
-                <a href="{% url 'portal:publicar_denuncia' denuncia.pk %}">Publicar</a>
-              {% endif %}
+              <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                {% if denuncia.status == 'analise' %}
+                  <a href="{% url 'portal:aprovar_denuncia' denuncia.pk %}" style="color:#16a34a; font-weight:700;">Aprovar</a>
+                  <a href="{% url 'portal:rejeitar_denuncia' denuncia.pk %}" style="color:#d97706; font-weight:700;">Rejeitar</a>
+                {% endif %}
+                {% if denuncia.status == 'aprovada' and not denuncia.publicada %}
+                  <a href="{% url 'portal:publicar_denuncia' denuncia.pk %}" style="color:var(--azul-medio); font-weight:700;">Publicar</a>
+                {% endif %}
+              </div>
             </td>
           </tr>
           {% empty %}

@@ -9,24 +9,27 @@
       <p class="gov-text">Protocolo: <strong>{{ denuncia.protocolo }}</strong></p>
     </div>
 
-    <form method="post" style="display:flex;flex-direction:column;gap:16px;">
-      {% csrf_token %}
-      <label for="motivo_moderacao" style="font-weight:600;">Motivo da rejeição</label>
-      <textarea
-        id="motivo_moderacao"
-        name="motivo_moderacao"
-        rows="5"
-        required
-        style="padding:12px;border:1px solid var(--cinza-linha);border-radius:4px;font-size:1rem;"
-        placeholder="Descreva o motivo da rejeição desta denúncia..."
-      ></textarea>
-      <div style="display:flex;gap:12px;">
-        <button type="submit" class="btn btn-primario" style="background:var(--vermelho-alerta);">
-          Confirmar Rejeição
-        </button>
-        <a href="{% url 'portal:moderacao_denuncias' %}" class="btn btn-primario">Cancelar</a>
-      </div>
-    </form>
+    <div class="form-card" style="max-width: 600px; margin: 0 auto;">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-row">
+          <label for="motivo_moderacao">Motivo da rejeição</label>
+          <textarea
+            id="motivo_moderacao"
+            name="motivo_moderacao"
+            rows="5"
+            required
+            placeholder="Descreva o motivo da rejeição desta denúncia..."
+          ></textarea>
+        </div>
+        <div style="display:flex; gap:12px; margin-top: 12px;">
+          <button type="submit" class="btn" style="background: var(--vermelho-alerta); color: #fff;">
+            Confirmar Rejeição
+          </button>
+          <a href="{% url 'portal:moderacao_denuncias' %}" class="btn" style="background: transparent; border: 1px solid var(--gray-600); color: var(--gray-600);">Cancelar</a>
+        </div>
+      </form>
+    </div>
   </div>
 </section>
 {% endblock %}

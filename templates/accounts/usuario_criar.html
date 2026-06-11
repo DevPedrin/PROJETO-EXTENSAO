@@ -1,72 +1,61 @@
 {% extends 'portal/base.html' %}
 
 {% block content %}
+<section class="secao secao-alt" aria-labelledby="titulo-criar-usuario">
+  <div class="container" style="max-width: 650px; margin: 0 auto;">
 
-<h1>Novo Usuário</h1>
-
-<form method="post">
-
-    {% csrf_token %}
-
-    <div>
-        <label>Username</label>
-        <input
-            type="text"
-            name="username"
-            required
-        >
+    <div class="secao-header">
+      <span class="golpe-tipo tipo-alto" aria-hidden="true">Administração</span>
+      <h2 id="titulo-criar-usuario" class="gov-subtitle">Novo Usuário</h2>
+      <p class="gov-text">Preencha os campos abaixo para criar um novo usuário. A senha padrão de login atribuída será <strong>123456</strong>.</p>
     </div>
 
-    <div>
-        <label>Email</label>
-        <input
-            type="email"
-            name="email"
-            required
-        >
+    <div class="form-card">
+      <form method="post" autocomplete="off" novalidate>
+        {% csrf_token %}
+
+        <div class="form-grid-2" style="margin-bottom: 16px;">
+          <div class="form-row" style="margin-bottom: 0;">
+            <label for="username">Nome de Usuário *</label>
+            <input type="text" id="username" name="username" placeholder="Nome de login" required>
+          </div>
+          <div class="form-row" style="margin-bottom: 0;">
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" name="email" placeholder="exemplo@email.com" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="nome_completo">Nome Completo</label>
+          <input type="text" id="nome_completo" name="nome_completo" placeholder="Nome completo do usuário">
+        </div>
+
+        <div class="form-grid-2" style="margin-bottom: 24px;">
+          <div class="form-row" style="margin-bottom: 0;">
+            <label for="telefone">Telefone</label>
+            <input type="text" id="telefone" name="telefone" placeholder="(00) 00000-0000">
+          </div>
+          <div class="form-row" style="margin-bottom: 0;">
+            <label for="tipo_usuario">Nível de Acesso *</label>
+            <select id="tipo_usuario" name="tipo_usuario" required>
+              <option value="usuario">Usuário Comum</option>
+              <option value="moderador">Moderador</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 16px; justify-content: flex-end; flex-wrap: wrap; margin-top: 24px;">
+          <a href="{% url 'usuarios' %}" class="btn" style="background: transparent; border: 1px solid var(--gray-600); color: var(--gray-600);">
+            Cancelar
+          </a>
+          <button type="submit" class="btn btn-primario">
+            Criar Usuário
+          </button>
+        </div>
+
+      </form>
     </div>
-
-    <div>
-        <label>Nome Completo</label>
-        <input
-            type="text"
-            name="nome_completo"
-        >
-    </div>
-
-    <div>
-        <label>Telefone</label>
-        <input
-            type="text"
-            name="telefone"
-        >
-    </div>
-
-    <div>
-        <label>Tipo</label>
-
-        <select name="tipo_usuario">
-
-            <option value="usuario">
-                Usuário
-            </option>
-
-            <option value="moderador">
-                Moderador
-            </option>
-
-            <option value="admin">
-                Administrador
-            </option>
-
-        </select>
-
-    </div>
-
-    <button type="submit">
-        Criar Usuário
-    </button>
-
-</form>
-
+  </div>
+</section>
 {% endblock %}
