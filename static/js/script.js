@@ -99,8 +99,18 @@ function initModalVideo() {
   const iframe = overlay.querySelector('iframe');
   const btnFechar = overlay.querySelector('.modal-close');
 
+  function getEmbedUrl(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      return `https://www.youtube.com/embed/${match[2]}?autoplay=1`;
+    }
+    return url;
+  }
+
   function abrirModal(url) {
-    if (iframe) iframe.src = url;
+    const embedUrl = getEmbedUrl(url);
+    if (iframe) iframe.src = embedUrl;
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
     if (btnFechar) btnFechar.focus();
@@ -409,7 +419,7 @@ function initLoadingBotoes() {
 
 /* ─── INICIALIZAÇÃO ─────────────────────────────────────────── */
 
-document.addEventListener('DOMContentLoaded', () => {
+function initAll() {
   initSkipLink();
   initFocoVisivel();
   initAnimacaoEntrada();
@@ -422,4 +432,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initMenuMobile();
   initScrollSuave();
   initLoadingBotoes();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAll);
+} else {
+  initAll();
+}
