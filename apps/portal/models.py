@@ -1,4 +1,5 @@
 from django.db import models
+from django.db import IntegrityError
 from django.conf import settings
 from django.utils import timezone
 import uuid
@@ -149,9 +150,22 @@ class Denuncia(models.Model):
     def save(self, *args, **kwargs):
         if not self.protocolo:
             ano = timezone.now().year
-            codigo = uuid.uuid4().hex[:6].upper()
-            self.protocolo = f'DEN-{ano}-{codigo}'
-        super().save(*args, **kwargs)
+            attempts = 0
+            max_attempts = 10
+            while True:
+                attempts += 1
+                codigo = uuid.uuid4().hex[:6].upper()
+                self.protocolo = f'DEN-{ano}-{codigo}'
+                try:
+                    super().save(*args, **kwargs)
+                    break
+                except IntegrityError as e:
+                    # Se houve violação de unicidade no protocolo, tenta outra vez
+                    if attempts >= max_attempts:
+                        raise
+                    continue
+        else:
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.protocolo} - {self.get_tipo_golpe_display()}'

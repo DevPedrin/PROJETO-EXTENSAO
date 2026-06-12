@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from ..models import Denuncia, Video
 from ..permissions import requer_admin, requer_moderador_ou_admin
@@ -17,42 +18,89 @@ def dashboard_router(request):
 
 @login_required
 def dashboard_usuario(request):
-    denuncias = (
+    qs = (
         Denuncia.objects
         .filter(autor_hash=gerar_hash_usuario(request.user))
         .order_by('-criado_em')
     )
+
+    try:
+        per_page = int(request.GET.get('per_page', 25))
+    except (TypeError, ValueError):
+        per_page = 25
+    per_page = max(5, min(per_page, 200))
+
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(qs, per_page)
+    try:
+        page_obj = paginator.page(page_number)
+    except (PageNotAnInteger, EmptyPage):
+        page_obj = paginator.page(1)
+
     return render(
         request,
         'portal/dashboard_usuario.html',
-        {'denuncias': denuncias}
+        {'denuncias': page_obj, 'paginator': paginator}
     )
 
 
 @login_required
 @requer_moderador_ou_admin
 def dashboard_moderador(request):
-    denuncias = Denuncia.objects.all().order_by('-criado_em')
+    qs = Denuncia.objects.all().order_by('-criado_em')
+
+    try:
+        per_page = int(request.GET.get('per_page', 25))
+    except (TypeError, ValueError):
+        per_page = 25
+    per_page = max(5, min(per_page, 200))
+
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(qs, per_page)
+    try:
+        page_obj = paginator.page(page_number)
+    except (PageNotAnInteger, EmptyPage):
+        page_obj = paginator.page(1)
+
     return render(
         request,
         'portal/dashboard_moderador.html',
-        {'denuncias': denuncias}
+        {'denuncias': page_obj, 'paginator': paginator}
     )
 
 
 @login_required
 @requer_admin
 def dashboard_admin(request):
-    denuncias = Denuncia.objects.all().order_by('-criado_em')
+    qs = Denuncia.objects.all().order_by('-criado_em')
     videos = Video.objects.all().order_by('-criado_em')
+
+    total_analise = qs.filter(status='analise').count()
+    total_aprovadas = qs.filter(status='aprovada').count()
+    total_rejeitadas = qs.filter(status='rejeitada').count()
+
+    try:
+        per_page = int(request.GET.get('per_page', 25))
+    except (TypeError, ValueError):
+        per_page = 25
+    per_page = max(5, min(per_page, 200))
+
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(qs, per_page)
+    try:
+        page_obj = paginator.page(page_number)
+    except (PageNotAnInteger, EmptyPage):
+        page_obj = paginator.page(1)
+
     return render(
         request,
         'portal/dashboard_admin.html',
         {
-            'denuncias': denuncias,
+            'denuncias': page_obj,
             'videos': videos,
-            'total_analise': denuncias.filter(status='analise').count(),
-            'total_aprovadas': denuncias.filter(status='aprovada').count(),
-            'total_rejeitadas': denuncias.filter(status='rejeitada').count(),
+            'paginator': paginator,
+            'total_analise': total_analise,
+            'total_aprovadas': total_aprovadas,
+            'total_rejeitadas': total_rejeitadas,
         }
     )

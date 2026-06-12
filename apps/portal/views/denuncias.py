@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from ..forms import DenunciaForm
 from ..models import Denuncia
@@ -29,15 +30,29 @@ def denuncia_form(request):
 
 @login_required
 def minhas_denuncias(request):
-    denuncias = (
+    qs = (
         Denuncia.objects
         .filter(autor_hash=gerar_hash_usuario(request.user))
         .order_by('-criado_em')
     )
+
+    try:
+        per_page = int(request.GET.get('per_page', 25))
+    except (TypeError, ValueError):
+        per_page = 25
+    per_page = max(5, min(per_page, 200))
+
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(qs, per_page)
+    try:
+        page_obj = paginator.page(page_number)
+    except (PageNotAnInteger, EmptyPage):
+        page_obj = paginator.page(1)
+
     return render(
         request,
         'portal/minhas_denuncias.html',
-        {'denuncias': denuncias}
+        {'denuncias': page_obj, 'paginator': paginator}
     )
 
 

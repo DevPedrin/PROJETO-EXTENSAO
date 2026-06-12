@@ -1,0 +1,163 @@
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVIDADE — BREAKPOINTS
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  :root {
+    --secao-gap: 64px;
+  }
+
+  .graficos-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 960px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-panel {
+    border-radius: 8px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .golpes-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .videos-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .delegacias-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .filtro-panel {
+    position: static;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .numeros-emergencia {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .denuncia-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-hamburguer {
+    display: flex;
+  }
+
+  nav {
+    display: none;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    flex-direction: column;
+    padding: 16px 24px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-top: 1px solid var(--gray-100);
+    gap: 8px;
+    align-items: stretch;
+    z-index: 100;
+  }
+
+  nav.aberta {
+    display: flex;
+  }
+
+  nav a {
+    font-size: 1rem;
+    padding: 10px 14px;
+    border-bottom: none;
+    border-radius: 4px;
+    color: var(--primary);
+  }
+
+  nav a:hover, nav a.ativo {
+    background: var(--gray-50);
+    border-bottom: none;
+    color: var(--primary-dark);
+  }
+
+  .nav-usuario {
+    padding: 10px 14px;
+  }
+
+  .nav-btn-entrar, .nav-btn-sair {
+    text-align: center;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .secao-header {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --secao-gap: 48px;
+  }
+
+  .container {
+    padding: 0 18px;
+  }
+
+  .golpes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .graficos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .videos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h2, .hero .gov-subtitle {
+    font-size: clamp(1.6rem, 6vw, 2rem);
+  }
+
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-card {
+    padding: 32px 24px;
+  }
+
+  .form-card {
+    padding: 28px 20px;
+  }
+
+  .numeros-emergencia {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  nav {
+    flex-wrap: wrap;
+  }
+}

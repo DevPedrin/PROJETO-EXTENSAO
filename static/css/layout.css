@@ -1,0 +1,368 @@
+/* ═══════════════════════════════════════════════════════════════
+   LOGO
+   ═══════════════════════════════════════════════════════════════ */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logo:hover { text-decoration: none; }
+
+.logo-escudo {
+  width: 48px;
+  height: 48px;
+  background: var(--azul-gov);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-escudo svg {
+  width: 28px;
+  height: 28px;
+  fill: var(--amarelo-gov);
+}
+
+/* Logo nome — sobrescreve h1 global apenas neste contexto */
+.logo-nome h1 {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 800;
+  color: var(--gov-azul-escuro);
+  line-height: 1.2;
+  margin-bottom: 0;
+  letter-spacing: -0.01em;
+  /* Sem text-transform — GOV.BR prefere capitalização normal */
+}
+
+.logo-nome span {
+  font-size: 0.78rem;
+  color: var(--gov-cinza-escuro);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BARRA DE ACESSIBILIDADE GOV.BR
+   ═══════════════════════════════════════════════════════════════ */
+
+.barra-acesso {
+  background: var(--gov-azul-escuro);
+  color: var(--gov-branco);
+  font-size: 0.78rem;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.barra-acesso .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.acesso-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+}
+
+.acesso-btns button {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.35);
+  color: var(--branco);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: var(--fonte-principal);
+  transition: background 0.2s ease;
+}
+
+.acesso-btns button:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HEADER GOV.BR
+   ═══════════════════════════════════════════════════════════════ */
+
+header {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-100);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  transition: box-shadow 0.25s ease;
+}
+
+header.scrolled {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 24px;
+  gap: 16px;
+  min-height: 72px;
+}
+
+/* ─── NAVEGAÇÃO ─────────────────────────────────────────────── */
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+nav a {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+nav a:hover, nav a.ativo {
+  border-bottom: 2px solid var(--primary);
+  text-decoration: none;
+  color: var(--primary-dark);
+}
+
+.nav-usuario {
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  padding: 8px 6px;
+  font-weight: 400;
+}
+
+.nav-btn-entrar {
+  background: var(--primary);
+  color: var(--white) !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 10px 20px;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.2s ease;
+  border-bottom: none !important;
+}
+
+.nav-btn-entrar:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.nav-btn-sair {
+  background: transparent;
+  color: var(--danger) !important;
+  border: 1px solid var(--danger);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-btn-sair:hover {
+  background: var(--danger);
+  color: var(--white) !important;
+  text-decoration: none;
+}
+
+/* Botão hamburguer (mobile) */
+.nav-hamburguer {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.nav-hamburguer:hover {
+  background: var(--gray-100);
+}
+
+.nav-hamburguer span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--primary-dark);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.2s ease;
+}
+
+.nav-hamburguer.aberto span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-hamburguer.aberto span:nth-child(2) {
+  opacity: 0;
+}
+.nav-hamburguer.aberto span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FAIXA DE ALERTA
+   ═══════════════════════════════════════════════════════════════ */
+
+.faixa-alerta {
+  background: var(--vermelho-alerta);
+  color: var(--branco);
+  padding: 11px 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-bottom: 2px solid #991B1B;
+  line-height: 1.5;
+}
+
+.faixa-alerta .container {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: none;
+}
+
+.faixa-alerta p {
+  max-width: none;
+  color: var(--branco);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+.alerta-icone {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.alerta-icone svg {
+  fill: var(--branco);
+  width: 20px;
+  height: 20px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SEÇÕES GERAIS
+   ═══════════════════════════════════════════════════════════════ */
+
+.secao {
+  padding: var(--secao-gap) 0;
+}
+
+.secao-alt {
+  background: var(--gray-50);
+}
+
+.secao-header {
+  margin-bottom: 48px;
+}
+
+.secao-header h2,
+.secao-header .gov-subtitle {
+  margin-bottom: 16px;
+}
+
+.secao-header p,
+.secao-header .gov-text {
+  font-size: 1rem;
+  color: var(--gray-600);
+  max-width: 65ch;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════════ */
+
+footer {
+  background: #071D38;
+  color: rgba(255,255,255,0.62);
+  padding: 56px 0 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 48px;
+}
+
+footer h4 {
+  font-family: var(--fonte-titulo);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--branco);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--amarelo-gov);
+  display: inline-block;
+}
+
+footer p {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.62);
+  max-width: none;
+}
+
+footer ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+footer ul li a {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.55);
+  font-weight: 400;
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+
+footer ul li a:hover {
+  color: var(--amarelo-gov);
+  text-decoration: none;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 18px 24px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.38);
+}
+

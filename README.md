@@ -108,6 +108,12 @@ http://127.0.0.1:8000/
 
 ---
 
+## Teste de carga(Faker)
+
+Com a aplicação rodando rode:
+
+     compose exec application python manage.py seed_db --denuncias 20000
+
 ## Observações
 
 - O arquivo `.env` é obrigatório.
