@@ -12,60 +12,218 @@
     <!-- Painel de Indicadores Principais (Números em Destaque) -->
     <div class="estat-resumo-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 48px;">
       
-      <!-- Card 1: Total -->
       <div class="gov-stat-card blue-border">
         <div>
           <p class="stat-title">Total de Ocorrências</p>
           <span class="stat-val" aria-label="{{ total_denuncias }} denúncias aprovadas">{{ total_denuncias }}</span>
         </div>
-        <p class="stat-desc">Casos validados e processados</p>
+        <p class="stat-desc">Casos aprovados pela moderação</p>
       </div>
 
-      <!-- Card 2: Cidades -->
       <div class="gov-stat-card yellow-border">
         <div>
-          <p class="stat-title">Área de Atendimento</p>
-          <span class="stat-val" style="font-size: 1.5rem; font-weight: 700; padding: 12px 0;">Palmas — TO</span>
+          <p class="stat-title">Em Análise</p>
+          <span class="stat-val" aria-label="{{ total_em_analise }} denúncias em análise">{{ total_em_analise }}</span>
         </div>
-        <p class="stat-desc">Foco exclusivo municipal</p>
+        <p class="stat-desc">Registros que ainda aguardam avaliação</p>
       </div>
 
-      <!-- Card 3: Golpe mais comum -->
-      <div class="gov-stat-card red-border">
+      
+
+      <div class="gov-stat-card blue-border">
         <div>
-          <p class="stat-title">Incidência Principal</p>
-          <span class="stat-val" style="font-size: 1.25rem; font-weight: 700; padding: 12px 0;">
-            {{ golpe_mais_comum }}
-          </span>
+          <p class="stat-title">Área de Cobertura</p>
+          <span class="stat-val" style="font-size: 1.5rem; font-weight: 700; padding: 12px 0;">Palmas — TO</span>
         </div>
-        <p class="stat-desc">Maior volume de registros</p>
+        <p class="stat-desc">Foco exclusivo do portal</p>
       </div>
 
     </div>
 
     <!-- Seção de Gráficos e Distribuição -->
-    <div class="graficos-grid" role="region" aria-label="Distribuição das denúncias">
+    <div class="graficos-grid" role="region" aria-label="Distribuição das denúncias" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;">
       <div class="grafico-card" style="background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.02); border: 1px solid var(--cinza-linha);">
         <h3 class="gov-card-title" style="font-size: 1.3rem; margin-bottom: 8px;">Denúncias por Tipo de Golpe</h3>
         <p class="grafico-sub" style="color: var(--cinza-texto); margin-bottom: 32px;">Proporção de ocorrências de acordo com a categoria da fraude</p>
-        
-        <div class="barras" role="list" aria-label="Gráfico de barras por tipo de golpe" style="display: flex; flex-direction: column; gap: 20px;">
-          {% for golpe in denuncias_por_tipo %}
-            <div class="barra-row" role="listitem" style="display: flex; flex-direction: column; gap: 6px;">
-              <div class="barra-meta" style="display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 600; color: var(--cinza-escuro);">
-                <span>{{ golpe.nome_golpe }}</span>
-                <span aria-label="{{ golpe.total }} ocorrências" style="color: var(--azul-gov);">{{ golpe.total }} ({{ golpe.porcentagem }}%)</span>
-              </div>
-              <div class="barra-track" role="progressbar" aria-valuenow="{{ golpe.porcentagem }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ golpe.nome_golpe }}: {{ golpe.porcentagem }}%" style="background: #e9ecef; height: 16px; border-radius: 8px; overflow: hidden; width: 100%;">
-                <div class="barra-fill" data-width="{{ golpe.porcentagem }}%" style="width: {{ golpe.porcentagem }}%; background: var(--azul-claro); height: 100%; border-radius: 8px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);"></div>
-              </div>
-            </div>
-          {% empty %}
-            <p class="gov-text" style="color: var(--cinza-texto); padding: 24px 0; text-align: center;">Nenhuma denúncia aprovada no sistema para consolidação de estatísticas.</p>
-          {% endfor %}
+        <div style="position: relative; width: 100%; height: 320px;">
+          <canvas id="grafico-tipo" aria-label="Gráfico de distribuição por tipo de golpe" role="img" style="width: 100%; height: 100%;"></canvas>
+        </div>
+      </div>
+
+      <div class="grafico-card" style="background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.02); border: 1px solid var(--cinza-linha);">
+        <h3 class="gov-card-title" style="font-size: 1.3rem; margin-bottom: 8px;">Faixa Etária mais Impactada</h3>
+        <p class="grafico-sub" style="color: var(--cinza-texto); margin-bottom: 32px;">Distribuição das denúncias por faixa etária</p>
+        <div style="position: relative; width: 100%; height: 320px;">
+          <canvas id="grafico-faixa" aria-label="Gráfico de distribuição por faixa etária" role="img" style="width: 100%; height: 100%;"></canvas>
+        </div>
+      </div>
+
+      <div class="grafico-card" style="background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.02); border: 1px solid var(--cinza-linha);">
+        <h3 class="gov-card-title" style="font-size: 1.3rem; margin-bottom: 8px;">Tendência Mensal</h3>
+        <p class="grafico-sub" style="color: var(--cinza-texto); margin-bottom: 24px;">Denúncias nos últimos meses</p>
+        <div style="position: relative; width: 100%; height: 320px;">
+          <canvas id="grafico-mensal" aria-label="Gráfico de tendências mensais" role="img" style="width: 100%; height: 100%;"></canvas>
         </div>
       </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      (function() {
+        var labels = {{ meses_labels_json|default:'[]'|safe }};
+        var values = {{ meses_valores_json|default:'[]'|safe }};
+        var tipoLabels = [{% for golpe in denuncias_por_tipo %}'{{ golpe.nome_golpe|escapejs }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
+        var tipoValues = [{% for golpe in denuncias_por_tipo %}{{ golpe.total }}{% if not forloop.last %}, {% endif %}{% endfor %}];
+        var faixaLabels = [{% for faixa in denuncias_por_faixa %}'{{ faixa.nome_faixa|escapejs }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
+        var faixaValues = [{% for faixa in denuncias_por_faixa %}{{ faixa.total }}{% if not forloop.last %}, {% endif %}{% endfor %}];
+        var ctxTipo = document.getElementById('grafico-tipo');
+        var ctxFaixa = document.getElementById('grafico-faixa');
+        var ctxMensal = document.getElementById('grafico-mensal');
+
+        if (ctxTipo && Array.isArray(tipoLabels) && tipoLabels.length && Array.isArray(tipoValues) && tipoValues.length) {
+          new Chart(ctxTipo.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+              labels: tipoLabels,
+              datasets: [{
+                data: tipoValues,
+                backgroundColor: [
+                  'rgba(37, 99, 235, 0.75)',
+                  'rgba(234, 88, 12, 0.75)',
+                  'rgba(16, 185, 129, 0.75)',
+                  'rgba(234, 179, 8, 0.75)',
+                  'rgba(59, 130, 246, 0.75)'
+                ],
+                borderColor: 'rgba(255, 255, 255, 0.9)',
+                borderWidth: 2,
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  align: 'center',
+                  labels: {
+                    color: '#334155',
+                    padding: 10,
+                    boxWidth: 12,
+                    usePointStyle: true,
+                    pointStyle: 'circle',
+                    font: { size: 12 },
+                    textAlign: 'left'
+                  }
+                },
+                tooltip: {
+                  backgroundColor: '#1e293b',
+                  titleColor: '#f8fafc',
+                  bodyColor: '#f8fafc'
+                }
+              }
+            }
+          });
+        } else if (ctxTipo && ctxTipo.parentNode) {
+          ctxTipo.parentNode.innerHTML = '<p style="color: var(--cinza-texto);">Sem dados de tipo de golpe para exibir.</p>';
+        }
+
+        if (ctxFaixa && Array.isArray(faixaLabels) && faixaLabels.length && Array.isArray(faixaValues) && faixaValues.length) {
+          new Chart(ctxFaixa.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+              labels: faixaLabels,
+              datasets: [{
+                data: faixaValues,
+                backgroundColor: [
+                  'rgba(37, 99, 235, 0.75)',
+                  'rgba(16, 185, 129, 0.75)',
+                  'rgba(234, 179, 8, 0.75)',
+                  'rgba(244, 63, 94, 0.75)',
+                  'rgba(148, 163, 184, 0.75)'
+                ],
+                borderColor: 'rgba(255, 255, 255, 0.9)',
+                borderWidth: 2,
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  align: 'center',
+                  labels: {
+                    color: '#334155',
+                    padding: 10,
+                    boxWidth: 12,
+                    usePointStyle: true,
+                    pointStyle: 'circle',
+                    font: { size: 12 },
+                    textAlign: 'left'
+                  }
+                },
+                tooltip: {
+                  backgroundColor: '#1e293b',
+                  titleColor: '#f8fafc',
+                  bodyColor: '#f8fafc'
+                }
+              }
+            }
+          });
+        } else if (ctxFaixa && ctxFaixa.parentNode) {
+          ctxFaixa.parentNode.innerHTML = '<p style="color: var(--cinza-texto);">Sem dados de faixa etária para exibir.</p>';
+        }
+
+        if (!ctxMensal || !Array.isArray(labels) || !Array.isArray(values) || !values.length) {
+          if (ctxMensal && ctxMensal.parentNode) {
+            ctxMensal.parentNode.innerHTML = '<p style="color: var(--cinza-texto);">Sem dados mensais suficientes para exibir a tendência.</p>';
+          }
+          return;
+        }
+
+        new Chart(ctxMensal.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Denúncias',
+              data: values,
+              backgroundColor: 'rgba(37, 99, 235, 0.65)',
+              borderColor: 'rgba(37, 99, 235, 1)',
+              borderWidth: 1,
+              borderRadius: 8,
+              maxBarThickness: 40,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+              padding: 8
+            },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: { color: '#334155' }
+              },
+              y: {
+                beginAtZero: true,
+                grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                ticks: { color: '#334155', precision: 0 }
+              }
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#1e293b',
+                titleColor: '#f8fafc',
+                bodyColor: '#f8fafc'
+              }
+            }
+          }
+        });
+      })();
+    </script>
 
   </div>
 </section>

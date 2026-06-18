@@ -70,14 +70,17 @@
               <div class="form-grid-2" style="margin-bottom: 22px;">
                 <div class="form-row" style="margin-bottom: 0;">
                   <label for="form-data">Data da ocorrência</label>
-                  <input type="date" name="data_ocorrencia" id="form-data"
-                         value="{{ form.data_ocorrencia.value|default:'' }}" />
+                  {{ form.data_ocorrencia }}
+                  {% if form.data_ocorrencia.errors %}
+                    <span class="form-erro" style="color: var(--vermelho-alerta); font-size: 0.85rem; display: block; margin-top: 4px;">{{ form.data_ocorrencia.errors|join:", " }}</span>
+                  {% endif %}
                 </div>
                 <div class="form-row" style="margin-bottom: 0;">
-                  <label for="form-cidade">Cidade</label>
-                  <input type="text" name="cidade" id="form-cidade"
-                         placeholder="Exemplo: Palmas — TO"
-                         value="{{ form.cidade.value|default:'' }}" />
+                  <label>Cidade</label>
+                  <input type="hidden" name="cidade" value="Palmas — TO" />
+                  <div style="padding: 14px 16px; border: 1px solid #d1d5db; border-radius: 8px; background: #f8fafc; color: #0f172a;">
+                    Palmas — TO
+                  </div>
                 </div>
               </div>
 
@@ -90,24 +93,16 @@
                 {% endif %}
               </div>
 
-              <div class="form-grid-2" style="margin-bottom: 22px;">
-                <div class="form-row" style="margin-bottom: 0;">
-                  <label for="form-nome">Nome (opcional)</label>
-                  <input type="text" name="nome_informado" id="form-nome"
-                         placeholder="Pode deixar em branco"
-                         value="{{ form.nome_informado.value|default:'' }}" />
-                </div>
-                <div class="form-row" style="margin-bottom: 0;">
-                  <label for="form-idade">Faixa etária</label>
-                  <select name="faixa_etaria" id="form-idade">
-                    <option value="">Selecione...</option>
-                    {% for valor, rotulo in form.faixa_etaria.field.choices %}
-                      {% if valor %}
-                        <option value="{{ valor }}" {% if form.faixa_etaria.value == valor %}selected{% endif %}>{{ rotulo }}</option>
-                      {% endif %}
-                    {% endfor %}
-                  </select>
-                </div>
+              <div class="form-row" style="margin-bottom: 22px;">
+                <label for="form-idade">Faixa etária</label>
+                <select name="faixa_etaria" id="form-idade">
+                  <option value="">Selecione...</option>
+                  {% for valor, rotulo in form.faixa_etaria.field.choices %}
+                    {% if valor %}
+                      <option value="{{ valor }}" {% if form.faixa_etaria.value == valor %}selected{% endif %}>{{ rotulo }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
               </div>
 
               <div class="form-checkbox" style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">

@@ -40,22 +40,14 @@ def estatisticas(request):
         item['nome_faixa'] = escolhas_faixa.get(item['faixa_etaria'], item['faixa_etaria'])
         item['porcentagem'] = round((item['total'] / total_denuncias) * 100, 1) if total_denuncias else 0
 
-    denuncias_por_cidade = list(
-        aprovadas.exclude(cidade='')
-        .values('cidade')
-        .annotate(total=models.Count('id'))
-        .order_by('-total')[:5]
-    )
-    for item in denuncias_por_cidade:
-        item['porcentagem'] = round((item['total'] / total_denuncias) * 100, 1) if total_denuncias else 0
-
     hoje = date.today()
     seis_meses_atras = hoje - relativedelta(months=5)
 
     mensal_qs = (
-        Denuncia.objects
-        .filter(criado_em__date__gte=seis_meses_atras)
-        .annotate(mes=TruncMonth('criado_em'))
+        aprovadas
+        .exclude(data_ocorrencia__isnull=True)
+        .filter(data_ocorrencia__gte=seis_meses_atras)
+        .annotate(mes=TruncMonth('data_ocorrencia'))
         .values('mes')
         .annotate(total=models.Count('id'))
         .order_by('mes')
@@ -69,7 +61,6 @@ def estatisticas(request):
         'total_rejeitadas': total_rejeitadas,
         'denuncias_por_tipo': denuncias_por_tipo,
         'denuncias_por_faixa': denuncias_por_faixa,
-        'denuncias_por_cidade': denuncias_por_cidade,
         'meses_labels_json': json.dumps(meses_labels),
         'meses_valores_json': json.dumps(meses_valores),
     }

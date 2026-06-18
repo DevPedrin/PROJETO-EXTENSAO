@@ -114,7 +114,7 @@ class Command(BaseCommand):
             Delegacia.objects.create(
                 nome=nome[:200],
                 tipo=random.choice(tipos),
-                cidade=faker.city(),
+                cidade='Palmas — TO',
                 endereco=faker.street_address(),
                 telefone=faker.phone_number(),
                 horario=f'{random.randint(8, 10)}h às {random.randint(17, 20)}h',
@@ -153,7 +153,7 @@ class Command(BaseCommand):
             tipo_golpe = random.choice(tipos)
             faixa_etaria = random.choice(faixas)
             data_ocorrencia = faker.date_between(start_date='-1y', end_date='today')
-            cidade = faker.city()
+            cidade = 'Palmas — TO'
             descricao = faker.paragraph(nb_sentences=5)
             status = random.choice(statuses)
             publicada = status == 'aprovada'
