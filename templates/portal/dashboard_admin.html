@@ -109,6 +109,27 @@
       </table>
     </div>
 
+    <!-- Paginação -->
+    {% if paginator.num_pages > 1 %}
+      <div style="margin-top:16px; text-align:center;">
+        <ul class="pagination" style="list-style:none; padding:0; display:inline-flex; gap:8px;">
+          {% if denuncias.has_previous %}
+            <li><a href="?page={{ denuncias.previous_page_number }}" class="btn">Anterior</a></li>
+          {% endif %}
+          {% for num in paginator.page_range %}
+            {% if num == denuncias.number %}
+              <li><span class="btn btn-ativo">{{ num }}</span></li>
+            {% elif num <= 2 or num > paginator.num_pages|add:'-2' or num >= denuncias.number|add:'-2' and num <= denuncias.number|add:'2' %}
+              <li><a href="?page={{ num }}" class="btn">{{ num }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if denuncias.has_next %}
+            <li><a href="?page={{ denuncias.next_page_number }}" class="btn">Próxima</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    {% endif %}
+
   </div>
 </section>
 {% endblock %}

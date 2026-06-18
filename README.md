@@ -108,6 +108,32 @@ http://127.0.0.1:8000/
 
 ---
 
+## Teste de carga(Faker)
+
+Com a aplicação rodando rode:
+
+    docker compose exec application python manage.py seed_db --denuncias 20000
+
+## Teste de carga com Locust
+
+Para uso com Docker, o projeto já expõe a porta do Locust.
+
+Com os containers rodando:
+
+    docker compose exec application locust --host=http://127.0.0.1:8000 --web-host=0.0.0.0
+
+Abra a interface gráfica em:
+
+    http://127.0.0.1:8089
+
+Use um dos usuários de teste já populados no banco:
+
+- admin / ifto2026
+- moderador / ifto2026
+- usuario / ifto2026
+
+O arquivo de teste está em `locustfile.py`.
+
 ## Observações
 
 - O arquivo `.env` é obrigatório.

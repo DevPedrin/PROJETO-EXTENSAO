@@ -3,12 +3,26 @@ from .models import Denuncia, Delegacia
 
 
 class DenunciaForm(forms.ModelForm):
+    data_ocorrencia = forms.DateField(
+        required=False,
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                'type': 'date',
+                'id': 'form-data',
+                'autocomplete': 'off',
+            }
+        ),
+        input_formats=['%Y-%m-%d', '%d/%m/%Y', '%d-%m-%Y']
+    )
+
     class Meta:
         model = Denuncia
         fields = [
             'tipo_golpe',
             'data_ocorrencia',
             'cidade',
+            'faixa_etaria',
             'descricao',
             'anonima',
         ]
@@ -18,14 +32,13 @@ class DenunciaForm(forms.ModelForm):
                 'id': 'form-tipo-golpe',
             }),
 
-            'data_ocorrencia': forms.DateInput(attrs={
-                'type': 'date',
-                'id': 'form-data',
-            }),
-
             'cidade': forms.TextInput(attrs={
                 'id': 'form-cidade',
                 'placeholder': 'Ex.: Palmas - TO',
+            }),
+
+            'faixa_etaria': forms.Select(attrs={
+                'id': 'form-idade',
             }),
 
             'descricao': forms.Textarea(attrs={
@@ -61,6 +74,10 @@ class DenunciaForm(forms.ModelForm):
             )
 
         return cleaned_data
+
+    def clean_cidade(self):
+        # O portal é focado em Palmas — TO, então normaliza o campo para esse valor.
+        return 'Palmas — TO'
 
 
 class DelegaciaForm(forms.ModelForm):

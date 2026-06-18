@@ -10,23 +10,7 @@
       <p class="gov-text">Lista de todos os usuários cadastrados na plataforma e seus respectivos níveis de acesso ao sistema.</p>
     </div>
 
-    <!-- Mensagens de feedback -->
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alerta-form alerta-{{ message.tags }}" role="alert" style="
-          margin-bottom: 24px;
-          padding: 16px 20px;
-          border-radius: var(--raio);
-          font-size: 0.95rem;
-          font-weight: 600;
-          background: {% if message.tags == 'success' %}#d4edda{% else %}#f8d7da{% endif %};
-          color: {% if message.tags == 'success' %}#155724{% else %}#721c24{% endif %};
-          border: 1px solid {% if message.tags == 'success' %}#c3e6cb{% else %}#f5c6cb{% endif %};
-        ">
-          {{ message }}
-        </div>
-      {% endfor %}
-    {% endif %}
+    
 
     <div style="margin-bottom: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
       <a href="{% url 'usuario_criar' %}" class="btn btn-primario">
